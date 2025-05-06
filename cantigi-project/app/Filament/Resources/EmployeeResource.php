@@ -37,6 +37,8 @@ class EmployeeResource extends Resource
                 TextInput::make('email')
                     ->email()
                     ->required(),
+                TextInput::make('position')
+                    ->required(),
                 TextInput::make('phone')
                     ->required(),
                 DatePicker::make('hire_date')
@@ -60,6 +62,7 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('phone'),
+                Tables\Columns\TextColumn::make('position'),
                 Tables\Columns\TextColumn::make('hire_date'),
                 Tables\Columns\TextColumn::make('status')
             ])
@@ -67,7 +70,9 @@ class EmployeeResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
