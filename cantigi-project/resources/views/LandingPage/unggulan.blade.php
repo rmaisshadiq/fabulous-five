@@ -9,8 +9,8 @@
     
     <!-- unggulan 1 -->
     <div class="bg-white rounded-3xl flex flex-col items-center">
-      <div class="bg-green-500 w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
-        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/piggy-bank.png') }}" alt="Bus">
+      <div class="bg-[#138A40] w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
+        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/low-price.png') }}" alt="Bus">
       </div>
       <div class="p-4 flex flex-col items-center">
         <h1 class="text-[24px] font-bold">Harga Termurah</h1>
@@ -21,7 +21,7 @@
     <!-- unggulan 2 -->
     <div class="bg-white rounded-3xl flex flex-col items-center">
       <div class="bg-green-500 w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
-        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/premium-quality.png') }}" alt="Bus">
+        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/quality.png') }}" alt="Bus">
       </div>
       <div class="p-4 flex flex-col items-center">
         <h1 class="text-[24px] font-bold">Kendaraan Berkualitas</h1>
@@ -32,7 +32,7 @@
     <!-- unggulan 3 -->
     <div class="bg-white rounded-3xl flex flex-col items-center">
       <div class="bg-green-500 w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
-        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/handshake.png') }}" alt="Bus">
+        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/technical-support.png') }}" alt="Bus">
       </div>
       <div class="p-4 flex flex-col items-center">
         <h1 class="text-[24px] font-bold">Pelayanan Ramah</h1>

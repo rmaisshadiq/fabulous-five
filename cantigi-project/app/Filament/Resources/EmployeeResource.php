@@ -31,6 +31,7 @@ class EmployeeResource extends Resource
                     ->image()
                     ->directory('employees')
                     ->required()
+                    ->visibility('public')
                     ->columnSpan(2),
                 TextInput::make('name')
                     ->required(),
