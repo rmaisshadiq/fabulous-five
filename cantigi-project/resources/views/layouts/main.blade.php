@@ -19,19 +19,14 @@
     </style>
 </head>
 
-<body class="bg-white text-gray-800">
+<body class="bg-white text-gray-800 overflow-x-hidden">
     @include('layouts/header')
 
-    <main class="flex-shrink-0">
-        <div class="container">
-            @yield('content')
-        </div>
+    <main class="flex-shrink-0 overflow-x-hidden">
+        @yield('content')
     </main>
 
     @include('layouts/footer')
-
-    {{-- Jika kamu ingin meletakkan script di akhir body juga bisa --}}
-    {{-- @vite('resources/js/app.js') --}}
 </body>
 
 </html>
