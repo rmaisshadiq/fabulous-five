@@ -11,7 +11,7 @@ class Driver extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_id',
+        'employees_id',
         'license_number',
         'available_status'
     ];

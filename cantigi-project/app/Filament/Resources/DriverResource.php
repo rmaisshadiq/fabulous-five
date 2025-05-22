@@ -26,7 +26,7 @@ class DriverResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('employee_id')
+                Select::make('employees_id')
                 ->relationship('employees', 'name')
                 ->required()
                 ->unique(ignoreRecord:true),
@@ -45,7 +45,7 @@ class DriverResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id'),
+                Tables\Columns\TextColumn::make('employees_id'),
                 Tables\Columns\TextColumn::make('license_number'),
                 Tables\Columns\TextColumn::make('available_status')
             ])
