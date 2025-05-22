@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
             $table->date('maintenance_date')->default(date("Y-m-d"));
             $table->text('description');
             $table->decimal('cost');

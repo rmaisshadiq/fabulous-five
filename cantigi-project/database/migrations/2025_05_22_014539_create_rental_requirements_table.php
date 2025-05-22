@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('rental_requirements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->string('resident_id_card')->nullable();
             $table->string('work_or_student_id_card')->nullable();
             $table->string('guarantee_type');
             $table->string('motorcycle_guarantee_doc');
-            $table->decimal('deposit_amount');
+            $table->unsignedInteger('deposit_amount');
             $table->text('social_media_link');
             $table->foreignId('verified_by')->constrained()->cascadeOnDelete();
             $table->timestamp('verified_at');

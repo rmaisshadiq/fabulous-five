@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('driver_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
+            $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
+            $table->foreignId('driver_id')->constrained('drivers')->cascadeOnDelete();
             $table->date('booking_date')->default(date("Y-m-d"));
             $table->time('booking_time');
             $table->string('booking_fuel_level');
