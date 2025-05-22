@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
             $table->foreignId('driver_id')->constrained()->cascadeOnDelete();
-            $table->date('booking-date')->default(date("Y-m-d"));
-            $table->time('booking-time');
+            $table->date('booking_date')->default(date("Y-m-d"));
+            $table->time('booking_time');
             $table->string('booking_fuel_level');
             $table->text('guarantee_info');
             $table->timestamps();
