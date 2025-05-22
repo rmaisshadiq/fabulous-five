@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('motorcycle_guarantee_doc');
             $table->unsignedInteger('deposit_amount');
             $table->text('social_media_link');
-            $table->foreignId('verified_by')->constrained()->cascadeOnDelete();
+            $table->foreignId('verified_by')->constrained('employees')->cascadeOnDelete();
             $table->timestamp('verified_at');
             $table->timestamps();
         });

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
             $table->date('maintenance_date')->default(date("Y-m-d"));
             $table->text('description');
-            $table->decimal('cost');
+            $table->unsignedInteger('cost');
             $table->timestamps();
         });
     }
