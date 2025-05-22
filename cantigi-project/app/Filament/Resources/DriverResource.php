@@ -45,7 +45,10 @@ class DriverResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employees_id'),
+                Tables\Columns\ImageColumn::make('employees.portrait')
+                    ->label('Employee portrait'),
+                Tables\Columns\TextColumn::make('employees.name')
+                    ->label('Employee name'),
                 Tables\Columns\TextColumn::make('license_number'),
                 Tables\Columns\TextColumn::make('available_status')
             ])
