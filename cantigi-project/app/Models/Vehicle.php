@@ -22,4 +22,12 @@ class Vehicle extends Model
         'last_maintenance_date',
         'status'
     ];
+
+    public function maintenances() {
+        return $this->hasMany(Maintenance::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
 }
