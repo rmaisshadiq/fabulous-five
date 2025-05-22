@@ -8,11 +8,11 @@
                     Tim customer service kami siap membantu Anda 24/7 untuk memberikan informasi lebih detail mengenai syarat dan ketentuan rental
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="#" class="bg-white text-[#138A40] px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 text-sm sm:text-base">
+                    <a href="https://wa.me/6285363483996" class="bg-white text-[#138A40] px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 text-sm sm:text-base">
                         Hubungi WhatsApp
                     </a>
                     <a href="#" class="border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-[#138A40] transition-colors duration-300 text-sm sm:text-base">
-                        Telepon Sekarang
+                        Sewa Sekarang
                     </a>
                 </div>
             </div>

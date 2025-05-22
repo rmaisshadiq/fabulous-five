@@ -5,13 +5,13 @@
     <div class="w-full md:w-1/2 space-y-5 text-center md:text-left">
       <h2 class="text-3xl text-black sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
         Sewa Kendaraan<br class="hidden sm:block">
-        Dengan <span class="text-green-600 block sm:inline">Mudah <span class="text-black">&</span> Cepat</span>
+        Dengan <span class="text-[#138A40] block sm:inline">Mudah <span class="text-black">&</span> Cepat</span>
       </h2>
       <p class="text-gray-600 text-base sm:text-lg md:text-xl max-w-md mx-auto md:mx-0">
         Rental Kendaraan Termurah Dan Proses Yang Gak Ribet Hanya Di Cantigi Tours.
       </p>
       <div class="pt-2">
-        <button class="bg-green-600 text-white px-6 py-3 text-base sm:text-lg lg:text-xl rounded-md hover:bg-green-700 transition duration-300 ease-in-out shadow-md">
+        <button class="bg-[#138A40] text-white px-6 py-3 text-base sm:text-lg lg:text-xl rounded-md hover:bg-green-700 transition duration-300 ease-in-out shadow-md">
           Sewa Sekarang
         </button>
       </div>

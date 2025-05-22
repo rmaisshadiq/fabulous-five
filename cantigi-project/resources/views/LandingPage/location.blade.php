@@ -105,20 +105,20 @@
 
                     <div class="space-y-4">
                         <!-- WhatsApp -->
-                        <a href="https://wa.me/62123456789" target="_blank" rel="noopener noreferrer"
+                        <a href="https://wa.me/6285363483996" target="_blank" rel="noopener noreferrer"
                             class="contact-button social-whatsapp bg-green-500 hover:bg-green-600 text-white p-4 rounded-xl flex items-center gap-4 group w-full">
                             <div class="bg-white/20 p-3 rounded-lg group-hover:bg-white/30 transition-colors">
                                 <i class="fa fa-whatsapp text-2xl"></i>
                             </div>
                             <div class="text-left">
                                 <p class="font-semibold text-lg">WhatsApp</p>
-                                <p class="text-sm opacity-90">+62 123-4567-89</p>
+                                <p class="text-sm opacity-90">+62 8536 3483 996</p>
                             </div>
                             <i class="fa fa-arrow-right ml-auto group-hover:translate-x-1 transition-transform"></i>
                         </a>
 
                         <!-- Instagram -->
-                        <a href="https://instagram.com/CantigiTours" target="_blank" rel="noopener noreferrer"
+                        <a href="https://instagram.com/cantigitours_" target="_blank" rel="noopener noreferrer"
                             class="contact-button social-instagram bg-pink-500 hover:bg-pink-600 text-white p-4 rounded-xl flex items-center gap-4 group w-full">
                             <div class="bg-white/20 p-3 rounded-lg group-hover:bg-white/30 transition-colors">
                                 <i class="fa fa-instagram text-2xl"></i>
@@ -144,7 +144,7 @@
                         </a>
 
                         <!-- Facebook -->
-                        <a href="https://facebook.com/CantigiTours" target="_blank" rel="noopener noreferrer"
+                        <a href="https://facebook.com/Cantigi Tours" target="_blank" rel="noopener noreferrer"
                             class="contact-button social-facebook bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl flex items-center gap-4 group w-full">
                             <div class="bg-white/20 p-3 rounded-lg group-hover:bg-white/30 transition-colors">
                                 <i class="fa fa-facebook-f text-2xl"></i>

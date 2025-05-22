@@ -43,7 +43,8 @@
                                     <li>KTP menjadi dokumen utama yang harus diserahkan sebagai jaminan identitas penyewa</li>
                                     <li>Surat Izin Mengemudi (SIM A) wajib dimiliki dan masih berlaku untuk rental lepas kunci</li>
                                     <li>KTM diperlukan sebagai bukti status mahasiswa untuk mendapatkan diskon khusus</li>
-                                    <li>Penyewa telah melakukan pembayaran DP minimal 30% dari total biaya rental</li>
+                                    <li>Jaminan motor dan STNK 2016 keatas atau deposit sebesar Rp2.000.000</li>
+                                    <li>Memiliki Akun media sosial yang aktif(Instagram & Facebook)</li>
                                     <li>Penyewa telah menandatangani surat perjanjian rental yang telah disepakati bersama</li>
                                 </ol>
                             </div>
