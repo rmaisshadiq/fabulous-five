@@ -24,10 +24,10 @@
           src="{{ asset('images/car.png') }}" 
           alt="Car" 
           class="w-[60rem]
-                 sm:h-[100%]
-                  md:w-[100%]
+                 sm:h-[200%]
+                  md:w-[200%]
                   lg:w-[100%]
-                  xl:w-[100%]
+                  xl:w-[200%]
                   2xl:w-[100%]
                 object-contain 
                 transform scale-x-[-1]"
@@ -44,10 +44,12 @@
               w-1/2
               mt-[4rem] 
               h-[90%]
-              sm:h-[70%]
-              md:h-[70%]
-              lg:h-[70%]
-              xl:h-[70%]
+              sm:h-[50%]
+              md:h-[40%]
+              md:mt-[11rem]
+              lg:h-[60%]
+              lg:mt-[6rem]
+              xl:h-[60%]
               2xl:h-[80%]
               bg-[#138A40] 
               z-0"
