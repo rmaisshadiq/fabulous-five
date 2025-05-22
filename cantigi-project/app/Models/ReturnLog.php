@@ -11,7 +11,12 @@ class ReturnLog extends Model
     use HasFactory;
 
     protected $fillable = [
+        'order_id',
         'return_date',
         'return_time'
     ];
+
+    public function orders() {
+        return $this->belongsTo(Order::class);
+    }
 }
