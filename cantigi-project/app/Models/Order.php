@@ -19,4 +19,28 @@ class Order extends Model
         'booking_fuel_level',
         'guarantee_info'
     ];
+
+    public function feedback() {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function customers() {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function vehicles() {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function drivers() {
+        return $this->belongsTo(Driver::class);
+    }
+
+    public function payments() {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function returnlog() {
+        return $this->hasOne(ReturnLog::class);
+    }
 }

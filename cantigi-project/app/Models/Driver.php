@@ -15,4 +15,12 @@ class Driver extends Model
         'license_number',
         'available_status'
     ];
+
+    public function employees() {
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
 }
