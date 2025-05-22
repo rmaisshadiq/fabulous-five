@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('driver_id')->constrained()->cascadeOnDelete();
+            $table->date('booking-date')->default(date("Y-m-d"));
+            $table->time('booking-time');
+            $table->string('booking_fuel_level');
+            $table->text('guarantee_info');
             $table->timestamps();
         });
     }

@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('vehicle_name');
+            $table->string('car_type');
+            $table->string('brand');
+            $table->string('model');
             $table->string('vehicle_image');
             $table->string('license_plate')->unique();
+            $table->decimal('price_per_day');
             $table->date('purchase_date')->default(date("Y-m-d"));
             $table->date('last_maintenance_date')->default(date("Y-m-d"));
             $table->enum('status', ['active', 'maintenance', 'retired']);

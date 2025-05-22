@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->integer('rating');
+            $table->text('comment');
+            $table->date('date')->default(date("Y-m-d"));
             $table->timestamps();
         });
     }

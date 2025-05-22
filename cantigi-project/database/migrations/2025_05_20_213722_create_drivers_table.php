@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('employee_id')->constrained()->cascadeOnDelete();
+            $table->string('nomor_lisensi');
+            $table->enum('available_status', ['available', 'not available'])->default('available');
             $table->timestamps();
         });
     }

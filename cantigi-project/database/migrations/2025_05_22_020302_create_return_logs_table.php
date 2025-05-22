@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
+        Schema::create('return_logs', function (Blueprint $table) {
             $table->id();
+            $table->date('return_date')->default(date("Y-m-d"));
+            $table->time('return_time');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('return_logs');
     }
 };
