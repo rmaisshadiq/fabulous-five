@@ -1,44 +1,69 @@
-<!-- Unggulan -->
-<div class="flex justify-center items-center mt-[100px]">
-    <h1 class="text-center font-semibold text-[36px]">Kenapa Harus Cantigi Tours ?</h1>
-</div>
+ <!-- Unggulan Section -->
+    <section class="py-16 px-4 sm:py-20 lg:py-24">
+        <!-- Title -->
+        <div class="text-center mb-12 sm:mb-16 lg:mb-20">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-900 leading-tight px-4">
+                Kenapa Harus Cantigi Tours?
+            </h1>
+        </div>
 
-<!-- Container khusus untuk unggulan -->
-<div class="w-[1200px] mx-auto mt-[100px]">
-  <div class="unggulan flex justify-center gap-[100px] flex-nowrap">
-    
-    <!-- unggulan 1 -->
-    <div class="bg-white rounded-3xl flex flex-col items-center">
-      <div class="bg-[#138A40] w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
-        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/low-price.png') }}" alt="Bus">
-      </div>
-      <div class="p-4 flex flex-col items-center">
-        <h1 class="text-[24px] font-bold">Harga Termurah</h1>
-        <p class="text-center text-[16px]">Cantigi Tour menyediakan kendaraan berkualitas dan harga yang terjangkau sekota padang</p>
-      </div>
-    </div>
+        <!-- Features Container -->
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 sm:gap-12 lg:gap-16 justify-items-center">
+                
+                <!-- Feature 1: Harga Termurah -->
+                <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm w-full">
+                    <div class="bg-[#138A40] w-full aspect-square rounded-t-3xl flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-4 bg-white/10 rounded-2xl"></div>
+                        <img class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 object-contain relative z-10" 
+                             src="{{ asset('images/low-price.png') }}" 
+                             alt="Harga Termurah Icon">
+                    </div>
+                    <div class="p-6 sm:p-8 text-center">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+                            Harga Termurah
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+                            Cantigi Tour menyediakan kendaraan berkualitas dan harga yang terjangkau sekota Padang
+                        </p>
+                    </div>
+                </div>
 
-    <!-- unggulan 2 -->
-    <div class="bg-white rounded-3xl flex flex-col items-center">
-      <div class="bg-green-500 w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
-        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/quality.png') }}" alt="Bus">
-      </div>
-      <div class="p-4 flex flex-col items-center">
-        <h1 class="text-[24px] font-bold">Kendaraan Berkualitas</h1>
-        <p class="text-center text-[16px]">Cantigi Tour menyediakan kendaraan berkualitas yang siap untuk dipakai tanpa kerusakan</p>
-      </div>
-    </div>
+                <!-- Feature 2: Kendaraan Berkualitas -->
+                <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm w-full">
+                    <div class="bg-[#138A40] w-full aspect-square rounded-t-3xl flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-4 bg-white/10 rounded-2xl"></div>
+                        <img class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 object-contain relative z-10" 
+                             src="{{ asset('images/quality.png') }}" 
+                             alt="Kendaraan Berkualitas Icon">
+                    </div>
+                    <div class="p-6 sm:p-8 text-center">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+                            Kendaraan Berkualitas
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+                            Cantigi Tour menyediakan kendaraan berkualitas yang siap untuk dipakai tanpa kerusakan
+                        </p>
+                    </div>
+                </div>
 
-    <!-- unggulan 3 -->
-    <div class="bg-white rounded-3xl flex flex-col items-center">
-      <div class="bg-green-500 w-[300px] h-[300px] rounded-tl-[30px] rounded-bl-[90px] rounded-tr-[90px] rounded-br-[30px] flex items-center justify-center overflow-hidden shadow-lg">
-        <img class="w-[200px] h-[200px] object-cover" src="{{ asset('images/technical-support.png') }}" alt="Bus">
-      </div>
-      <div class="p-4 flex flex-col items-center">
-        <h1 class="text-[24px] font-bold">Pelayanan Ramah</h1>
-        <p class="text-center text-[16px]">Kami memberikan pelayanan sepenuh hati sehingga customer nyaman dalam perjalanan</p>
-      </div>
-    </div>
-
-  </div>
-</div>
+                <!-- Feature 3: Pelayanan Ramah -->
+                <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm w-full md:col-span-2 xl:col-span-1 md:max-w-sm">
+                    <div class="bg-[#138A40] w-full aspect-square rounded-t-3xl flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-4 bg-white/10 rounded-2xl"></div>
+                        <img class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 object-contain relative z-10" 
+                             src="{{ asset('images/technical-support.png') }}" 
+                             alt="Pelayanan Ramah Icon">
+                    </div>
+                    <div class="p-6 sm:p-8 text-center">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+                            Pelayanan Ramah
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+                            Kami memberikan pelayanan sepenuh hati sehingga customer nyaman dalam perjalanan
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

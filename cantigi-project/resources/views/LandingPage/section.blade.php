@@ -3,7 +3,7 @@
     
     <!-- Konten Teks -->
     <div class="w-full md:w-1/2 space-y-5 text-center md:text-left">
-      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+      <h2 class="text-3xl text-black sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
         Sewa Kendaraan<br class="hidden sm:block">
         Dengan <span class="text-green-600 block sm:inline">Mudah <span class="text-black">&</span> Cepat</span>
       </h2>
@@ -24,11 +24,11 @@
           src="{{ asset('images/car.png') }}" 
           alt="Car" 
           class="w-[60rem]
-                 sm:h-[200%]
-                  md:w-[200%]
-                  lg:w-[100%]
-                  xl:w-[200%]
-                  2xl:w-[100%]
+                 sm:h-full
+                  md:w-full
+                  lg:w-full
+                  xl:w-full
+                  2xl:w-full
                 object-contain 
                 transform scale-x-[-1]"
           style=" margin-top: 10%;">
@@ -50,9 +50,9 @@
               lg:h-[60%]
               lg:mt-[6rem]
               xl:h-[60%]
-              2xl:h-[80%]
+              2xl:h-[70%]
               bg-[#138A40] 
               z-0"
-       style="border-top-left-radius: 15vw; border-bottom-left-radius: 5vw;">
+       style="border-top-left-radius: 20vw; border-bottom-left-radius: 5vw;">
   </div>
 </section>
