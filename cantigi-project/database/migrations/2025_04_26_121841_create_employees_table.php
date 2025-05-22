@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('portrait');
             $table->string('position');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('phone');
             $table->date('hire_date')->default(date("Y-m-d"));
             $table->enum('status', ['active', 'retired']);
