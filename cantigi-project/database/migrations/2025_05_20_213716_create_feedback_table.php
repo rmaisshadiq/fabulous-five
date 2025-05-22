@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->integer('rating');
             $table->text('comment');
-            $table->date('date')->default(date("Y-m-d"));
+            $table->date('feedback_date')->default(date("Y-m-d"));
             $table->timestamps();
         });
     }

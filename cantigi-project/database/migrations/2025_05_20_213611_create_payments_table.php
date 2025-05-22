@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
-            $table->date('payment_date')->default(date("Y-m-md"));
+            $table->foreignId('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->date('payment_date')->default(date("Y-m-d"));
             $table->decimal('amount');
             $table->string('payment_method');
             $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
