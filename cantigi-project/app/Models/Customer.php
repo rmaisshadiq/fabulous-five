@@ -13,4 +13,20 @@ class Customer extends Model
     protected $fillable = [
         'user_id'
     ];
+
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function feedback() {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    public function requirements() {
+        return $this->hasOne(RentalRequirements::class);
+    }
 }

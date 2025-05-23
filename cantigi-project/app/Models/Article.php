@@ -16,4 +16,8 @@ class Article extends Model
         'publish_date',
         'author_id'
     ];
+
+    public function employees() {
+        return $this->belongsTo(Employee::class);
+    }
 }
