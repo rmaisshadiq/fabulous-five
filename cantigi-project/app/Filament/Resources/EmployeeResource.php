@@ -31,6 +31,7 @@ class EmployeeResource extends Resource
                     ->image()
                     ->directory('employees')
                     ->required()
+                    ->visibility('public')
                     ->columnSpan(2),
                 TextInput::make('name')
                     ->required(),
@@ -58,7 +59,9 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('portrait'),
+                Tables\Columns\ImageColumn::make('portrait')
+                    ->width(150)
+                    ->height(150),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('phone'),

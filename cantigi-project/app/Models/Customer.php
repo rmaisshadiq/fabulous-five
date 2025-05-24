@@ -2,18 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    use SoftDeletes, HasFactory;
+    //
+    use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password'
+        'user_id'
     ];
+
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function feedback() {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    public function requirements() {
+        return $this->hasOne(RentalRequirements::class);
+    }
 }

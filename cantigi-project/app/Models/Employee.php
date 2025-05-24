@@ -20,4 +20,16 @@ class Employee extends Model
         'hire_date',
         'status'
     ];
+
+    public function articles() {
+        return $this->hasMany(Article::class);
+    }
+
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function requirements() {
+        return $this->hasMany(RentalRequirements::class);
+    }
 }

@@ -12,11 +12,22 @@ class Vehicle extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'vehicle_name',
+        'car_type',
+        'brand',
+        'model',
         'vehicle_image',
         'license_plate',
+        'price_per_day',
         'purchase_date',
         'last_maintenance_date',
         'status'
     ];
+
+    public function maintenances() {
+        return $this->hasMany(Maintenance::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
 }
