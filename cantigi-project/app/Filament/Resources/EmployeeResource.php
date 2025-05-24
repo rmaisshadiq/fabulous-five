@@ -59,7 +59,9 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('portrait'),
+                Tables\Columns\ImageColumn::make('portrait')
+                    ->width(150)
+                    ->height(150),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('phone'),
