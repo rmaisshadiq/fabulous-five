@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Article extends Model
 {
     //
     use HasFactory;
 
     protected $fillable = [
-        'user_id'
+        'title',
+        'content',
+        'publish_date',
+        'author_id'
     ];
 }

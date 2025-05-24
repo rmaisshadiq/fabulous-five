@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class ReturnLog extends Model
 {
     //
     use HasFactory;
 
     protected $fillable = [
-        'user_id'
+        'return_date',
+        'return_time'
     ];
 }
