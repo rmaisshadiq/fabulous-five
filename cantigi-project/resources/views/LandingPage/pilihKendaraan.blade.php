@@ -50,7 +50,7 @@
             <!-- Card 1: BUS -->
             <div class="vehicle-card bg-white rounded-3xl  w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 mb-8">
                 <div class="vehicle-image-container bg-[#138A40] rounded-tl-[60px] sm:rounded-tl-[90px] rounded-bl-[20px] sm:rounded-bl-[30px] rounded-tr-[20px] sm:rounded-tr-[30px] rounded-br-[60px] sm:rounded-br-[90px] flex items-center justify-center overflow-hidden shadow-lg">
-                    <img class="vehicle-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-contain p-4" src="{{ asset('images/BUS.png') }}" alt="Bus">
+                    <img class="vehicle-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-contain p-4" src="{{ asset('images/pilihKendaraan/BUS.png') }}" alt="Bus">
                 </div>
                 <div class="p-4 flex flex-col items-center">
                     <h2 class="font-semibold text-xl sm:text-2xl">BUS</h2>
@@ -63,7 +63,7 @@
             <!-- Card 2: MOBIL -->
             <div class="vehicle-card bg-white rounded-3xl w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 mb-8">
                 <div class="vehicle-image-container bg-[#138A40] rounded-tl-[60px] sm:rounded-tl-[90px] rounded-bl-[20px] sm:rounded-bl-[30px] rounded-tr-[20px] sm:rounded-tr-[30px] rounded-br-[60px] sm:rounded-br-[90px] flex items-center justify-center overflow-hidden shadow-lg">
-                    <img class="vehicle-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-contain p-4" src="{{ asset('images/car.png') }}" alt="Mobil">
+                    <img class="vehicle-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-contain p-4" src="{{ asset('images/pilihKendaraan/car.png') }}" alt="Mobil">
                 </div>
                 <div class="p-4 flex flex-col items-center">
                     <h2 class="font-semibold text-xl sm:text-2xl">MOBIL</h2>
@@ -76,7 +76,7 @@
             <!-- Card 3: MOTOR -->
             <div class="vehicle-card bg-white rounded-3xl w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 mb-8">
                 <div class="vehicle-image-container bg-[#138A40] rounded-tl-[60px] sm:rounded-tl-[90px] rounded-bl-[20px] sm:rounded-bl-[30px] rounded-tr-[20px] sm:rounded-tr-[30px] rounded-br-[60px] sm:rounded-br-[90px] flex items-center justify-center overflow-hidden shadow-lg">
-                    <img class="vehicle-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-contain p-4" src="{{ asset('images/MotorCycles.png') }}" alt="Motor">
+                    <img class="vehicle-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-contain p-4" src="{{ asset('images/pilihKendaraan/MotorCycles.png') }}" alt="Motor">
                 </div>
                 <div class="p-4 flex flex-col items-center">
                     <h2 class="font-semibold text-xl sm:text-2xl">MOTOR</h2>

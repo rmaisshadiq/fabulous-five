@@ -21,7 +21,7 @@
     <div class="hidden md:block w-full md:w-1/2 relative">
       <div class="relative w-full h-full flex items-center justify-center">
         <img 
-          src="{{ asset('images/car.png') }}" 
+          src="{{ asset('images/imgUtama/car.png') }}" 
           alt="Car" 
           class="w-[60rem]
                  sm:h-full

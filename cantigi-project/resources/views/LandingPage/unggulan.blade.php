@@ -16,7 +16,7 @@
                     <div class="bg-[#138A40] w-full aspect-square rounded-t-3xl flex items-center justify-center overflow-hidden relative">
                         <div class="absolute inset-4 bg-white/10 rounded-2xl"></div>
                         <img class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 object-contain relative z-10" 
-                             src="{{ asset('images/low-price.png') }}" 
+                             src="{{ asset('images/unggulan/low-price.png') }}" 
                              alt="Harga Termurah Icon">
                     </div>
                     <div class="p-6 sm:p-8 text-center">
@@ -34,7 +34,7 @@
                     <div class="bg-[#138A40] w-full aspect-square rounded-t-3xl flex items-center justify-center overflow-hidden relative">
                         <div class="absolute inset-4 bg-white/10 rounded-2xl"></div>
                         <img class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 object-contain relative z-10" 
-                             src="{{ asset('images/quality.png') }}" 
+                             src="{{ asset('images/unggulan/quality.png') }}" 
                              alt="Kendaraan Berkualitas Icon">
                     </div>
                     <div class="p-6 sm:p-8 text-center">
@@ -52,7 +52,7 @@
                     <div class="bg-[#138A40] w-full aspect-square rounded-t-3xl flex items-center justify-center overflow-hidden relative">
                         <div class="absolute inset-4 bg-white/10 rounded-2xl"></div>
                         <img class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 object-contain relative z-10" 
-                             src="{{ asset('images/technical-support.png') }}" 
+                             src="{{ asset('images/unggulan/tech-support.png') }}" 
                              alt="Pelayanan Ramah Icon">
                     </div>
                     <div class="p-6 sm:p-8 text-center">

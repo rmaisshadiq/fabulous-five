@@ -148,7 +148,7 @@
             <div class="blog-card bg-white overflow-hidden rounded-xl">
                 <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
                     <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/List harga.png') }}" alt="List Harga">
+                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/List harga.png') }}" alt="List Harga">
                 </div>
                 <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
                     <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">List Harga di CantigiTours</p>
@@ -166,7 +166,7 @@
             <div class="blog-card bg-white overflow-hidden rounded-xl">
                 <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
                     <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/Tentang Cantigi.png') }}" alt="Tentang CantigiTours">
+                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/Tentang Cantigi.png') }}" alt="Tentang CantigiTours">
                 </div>
                 <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
                     <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Tentang Cantigi Tours</p>
@@ -184,7 +184,7 @@
             <div class="blog-card bg-white overflow-hidden rounded-xl">
                 <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
                     <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/Lalu Lintas.jpg') }}" alt="Rambu Lalu Lintas">
+                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/Lalu Lintas.jpg') }}" alt="Rambu Lalu Lintas">
                 </div>
                 <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
                     <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Lalu Lintas Padang</p>
@@ -205,7 +205,7 @@
             <div class="blog-card bg-white overflow-hidden rounded-xl">
                 <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
                     <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/kalender.png') }}" alt="Jadwal Libur">
+                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/kalender.png') }}" alt="Jadwal Libur">
                 </div>
                 <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
                     <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Jadwal Libur 2025</p>
@@ -223,7 +223,7 @@
             <div class="blog-card bg-white overflow-hidden rounded-xl">
                 <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
                     <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/Avanza terbaru.png') }}" alt="Toyota Avanza">
+                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/Avanza terbaru.png') }}" alt="Toyota Avanza">
                 </div>
                 <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
                     <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Toyota Avanza Terbaru 2025</p>
