@@ -1,5 +1,7 @@
 import './bootstrap';
 
+import Alpine from 'alpinejs';
+
   const toggleBtn = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
 
@@ -50,5 +52,7 @@ import './bootstrap';
                 });
             });
         });
-
         
+window.Alpine = Alpine;
+
+Alpine.start();
