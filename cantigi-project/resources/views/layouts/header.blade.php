@@ -5,7 +5,7 @@
       
       <!-- Logo -->
       <div class="flex items-center space-x-2 mb-4 md:mb-0">
-        <img src="{{ asset('images/LOGOFIX.png') }}" alt="CantigiTours Logo" class="w-10 md:w-12 lg:w-16">
+        <img src="{{ asset('images/logo/LOGOFIX.png') }}" alt="CantigiTours Logo" class="w-10 md:w-12 lg:w-16">
         <h1 class="font-bold text-xl sm:text-2xl lg:text-3xl">CantigiTours</h1>
       </div>
 
@@ -22,8 +22,8 @@
         
         <!-- Nav Links -->
         <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 lg:space-x-8 text-gray-800 font-medium text-base sm:text-lg lg:text-xl w-full md:w-auto text-left">
-          <a href="#" class="hover:text-green-500 py-1 transition-colors duration-200">Home</a>
-          <a href="#" class="hover:text-green-500 py-1 transition-colors duration-200">Kendaraan</a>
+          <a href="{{ route('home') }}" class="hover:text-green-500 py-1 transition-colors duration-200">Home</a>
+          <a href="{{ route('kendaraan') }}" class="hover:text-green-500 py-1 transition-colors duration-200">Kendaraan</a>
           <a href="#" class="hover:text-green-500 py-1 transition-colors duration-200">About Us</a>
         </nav>
 
