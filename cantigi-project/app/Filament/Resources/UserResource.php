@@ -44,7 +44,8 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('email'),
+                TextColumn::make('email')
+                    ->icon('heroicon-o-envelope'),
                 TextColumn::make('created_at')
                     ->date(),
                 TextColumn::make('updated_at')
