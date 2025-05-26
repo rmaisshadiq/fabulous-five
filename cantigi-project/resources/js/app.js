@@ -1,6 +1,11 @@
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+
+Alpine.start();
+
 import './bootstrap';
 
-import Alpine from 'alpinejs';
 
   const toggleBtn = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
@@ -52,8 +57,6 @@ import Alpine from 'alpinejs';
                 });
             });
         });
-        
-window.Alpine = Alpine;
 
          document.addEventListener('DOMContentLoaded', function() {
             // Ambil tombol "Sewa Sekarang" berdasarkan ID
@@ -238,4 +241,3 @@ window.Alpine = Alpine;
     document.addEventListener('DOMContentLoaded', () => {
       new CarPagination();
     });
-Alpine.start();
