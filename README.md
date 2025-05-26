@@ -48,22 +48,40 @@ Buka directory cantigi-project
 cd cantigi-project
 ```
 
+Install Composer
+
+```
+composer install
+```
+
 Install npm module
 
 ```
 npm install
 ```
 
-or 
+Copy env
 
 ```
-npm i
+copy .env-example .env
 ```
 
-Migrate database menggunakan prisma
+Ganti APP_URL pada .env
 
 ```
-npx prisma migrate
+APP_URL=http://127.0.0.1:8000
+```
+
+Migrate database
+
+```
+php artisan migrate
+```
+
+Link storage
+
+```
+php artisan storage:link
 ```
 
 Jalankan server backend
@@ -72,24 +90,12 @@ Jalankan server backend
 npm run dev
 ```
 
-
-### Installing and Running Backend
-
-Buka directory frontend
+Jalankan laravel
 
 ```
-cd frontend
+php artisan serve
 ```
 
-Install node module
-
-```
-npm install
-```
-
-```
-npm run dev
-```
 
 ## 🎈 Usage <a name="usage"></a>
 
