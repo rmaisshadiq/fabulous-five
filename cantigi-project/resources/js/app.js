@@ -248,7 +248,7 @@ function selectOption(element) {
         sibling.classList.remove('selected');
       }
       
-      updateUI() {
+function updateUI() {
         // Update navigation buttons
         this.prevBtn.disabled = this.currentPage === 0;
         this.nextBtn.disabled = this.currentPage === this.totalPages - 1;
