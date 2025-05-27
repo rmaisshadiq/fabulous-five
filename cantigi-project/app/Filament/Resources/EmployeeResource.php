@@ -21,7 +21,7 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
     {
@@ -63,7 +63,8 @@ class EmployeeResource extends Resource
                     ->width(150)
                     ->height(150),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('email')
+                    ->icon('heroicon-o-envelope'),
                 Tables\Columns\TextColumn::make('phone'),
                 Tables\Columns\TextColumn::make('position'),
                 Tables\Columns\TextColumn::make('hire_date'),

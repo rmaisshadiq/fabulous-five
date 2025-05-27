@@ -1,19 +1,13 @@
 import './bootstrap';
 
-
-// js home 
-// 
-// 
-// 
-// 
-//
-//
-// 
-// 
-// 
-// 
-// 
 import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+
+Alpine.start();
+
+import './bootstrap';
+
 
   const toggleBtn = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
@@ -65,8 +59,6 @@ import Alpine from 'alpinejs';
                 });
             });
         });
-        
-window.Alpine = Alpine;
 
          document.addEventListener('DOMContentLoaded', function() {
             // Ambil tombol "Sewa Sekarang" berdasarkan ID
@@ -256,67 +248,22 @@ function selectOption(element) {
         sibling.classList.remove('selected');
       }
       
-      // Add selected class to clicked element
-      element.classList.add('selected');
-      
-      // Check the radio button
-      const radio = element.querySelector('input[type="radio"]');
-      if (radio) {
-        radio.checked = true;
+      updateUI() {
+        // Update navigation buttons
+        this.prevBtn.disabled = this.currentPage === 0;
+        this.nextBtn.disabled = this.currentPage === this.totalPages - 1;
+        
+        // Update page indicators
+        this.createPageIndicators();
+        
+        // Update page info
+        this.currentPageInfo.textContent = this.currentPage + 1;
+        this.totalPagesInfo.textContent = this.totalPages;
       }
     }
-
-    function selectLocation(element) {
-      // Remove selected class from all location cards
-      const siblings = element.parentElement.children;
-      for (let sibling of siblings) {
-        sibling.classList.remove('selected');
-      }
-      
-      // Add selected class to clicked element
-      element.classList.add('selected');
-      
-      // Check the radio button
-      const radio = element.querySelector('input[type="radio"]');
-      if (radio) {
-        radio.checked = true;
-      }
-    }
-
-    // Add animation delays for smooth entrance
-    document.addEventListener('DOMContentLoaded', function() {
-      const sections = document.querySelectorAll('section > div');
-      sections.forEach((section, index) => {
-        section.style.animationDelay = `${index * 0.1}s`;
-        section.classList.add('animate-slide-in');
-      });
+    
+    // Initialize pagination when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new CarPagination();
     });
-
-    function selectLocation(el) {
-  // Reset semua pilihan
-  document.querySelectorAll('.option-card').forEach(card => {
-    card.classList.remove('selected');
-    card.querySelector('input[type="radio"]').checked = false;
-  });
-
-  // Tandai yang dipilih
-  el.classList.add('selected');
-  el.querySelector('input[type="radio"]').checked = true;
-
-  // Cek apakah 'lokasi lainnya' yang dipilih
-  const isCustom = el.querySelector('input[type="radio"]').value === 'lainnya';
-  const customInput = document.getElementById('custom-location-input');
-  if (isCustom) {
-    customInput.classList.remove('hidden');
-  } else {
-    customInput.classList.add('hidden');
-  }
-}
-// 
-// 
-// 
-// 
-//
-//
-// 
-// selesai
+Alpine.start();

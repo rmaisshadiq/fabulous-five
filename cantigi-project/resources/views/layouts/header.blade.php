@@ -32,18 +32,13 @@
         </nav>
 
         <!-- Buttons -->
-        <div
-          class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4 text-sm sm:text-base lg:text-lg w-full sm:w-auto text-center sm:text-left">
-          <a href="{{ route('login') }}"
-            class="w-full sm:w-auto border border-green-500 text-green-500 px-3 py-2 rounded-md hover:bg-green-500 hover:text-white transition duration-300 text-center block">
+        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4 text-sm sm:text-base lg:text-lg w-full sm:w-auto text-center sm:text-left">
+          <a href="{{ route('login') }}" class="w-full sm:w-auto border border-green-500 text-green-500 px-3 py-2 rounded-md hover:bg-green-500 hover:text-white transition duration-300">
             Log In
           </a>
-
-          <a href="{{ route('register') }}"
-            class="w-full sm:w-auto bg-[#138A40] text-white px-3 py-2 rounded-md hover:bg-green-800 transition duration-300 text-center block">
+          <a href="{{ route('register') }}" class="w-full sm:w-auto bg-[#138A40] text-white px-3 py-2 rounded-md hover:bg-green-800 transition duration-300">
             Sign Up
           </a>
-
         </div>
       </div>
     </div>
