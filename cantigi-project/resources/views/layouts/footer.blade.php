@@ -52,10 +52,9 @@
     <p class="text-sm text-gray-200">&copy; 2025 PT.CantigiToursInternational. Semua hak cipta dilindungi.</p>
 
     <div class="flex gap-4 text-xl">
-      <a href="#" class="hover:text-green-400"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
-      <a href="#" class="hover:text-pink-400"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-      <a href="#" class="hover:text-blue-500"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-      <a href="#" class="hover:text-sky-400"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+      <a href="https://wa.me/6285363483996" class="hover:text-green-400"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+      <a href="https://instagram.com/cantigitours_" class="hover:text-pink-400"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+      <a href="https://facebook.com/Cantigi Tours" class="hover:text-blue-500"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
     </div>
   </div>
 </footer>

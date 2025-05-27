@@ -20,7 +20,7 @@ class DriverResource extends Resource
 {
     protected static ?string $model = Driver::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
     {
@@ -45,7 +45,12 @@ class DriverResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employees_id'),
+                Tables\Columns\ImageColumn::make('employees.portrait')
+                    ->label('Employee portrait')
+                    ->width(150)
+                    ->height(150),
+                Tables\Columns\TextColumn::make('employees.name')
+                    ->label('Employee name'),
                 Tables\Columns\TextColumn::make('license_number'),
                 Tables\Columns\TextColumn::make('available_status')
             ])

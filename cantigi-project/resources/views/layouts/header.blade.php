@@ -5,7 +5,7 @@
       
       <!-- Logo -->
       <div class="flex items-center space-x-2 mb-4 md:mb-0">
-        <img src="{{ asset('images/LOGOFIX.png') }}" alt="CantigiTours Logo" class="w-10 md:w-12 lg:w-16">
+        <img src="{{ asset('images/logo/LOGOFIX.png') }}" alt="CantigiTours Logo" class="w-10 md:w-12 lg:w-16">
         <h1 class="font-bold text-xl sm:text-2xl lg:text-3xl">CantigiTours</h1>
       </div>
 
@@ -22,19 +22,19 @@
         
         <!-- Nav Links -->
         <nav class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 lg:space-x-8 text-gray-800 font-medium text-base sm:text-lg lg:text-xl w-full md:w-auto text-left">
-          <a href="#" class="hover:text-green-500 py-1 transition-colors duration-200">Home</a>
-          <a href="#" class="hover:text-green-500 py-1 transition-colors duration-200">Kendaraan</a>
+          <a href="{{ route('home') }}" class="hover:text-green-500 py-1 transition-colors duration-200">Home</a>
+          <a href="{{ route('kendaraan') }}" class="hover:text-green-500 py-1 transition-colors duration-200">Kendaraan</a>
           <a href="#" class="hover:text-green-500 py-1 transition-colors duration-200">About Us</a>
         </nav>
 
         <!-- Buttons -->
         <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4 text-sm sm:text-base lg:text-lg w-full sm:w-auto text-center sm:text-left">
-          <button class="w-full sm:w-auto border border-green-500 text-green-500 px-3 py-2 rounded-md hover:bg-green-500 hover:text-white transition duration-300">
+          <a href="{{ route('login') }}" class="w-full sm:w-auto border border-green-500 text-green-500 px-3 py-2 rounded-md hover:bg-green-500 hover:text-white transition duration-300">
             Log In
-          </button>
-          <button class="w-full sm:w-auto bg-[#138A40] text-white px-3 py-2 rounded-md hover:bg-green-800 transition duration-300">
+          </a>
+          <a href="{{ route('register') }}" class="w-full sm:w-auto bg-[#138A40] text-white px-3 py-2 rounded-md hover:bg-green-800 transition duration-300">
             Sign Up
-          </button>
+          </a>
         </div>
       </div>
     </div>

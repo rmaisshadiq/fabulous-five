@@ -22,7 +22,7 @@ class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
     public static function form(Form $form): Form
     {
@@ -68,7 +68,9 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('vehicle_image'),
+                Tables\Columns\ImageColumn::make('vehicle_image')
+                    ->width(200)
+                    ->height(200),
                 Tables\Columns\TextColumn::make('brand'),
                 Tables\Columns\TextColumn::make('license_plate'),
                 Tables\Columns\TextColumn::make('purchase_date'),
