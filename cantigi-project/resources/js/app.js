@@ -266,4 +266,4 @@ function selectOption(element) {
     document.addEventListener('DOMContentLoaded', () => {
       new CarPagination();
     });
-Alpine.start();
+
