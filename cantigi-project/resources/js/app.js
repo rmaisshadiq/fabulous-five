@@ -1,3 +1,5 @@
+import './bootstrap';
+
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
@@ -88,142 +90,165 @@ import './bootstrap';
                 }
             });
         });
+        // 
+        // 
+        // 
+        // 
+        // 
+        // 
+        // 
+        // 
+        // 
+        // 
+        // selesai
 
-        // kode pagination
-        class CarPagination {
-        constructor() {
-        this.currentPage = 0;
-        this.totalPages = 4;
-        this.slidesContainer = document.getElementById('slidesContainer');
-        this.prevBtn = document.getElementById('prevBtn');
-        this.nextBtn = document.getElementById('nextBtn');
-        this.pageIndicators = document.getElementById('pageIndicators');
-        this.currentPageInfo = document.getElementById('currentPageInfo');
-        this.totalPagesInfo = document.getElementById('totalPagesInfo');
+
+
+// public/js/vehicle-slider.js
+// js slider
+// 
+// 
+// 
+// 
+// 
+const VehicleSlider = {
+    currentSlide: 0,
+    totalSlides: 0,
+    
+    init: function() {
+        this.totalSlides = document.querySelectorAll('.slide').length;
+        this.showSlide(0);
         
-        this.init();
-      }
-      
-      init() {
-        this.createPageIndicators();
-        this.updateUI();
-        this.bindEvents();
-      }
-      
-      createPageIndicators() {
-        this.pageIndicators.innerHTML = '';
-        for (let i = 0; i < this.totalPages; i++) {
-          const indicator = document.createElement('button');
-          indicator.className = `w-3 h-3 rounded-full transition-all duration-300 ${
-            i === this.currentPage ? 'bg-green-600' : 'bg-gray-300 hover:bg-green-400'
-          }`;
-          indicator.addEventListener('click', () => this.goToPage(i));
-          this.pageIndicators.appendChild(indicator);
-        }
-      }
-      
-      bindEvents() {
-        this.prevBtn.addEventListener('click', () => this.previousPage());
-        this.nextBtn.addEventListener('click', () => this.nextPage());
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            this.showSlide(0);
+        });
         
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowLeft') this.previousPage();
-          if (e.key === 'ArrowRight') this.nextPage();
-        });
-        
-        // Touch/Swipe support
-        let startX = 0;
-        let endX = 0;
-        
-        this.slidesContainer.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].clientX;
-        });
-        
-        this.slidesContainer.addEventListener('touchend', (e) => {
-          endX = e.changedTouches[0].clientX;
-          this.handleSwipe();
-        });
-        
-        // Mouse drag support
-        let isDragging = false;
-        let startMouseX = 0;
-        let endMouseX = 0;
-        
-        this.slidesContainer.addEventListener('mousedown', (e) => {
-          isDragging = true;
-          startMouseX = e.clientX;
-          this.slidesContainer.style.cursor = 'grabbing';
-        });
-        
-        this.slidesContainer.addEventListener('mousemove', (e) => {
-          if (!isDragging) return;
-          e.preventDefault();
-        });
-        
-        this.slidesContainer.addEventListener('mouseup', (e) => {
-          if (!isDragging) return;
-          isDragging = false;
-          endMouseX = e.clientX;
-          this.slidesContainer.style.cursor = 'grab';
-          
-          const deltaX = startMouseX - endMouseX;
-          if (Math.abs(deltaX) > 50) { // Minimum drag distance
-            if (deltaX > 0) {
-              this.nextPage();
-            } else {
-              this.previousPage();
+            if (e.key === 'ArrowLeft') {
+                this.changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                this.changeSlide(1);
             }
-          }
+        });
+    },
+    
+    showSlide: function(slideIndex) {
+        // Sembunyikan semua slide
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.classList.add('hidden');
+            slide.classList.remove('block');
         });
         
-        this.slidesContainer.addEventListener('mouseleave', () => {
-          isDragging = false;
-          this.slidesContainer.style.cursor = 'default';
+        // Tampilkan slide yang dipilih
+        const targetSlide = document.querySelector(`[data-slide="${slideIndex}"]`);
+        if (targetSlide) {
+            targetSlide.classList.remove('hidden');
+            targetSlide.classList.add('block');
+        }
+        
+        // Update indicators
+        this.updateIndicators(slideIndex);
+        
+        // Update counter
+        this.updateCounter(slideIndex);
+        
+        // Update button states
+        this.updateButtons(slideIndex);
+    },
+    
+    updateIndicators: function(activeIndex) {
+        document.querySelectorAll('.slide-indicator').forEach((indicator, index) => {
+            if (index === activeIndex) {
+                indicator.classList.remove('bg-gray-300');
+                indicator.classList.add('bg-green-500');
+            } else {
+                indicator.classList.remove('bg-green-500');
+                indicator.classList.add('bg-gray-300');
+            }
         });
-      }
-      
-      handleSwipe() {
-        const deltaX = startX - endX;
-        if (Math.abs(deltaX) > 50) { // Minimum swipe distance
-          if (deltaX > 0) {
-            this.nextPage();
-          } else {
-            this.previousPage();
-          }
+    },
+    
+    updateCounter: function(slideIndex) {
+        const counter = document.getElementById('slideCounter');
+        if (counter) {
+            counter.textContent = slideIndex + 1;
         }
-      }
-      
-      goToPage(page) {
-        if (page >= 0 && page < this.totalPages && page !== this.currentPage) {
-          this.currentPage = page;
-          this.updateSlidePosition();
-          this.updateUI();
+    },
+    
+    updateButtons: function(slideIndex) {
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.disabled = slideIndex === 0;
+            prevBtn.classList.toggle('opacity-50', slideIndex === 0);
         }
-      }
-      
-      nextPage() {
-        if (this.currentPage < this.totalPages - 1) {
-          this.currentPage++;
-          this.updateSlidePosition();
-          this.updateUI();
+        
+        if (nextBtn) {
+            nextBtn.disabled = slideIndex === this.totalSlides - 1;
+            nextBtn.classList.toggle('opacity-50', slideIndex === this.totalSlides - 1);
         }
-      }
-      
-      previousPage() {
-        if (this.currentPage > 0) {
-          this.currentPage--;
-          this.updateSlidePosition();
-          this.updateUI();
+    },
+    
+    changeSlide: function(direction) {
+        this.currentSlide += direction;
+        
+        // Ensure slide index stays within bounds
+        if (this.currentSlide < 0) {
+            this.currentSlide = 0;
+        } else if (this.currentSlide >= this.totalSlides) {
+            this.currentSlide = this.totalSlides - 1;
         }
+        
+        this.showSlide(this.currentSlide);
+    },
+    
+    goToSlide: function(slideIndex) {
+        this.currentSlide = slideIndex;
+        this.showSlide(this.currentSlide);
+    },
+    
+    // Auto slide functionality (optional)
+    startAutoSlide: function(interval = 10000) {
+        setInterval(() => {
+            this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+            this.showSlide(this.currentSlide);
+        }, interval);
+    }
+};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    VehicleSlider.init();
+    
+    // Uncomment to enable auto-sliding
+    // VehicleSlider.startAutoSlide(10000); // 10 seconds
+});
+// 
+// 
+// 
+// 
+// 
+//
+//
+// 
+// selesai
+
+
+// 
+// 
+// 
+// js form pemesanan
+function selectOption(element) {
+      // Remove selected class from all option cards in the same group
+      const siblings = element.parentElement.children;
+      for (let sibling of siblings) {
+        sibling.classList.remove('selected');
       }
       
-      updateSlidePosition() {
-        const translateX = -this.currentPage * 100;
-        this.slidesContainer.style.transform = `translateX(${translateX}%)`;
-      }
-      
-      updateUI() {
+function updateUI() {
         // Update navigation buttons
         this.prevBtn.disabled = this.currentPage === 0;
         this.nextBtn.disabled = this.currentPage === this.totalPages - 1;
@@ -241,3 +266,4 @@ import './bootstrap';
     document.addEventListener('DOMContentLoaded', () => {
       new CarPagination();
     });
+
