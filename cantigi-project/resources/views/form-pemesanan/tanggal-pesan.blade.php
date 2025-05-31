@@ -8,7 +8,6 @@
         <div class="date-section p-6 rounded-xl">
           <div class="mb-4">
             <p class="text-white font-semibold flex items-center">
-              <i class="fas fa-play text-green-200 mr-2"></i>
               Tanggal Mulai
             </p>
           </div>
@@ -24,7 +23,6 @@
         <div class="date-section p-6 rounded-xl">
           <div class="mb-4">
             <p class="text-white font-semibold flex items-center">
-              <i class="fas fa-stop text-green-200 mr-2"></i>
               Tanggal Selesai
             </p>
           </div>

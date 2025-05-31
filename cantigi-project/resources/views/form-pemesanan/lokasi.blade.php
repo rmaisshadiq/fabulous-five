@@ -9,8 +9,8 @@
     <label class="option-card p-4 rounded-xl cursor-pointer border border-gray-300 hover:border-green-500 transition flex items-center" onclick="selectLocation(this)">
       <input type="radio" name="location-option" value="kantor" class="hidden">
       <div>
-        <p class="text-white font-semibold">Kantor Kami</p>
-        <p class="text-green-100 text-sm">Gratis</p>
+        <p class="font-semibold">Kantor Kami</p>
+        <p class="text-sm">Gratis</p>
       </div>
     </label>
 
@@ -18,8 +18,8 @@
     <label class="option-card p-4 rounded-xl cursor-pointer border border-gray-300 hover:border-green-500 transition flex items-center" onclick="selectLocation(this)">
       <input type="radio" name="location-option" value="lainnya" class="hidden">
       <div>
-        <p class="text-white font-semibold">Lokasi Lainnya</p>
-        <p class="text-green-100 text-sm">+ Biaya antar</p>
+        <p class="font-semibold">Lokasi Lainnya</p>
+        <p class="text-sm">+ Biaya antar</p>
       </div>
     </label>
   </div>
@@ -28,8 +28,8 @@
   <div id="custom-location-input" class="mt-4 hidden">
     <label class="block black font-semibold mb-2">Masukkan Alamat Anda</label>
     <input type="text" placeholder="Contoh: Jl. by pass"
-           class="w-full p-3 rounded-lg bg-white text-gray-800">
+           class="w-full p-3 rounded-lg bg-gray-200 text-gray-800">
   </div>
 </div>
 
-    <div class="section-divider"></div>
+<div class="section-divider"></div>

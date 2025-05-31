@@ -1,12 +1,4 @@
 <style>
-    body { 
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
     .glass-card {
       backdrop-filter: blur(16px);
       background: rgba(255, 255, 255, 0.95);
@@ -52,7 +44,7 @@
       left: 0;
       height: 20px;
       width: 20px;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: bg-[#138A40];
       border: 2px solid rgba(255, 255, 255, 0.5);
       border-radius: 4px;
       transition: all 0.3s ease;
@@ -81,7 +73,7 @@
     }
     
     .option-card {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background-color: #138A40;
       transition: all 0.3s ease;
       cursor: pointer;
     }
@@ -92,13 +84,14 @@
     }
     
     .option-card.selected {
-      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      background-color: #138A40;
+      color: #ffffff;
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
     }
     
     .date-section {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background-color: #138A40;
       transition: all 0.3s ease;
     }
     
@@ -108,7 +101,7 @@
     }
     
     .booking-btn {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      background-color: #138A40;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -116,7 +109,7 @@
     
     .booking-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
     }
     
     .booking-btn::before {
