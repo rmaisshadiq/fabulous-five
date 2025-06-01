@@ -18,6 +18,10 @@ Route::get('/form-pemesanan/main-page/{id}', function ($id) {
     return view('form-pemesanan.main-page', compact('vehicles'));
 })->name('form.pemesanan');
 
+Route::get('/about-us', function () {
+    return view('about-us.main-page');
+})->name('about-us');
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
