@@ -11,8 +11,8 @@
         Mitra perjalanan terpercaya Anda sejak 2010, melayani dengan sepenuh hati untuk pengalaman wisata yang tak terlupakan
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button class="bg-white text-cantigi-green-600 px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 font-semibold shadow-lg">
-          <i class="fas fa-phone mr-2"></i>Hubungi Kami
+        <button class="bg-green-600 text-cantigi-green-600 px-8 py-3 rounded-full hover:bg-green-700 transition-all duration-300 font-semibold shadow-lg">
+          Hubungi Kami
         </button>
       </div>
     </div>

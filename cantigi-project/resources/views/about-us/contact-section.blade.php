@@ -8,7 +8,7 @@
         </p>
       </div>
       
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-4xl mx-auto shadow-2xl px-4 py-4 rounded-3xl">
         <!-- Social Media Buttons (horizontal) -->
             <div class="flex flex-col gap-4 lg:flex-row lg:gap-6 flex-wrap justify-between">
                 <!-- WhatsApp -->
@@ -52,13 +52,13 @@
             </div>
         
         <!-- Map -->
-        <div class="bg-white rounded-3xl py-[20px] overflow-hidden shadow-2xl animate-slide-up">
+        <div class="px-[20px] py-[20px] overflow-hidden animate-slide-up">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.2923887764405!2d100.42093447448089!3d-0.9303159353396498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd4b9c02cbf2e53%3A0x602c01e8a0488eee!2sCantigi%20Bus%20Pariwisata%20dan%20Rental%20Mobil!5e0!3m2!1sid!2sid!4v1744778219969!5m2!1sid!2sid"
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-            class="w-full h-96 border-0">
+            class="w-full h-96 border-0 rounded-[16px]">
           </iframe>
         </div>
       </div>

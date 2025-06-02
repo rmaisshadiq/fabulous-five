@@ -13,7 +13,7 @@
         <div class="bg-white rounded-3xl shadow-xl p-8 lg:p-12 hover:shadow-2xl transition-all duration-300 animate-slide-up">
           <div class="flex items-center mb-8">
             <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-6">
-              <i class="fas fa-eye text-white text-2xl"></i>
+              <i class="fa fa-eye text-white text-2xl"></i>
             </div>
             <h3 class="text-3xl font-bold text-gray-800">Visi</h3>
           </div>
@@ -21,15 +21,15 @@
             <p class="text-lg font-semibold text-gray-800 mb-6">Menjadi perusahaan tour dan travel terdepan di Sumatera Barat</p>
             <ul class="space-y-3">
               <li class="flex items-start">
-                <i class="fas fa-star text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                <i class="fa fa-star text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
                 <span>Memberikan pengalaman perjalanan yang berkesan dan berkualitas tinggi</span>
               </li>
               <li class="flex items-start">
-                <i class="fas fa-star text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                <i class="fa fa-star text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
                 <span>Menjadi pilihan utama wisatawan domestik dan mancanegara</span>
               </li>
               <li class="flex items-start">
-                <i class="fas fa-star text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                <i class="fa fa-star text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
                 <span>Berkontribusi pada pengembangan pariwisata Sumatera Barat</span>
               </li>
             </ul>
@@ -39,8 +39,8 @@
         <!-- Mission -->
         <div class="bg-white rounded-3xl shadow-xl p-8 lg:p-12 hover:shadow-2xl transition-all duration-300 animate-slide-up" style="animation-delay: 0.2s;">
           <div class="flex items-center mb-8">
-            <div class="w-16 h-16 bg-gradient-to-br from-cantigi-green-500 to-cantigi-green-600 rounded-2xl flex items-center justify-center mr-6">
-              <i class="fas fa-bullseye text-white text-2xl"></i>
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-6">
+              <i class="fa fa-bullseye text-white text-2xl"></i>
             </div>
             <h3 class="text-3xl font-bold text-gray-800">Misi</h3>
           </div>
