@@ -1,4 +1,4 @@
-<footer class="bg-[#138A40] w-full py-8 text-white px-[9rem] mt-[2rem]">
+<footer class="bg-[#0e0e0e] w-full py-8 text-white px-[9rem] mt-[2rem]">
   <!-- Bagian Atas Footer -->
   <div class="container mx-auto grid grid-cols-2 md:grid-cols-5 gap-5 mb-[2rem]">
     

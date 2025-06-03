@@ -130,7 +130,7 @@
                             <i class="fa fa-arrow-right ml-auto group-hover:translate-x-1 transition-transform"></i>
                         </a>
 
-                        <!-- Email -->
+                        <!-- Email
                         <a href="mailto:CantigiTours@gmail.com" target="_blank" rel="noopener noreferrer"
                             class="contact-button social-email bg-red-500 hover:bg-red-600 text-white p-4 rounded-xl flex items-center gap-4 group w-full">
                             <div class="bg-white/20 p-3 rounded-lg group-hover:bg-white/30 transition-colors">
@@ -141,7 +141,7 @@
                                 <p class="text-sm opacity-90">CantigiTours@gmail.com</p>
                             </div>
                             <i class="fa fa-arrow-right ml-auto group-hover:translate-x-1 transition-transform"></i>
-                        </a>
+                        </a> -->
 
                         <!-- Facebook -->
                         <a href="https://facebook.com/Cantigi Tours" target="_blank" rel="noopener noreferrer"
