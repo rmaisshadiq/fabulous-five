@@ -11,9 +11,9 @@
         Rental Kendaraan Termurah Dan Proses Yang Gak Ribet Hanya Di Cantigi Tours.
       </p>
       <div class="pt-2">
-        <button class="bg-[#138A40] text-white px-6 py-3 text-base sm:text-lg lg:text-xl rounded-md hover:bg-green-700 transition duration-300 ease-in-out shadow-md">
-          Sewa Sekarang
-        </button>
+        <a href="{{ route('kendaraan') }}" class="w-full sm:w-auto bg-[#138A40] text-white px-8 py-4 rounded-md hover:bg-green-800 transition duration-300">
+            Sewa Sekarang
+          </a>
       </div>
     </div>
 

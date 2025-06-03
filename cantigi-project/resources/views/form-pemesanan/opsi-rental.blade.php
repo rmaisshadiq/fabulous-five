@@ -8,8 +8,8 @@
       <input type="radio" name="rental-option" value="tanpa-supir" class="hidden">
       <div class="flex items-center">
         <div>
-          <p class="text-white font-semibold">Tanpa Supir</p>
-          <p class="text-green-100 text-sm">Lepas kunci</p>
+          <p class="font-semibold">Tanpa Supir</p>
+          <p class="text-sm">Lepas kunci</p>
         </div>
       </div>
     </label>
@@ -18,8 +18,8 @@
       <input type="radio" name="rental-option" value="dengan-supir" class="hidden">
       <div class="flex items-center">
         <div>
-          <p class="text-white font-semibold">Dengan Supir</p>
-          <p class="text-green-100 text-sm">Termasuk driver</p>
+          <p class="font-semibold">Dengan Supir</p>
+          <p class="text-sm">Termasuk driver</p>
         </div>
       </div>
     </label>

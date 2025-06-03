@@ -237,33 +237,5 @@ document.addEventListener('DOMContentLoaded', function() {
 // selesai
 
 
-// 
-// 
-// 
-// js form pemesanan
-function selectOption(element) {
-      // Remove selected class from all option cards in the same group
-      const siblings = element.parentElement.children;
-      for (let sibling of siblings) {
-        sibling.classList.remove('selected');
-      }
-      
-function updateUI() {
-        // Update navigation buttons
-        this.prevBtn.disabled = this.currentPage === 0;
-        this.nextBtn.disabled = this.currentPage === this.totalPages - 1;
-        
-        // Update page indicators
-        this.createPageIndicators();
-        
-        // Update page info
-        this.currentPageInfo.textContent = this.currentPage + 1;
-        this.totalPagesInfo.textContent = this.totalPages;
-      }
-    }
-    
-    // Initialize pagination when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      new CarPagination();
-    });
+
 

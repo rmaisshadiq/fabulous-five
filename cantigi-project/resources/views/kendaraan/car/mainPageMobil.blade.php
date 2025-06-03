@@ -16,4 +16,7 @@
         {{-- Include JavaScript --}}
         @include('kendaraan.car.vehicle-slider')
     </div>
+    <script>
+        
+    </script>
 @endsection

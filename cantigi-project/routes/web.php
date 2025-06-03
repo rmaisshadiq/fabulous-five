@@ -13,6 +13,12 @@ Route::get('/car', function () {
     return view('kendaraan.car.mainPageMobil', compact('vehicles'));
 })->name('kendaraan');
 
+Route::get('/form-pemesanan/main-page/{id}', function ($id) {
+    $vehicles = Vehicle::findOrFail($id);
+    return view('form-pemesanan.main-page', compact('vehicles'));
+})->name('form.pemesanan');
+
+
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
