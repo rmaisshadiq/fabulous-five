@@ -14,12 +14,11 @@
     <div>
       <h1 class="font-semibold text-xl mb-2">Informasi</h1>
       <ul class="space-y-1 text-sm">
-        <li><a href="#" class="hover:underline">Tentang Kami</a></li>
-        <li><a href="#" class="hover:underline">Hubungi Kami</a></li>
-        <li><a href="#" class="hover:underline">Kebijakan Privasi</a></li>
-        <li><a href="#" class="hover:underline">Kontak Kami</a></li>
-        <li><a href="#" class="hover:underline">Ketentuan Pengguna</a></li>
-        <li><a href="#" class="hover:underline">Pusat Bantuan</a></li>
+        <li><a href="{{ route('about-us')}}" class="hover:underline">Tentang Kami</a></li>
+        <li><a href="{{ route('hubungi-kami')}}" class="hover:underline">Hubungi Kami</a></li>
+        <li><a href="{{ route('kebijakan-privasi')}}" class="hover:underline">Kebijakan Privasi</a></li>
+        <li><a href="{{ route('ketentuan-pengguna')}}" class="hover:underline">Ketentuan Pengguna</a></li>
+        <li><a href="{{ route('pusat-bantuan')}}" class="hover:underline">Pusat Bantuan</a></li>
       </ul>
     </div>
 
@@ -27,12 +26,11 @@
     <div>
       <h1 class="font-semibold text-xl mb-2">Contact Us</h1>
       <ul class="space-y-1 text-sm">
-        <li><a href="#" class="hover:underline">WhatsApp</a></li>
-        <li><a href="#" class="hover:underline">Instagram</a></li>
-        <li><a href="#" class="hover:underline">Facebook</a></li>
-        <li><a href="#" class="hover:underline">TikTok</a></li>
-        <li><a href="#" class="hover:underline">Telegram</a></li>
-        <li><a href="#" class="hover:underline">YouTube</a></li>
+        <li><a href="https://wa.me/6285363483996" class="hover:underline">WhatsApp</a></li>
+        <li><a href="https://instagram.com/cantigitours_" class="hover:underline">Instagram</a></li>
+        <li><a href="https://facebook.com/Cantigi Tours" class="hover:underline">Facebook</a></li>
+        <li><a href="https://www.tiktok.com/@putra_putt_?_t=ZS-8wt1TIEeaox&_r=1" class="hover:underline">TikTok</a></li>
+    
       </ul>
     </div>
 
@@ -40,7 +38,7 @@
     <div>
       <h1 class="font-semibold text-xl mb-2">Lainnya</h1>
       <ul class="space-y-1 text-sm">
-        <li><a href="#" class="hover:underline">Syarat & Ketentuan</a></li>
+        <li><a href="{{ route('syarat-ketentuan')}}" class="hover:underline">Syarat & Ketentuan</a></li>
       </ul>
     </div>
   </div>

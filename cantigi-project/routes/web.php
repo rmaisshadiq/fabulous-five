@@ -22,7 +22,25 @@ Route::get('/about-us', function () {
     return view('about-us.main-page');
 })->name('about-us');
 
+Route::get('/hubungi-kami', function(){
+    return view('footer.hubungi-kami');
+})->name('hubungi-kami');
 
+Route::get('/kebijakan-privasi', function(){
+    return view('footer.kebijakan-privasi');
+})->name('kebijakan-privasi');
+
+Route::get('/ketentuan-pengguna', function(){
+    return view('footer.ketentuan-pengguna');
+})->name('ketentuan-pengguna');
+
+Route::get('/pusat-bantuan', function(){
+    return view('footer.pusat-bantuan');
+})->name('pusat-bantuan');
+
+Route::get('/syarat-ketentuan', function(){
+    return view('footer.syarat-ketentuan');
+})->name('syarat-ketentuan');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
@@ -43,6 +61,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 });
+
 
 
 require __DIR__ . '/auth.php';
