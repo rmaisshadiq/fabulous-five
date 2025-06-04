@@ -11,6 +11,7 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
+        'image',
         'title',
         'content',
         'publish_date',
