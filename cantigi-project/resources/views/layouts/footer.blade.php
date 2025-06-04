@@ -1,11 +1,17 @@
 <footer class="bg-[#0e0e0e] w-full py-8 text-white px-[9rem] mt-[2rem]">
   <!-- Bagian Atas Footer -->
   <div class="container mx-auto grid grid-cols-2 md:grid-cols-5 gap-5 mb-[2rem]">
-    
+
     <!-- Brand -->
-    <div>
-      <h1 class="logo font-bold text-[35px] mb-4">Cantigi Tours</h1>
-    </div>
+     <a href="{{ route('home') }}">
+      <div>
+        <div class="flex items-center space-x-2">
+          <img src="{{ asset('images/logo/logo.png') }}" alt="Logo" class="w-10 h-9">
+          <h1 class="logo font-bold text-[28px]">Cantigi Tours</h1>
+        </div>
+      </div>
+    </a>
+
 
     <!-- Spacer -->
     <div></div>
@@ -26,11 +32,12 @@
     <div>
       <h1 class="font-semibold text-xl mb-2">Contact Us</h1>
       <ul class="space-y-1 text-sm">
-        <li><a href="https://wa.me/6285363483996" class="hover:underline">WhatsApp</a></li>
-        <li><a href="https://instagram.com/cantigitours_" class="hover:underline">Instagram</a></li>
-        <li><a href="https://facebook.com/Cantigi Tours" class="hover:underline">Facebook</a></li>
-        <li><a href="https://www.tiktok.com/@putra_putt_?_t=ZS-8wt1TIEeaox&_r=1" class="hover:underline">TikTok</a></li>
-    
+        <li><a href="https://wa.me/6285363483996" target="_blank" class="hover:underline">WhatsApp</a></li>
+        <li><a href="https://instagram.com/cantigitours_" target="_blank" class="hover:underline">Instagram</a></li>
+        <li><a href="https://facebook.com/Cantigi Tours" target="_blank" class="hover:underline">Facebook</a></li>
+        <li><a href="https://www.tiktok.com/@putra_putt_?_t=ZS-8wt1TIEeaox&_r=1" target="_blank"
+            class="hover:underline">TikTok</a></li>
+
       </ul>
     </div>
 
@@ -50,9 +57,12 @@
     <p class="text-sm text-gray-200">&copy; 2025 PT.CantigiToursInternational. Semua hak cipta dilindungi.</p>
 
     <div class="flex gap-4 text-xl">
-      <a href="https://wa.me/6285363483996" class="hover:text-green-400"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
-      <a href="https://instagram.com/cantigitours_" class="hover:text-pink-400"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-      <a href="https://facebook.com/Cantigi Tours" class="hover:text-blue-500"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+      <a href="https://wa.me/6285363483996" target="_blank" class="hover:text-green-400"><i class="fa fa-whatsapp"
+          aria-hidden="true"></i></a>
+      <a href="https://instagram.com/cantigitours_" target="_blank" class="hover:text-pink-400"><i
+          class="fa fa-instagram" aria-hidden="true"></i></a>
+      <a href="https://facebook.com/Cantigi Tours" target="_blank" class="hover:text-blue-500"><i
+          class="fa fa-facebook-square" aria-hidden="true"></i></a>
     </div>
   </div>
 </footer>

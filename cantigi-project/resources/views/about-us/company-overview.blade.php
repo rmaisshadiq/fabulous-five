@@ -7,11 +7,11 @@
           <div class="absolute -top-6 -left-6 w-full h-full bg-cantigi-green-100 rounded-3xl -z-10"></div>
           <div class="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div class="h-80 bg-gradient-to-br from-cantigi-green-500 to-cantigi-green-700 flex items-center justify-center">
-              <img src="{{ asset('images/Cuplikan layar 2025-06-01 141852.png') }}" alt="" class="rounded-[24px]">
+              <img src="{{ asset('images/aboutus/cantigi.png') }}" alt="" class="rounded-[24px]">
             </div>
             <div class="p-6">
               <div class="flex items-center justify-between text-sm text-gray-600">
-                <span><i class="fa fa-calendar mr-2"></i>Sejak 2010</span>
+                <span class="text-white"><i class="fa fa-calendar mr-2"></i>Sejak 2010</span>
               </div>
             </div>
           </div>

@@ -12,10 +12,11 @@
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="https://wa.me/6285363483996"
+                    target="_blank"
                     class="bg-white text-[#138A40] px-6 py-3 rounded-[8px] font-semibold hover:bg-gray-100 transition-colors duration-300 text-sm sm:text-base">
                     Hubungi WhatsApp
                 </a>
-                <a href="#top" id="sewa-button"
+                <a href="{{ route('kendaraan') }}" id="sewa-button"
                     class="border-2 border-white text-white px-6 py-3 rounded-[8px] font-semibold hover:bg-white hover:text-[#138A40] transition-colors duration-300 text-sm sm:text-base">
                     Sewa Sekarang
                 </a>

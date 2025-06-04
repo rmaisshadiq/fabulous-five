@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
-            $table->foreignId('driver_id')->constrained('drivers')->cascadeOnDelete();
-            $table->date('booking_date')->default(date("Y-m-d"));
-            $table->time('booking_time');
-            $table->string('booking_fuel_level');
-            $table->text('guarantee_info');
+            $table->date('start_booking_date')->default(date("Y-m-d"));
+            $table->date('end_booking_date')->default(date("Y-m-d"));
+            $table->time('start_booking_time');
+            $table->time('end_booking_time');
+            $table->string('drop_address');
             $table->timestamps();
         });
     }

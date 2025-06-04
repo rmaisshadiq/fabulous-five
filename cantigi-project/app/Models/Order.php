@@ -13,11 +13,11 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'vehicle_id',
-        'driver_id',
-        'booking_date',
-        'booking_time',
-        'booking_fuel_level',
-        'guarantee_info'
+        'start_booking_date',
+        'end_booking_date',
+        'start_booking_time',
+        'end_booking_time',
+        'drop_address'
     ];
 
     public function feedback() {
