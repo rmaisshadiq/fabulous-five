@@ -16,7 +16,6 @@
         </div>
       </a>
       <!-- Navigation -->
-      <!-- Navigation -->
       <nav class="hidden md:flex space-x-8 text-gray-700 font-medium">
         <a href="{{ route('home') }}" class="hover:text-green-600 transition-colors duration-300 relative group
             {{ request()->routeIs('home') ? 'text-green-600' : '' }}">
