@@ -47,19 +47,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-<<<<<<< HEAD
 Route::get('/article', function () {
     $articles = Article::all(); // ⬅️ Ini wajib ada
     return view('article.main-page', compact('articles'));
 })->name('article');
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-=======
->>>>>>> 6eb835779bf3c4fa3bcee6387569dfb9e0a0cb25
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
