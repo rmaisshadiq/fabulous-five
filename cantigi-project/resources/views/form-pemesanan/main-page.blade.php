@@ -107,3 +107,127 @@
     }
   </style>
 @endsection
+
+{{-- @extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Create New Order</h2>
+            
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('orders.store') }}" method="POST" class="space-y-6">
+                @csrf
+                
+                <div>
+                    <label for="vehicle_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        Select Vehicle *
+                    </label>
+                    <select name="vehicle_id" id="vehicle_id" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            required>
+                        <option value="">Choose a vehicle</option>
+                        @foreach($vehicles as $vehicle)
+                            <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
+                                {{ $vehicle->name }} - {{ $vehicle->type }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="start_booking_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            Start Date *
+                        </label>
+                        <input type="date" name="start_booking_date" id="start_booking_date" 
+                               value="{{ old('start_booking_date') }}"
+                               min="{{ date('Y-m-d') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="end_booking_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            End Date *
+                        </label>
+                        <input type="date" name="end_booking_date" id="end_booking_date" 
+                               value="{{ old('end_booking_date') }}"
+                               min="{{ date('Y-m-d') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="start_booking_time" class="block text-sm font-medium text-gray-700 mb-2">
+                            Start Time *
+                        </label>
+                        <input type="time" name="start_booking_time" id="start_booking_time" 
+                               value="{{ old('start_booking_time') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="end_booking_time" class="block text-sm font-medium text-gray-700 mb-2">
+                            End Time *
+                        </label>
+                        <input type="time" name="end_booking_time" id="end_booking_time" 
+                               value="{{ old('end_booking_time') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="drop_address" class="block text-sm font-medium text-gray-700 mb-2">
+                        Drop Address *
+                    </label>
+                    <textarea name="drop_address" id="drop_address" rows="3" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                              placeholder="Enter the complete drop address..." 
+                              required>{{ old('drop_address') }}</textarea>
+                </div>
+
+                <div class="flex justify-between items-center pt-4">
+                    <a href="{{ route('orders.index') }}" 
+                       class="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit" 
+                            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
+                        Create Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-update end date when start date changes
+    document.getElementById('start_booking_date').addEventListener('change', function() {
+        const startDate = this.value;
+        const endDateInput = document.getElementById('end_booking_date');
+        
+        if (startDate) {
+            endDateInput.min = startDate;
+            if (endDateInput.value && endDateInput.value < startDate) {
+                endDateInput.value = startDate;
+            }
+        }
+    });
+</script>
+@endsection --}}

@@ -14,7 +14,8 @@ class Customer extends Model
         'user_id'
     ];
 
-    public function users() {
+    // GANTI dari "users()" ke "user()"
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
@@ -29,4 +30,5 @@ class Customer extends Model
     public function requirements() {
         return $this->hasOne(RentalRequirements::class);
     }
+
 }

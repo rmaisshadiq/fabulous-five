@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
@@ -56,6 +57,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $vehicles = Vehicle::findOrFail($id);
         return view('form-pemesanan.main-page', compact('vehicles'));
     })->name('form.pemesanan');
+
+     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
 

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    //
     use HasFactory;
 
     protected $fillable = [
@@ -17,7 +16,8 @@ class Order extends Model
         'end_booking_date',
         'start_booking_time',
         'end_booking_time',
-        'drop_address'
+        'drop_address',
+        'status',
     ];
 
     public function feedback() {
@@ -42,5 +42,16 @@ class Order extends Model
 
     public function returnlog() {
         return $this->hasOne(ReturnLog::class);
+    }
+
+    // Accessor agar bisa dipanggil sebagai "customer_name"
+    public function getCustomerNameAttribute()
+    {
+        return $this->customer?->user?->name;
+    }
+
+    public function getVehicleNameAttribute()
+    {
+        return $this->vehicles?->name;
     }
 }
