@@ -5,8 +5,8 @@
 
 @section('content')
     <section class="w-[60rem] mx-auto glass-card mt-[100px] mb-[100px] rounded-3xl p-8 animate-slide-in">
-
-
+        <form action="/order-submit" method="POST">
+        @csrf
 
         {{-- nama harga rental --}}
         @include('form-pemesanan.style')
@@ -26,91 +26,84 @@
         {{-- buton booking --}}
         @include('form-pemesanan.buton-booking')
 
+    </form>
+
+
     </section>
 
-    <script>
-        // js form pemesanan
-        function selectOption(element) {
-            // Remove selected class from all option cards in the same group
-            const siblings = element.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('selected');
-            }
+   <script>
+    function selectOption(element) {
+      // Remove selected class from all option cards in the same group
+      const siblings = element.parentElement.children;
+      for (let sibling of siblings) {
+        sibling.classList.remove('ring-4', 'ring-gray-800');
+      }
+      
+      // Add selected class to clicked element
+      element.classList.add('ring-4', 'ring-gray-800');
+      
+      // Check the radio button
+      const radio = element.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+      }
+    }
 
-            // Add selected class to clicked element
-            element.classList.add('selected');
+    function selectLocation(element) {
+      // Remove selected class from all location cards
+      const siblings = element.parentElement.children;
+      for (let sibling of siblings) {
+        sibling.classList.remove('ring-4', 'ring-gray-800');
+      }
+      
+      // Add selected class to clicked element
+      element.classList.add('ring-4', 'ring-gray-800');
+      
+      // Check the radio button
+      const radio = element.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+      }
 
-            // Check the radio button
-            const radio = element.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-            }
-        }
+      // Check if 'lokasi lainnya' is selected
+      const isCustom = element.querySelector('input[type="radio"]').value === 'lainnya';
+      const customInput = document.getElementById('custom-location-input');
+      if (isCustom) {
+        customInput.classList.remove('hidden');
+        customInput.classList.add('animate-fade-in');
+      } else {
+        customInput.classList.add('hidden');
+      }
+    }
 
-        function selectLocation(element) {
-            // Remove selected class from all location cards
-            const siblings = element.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('selected');
-            }
+    // Add smooth entrance animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const main = document.querySelector('section');
+      main.style.opacity = '0';
+      main.style.transform = 'translateY(30px)';
+      
+      setTimeout(() => {
+        main.style.transition = 'all 0.6s ease-out';
+        main.style.opacity = '1';
+        main.style.transform = 'translateY(0)';
+      }, 100);
+    });
+  </script>
 
-            // Add selected class to clicked element
-            element.classList.add('selected');
-
-            // Check the radio button
-            const radio = element.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-            }
-        }
-
-        // Add animation delays for smooth entrance
-        document.addEventListener('DOMContentLoaded', function () {
-            const sections = document.querySelectorAll('section > div');
-            sections.forEach((section, index) => {
-                section.style.animationDelay = `${index * 0.1}s`;
-                section.classList.add('animate-slide-in');
-            });
-        });
-
-        function selectLocation(el) {
-            // Reset semua pilihan
-            document.querySelectorAll('.option-card').forEach(card => {
-                card.classList.remove('selected');
-                card.querySelector('input[type="radio"]').checked = false;
-            });
-
-            // Tandai yang dipilih
-            el.classList.add('selected');
-            el.querySelector('input[type="radio"]').checked = true;
-
-            // Cek apakah 'lokasi lainnya' yang dipilih
-            const isCustom = el.querySelector('input[type="radio"]').value === 'lainnya';
-            const customInput = document.getElementById('custom-location-input');
-            if (isCustom) {
-                customInput.classList.remove('hidden');
-            } else {
-                customInput.classList.add('hidden');
-            }
-        }
-
-        // hitung hari
-        const startDateInput = document.getElementById('start-date');
-        const endDateInput = document.getElementById('end-date');
-        const durasiSpan = document.getElementById('durasi-hari');
-
-        function hitungDurasi() {
-            const start = new Date(startDateInput.value);
-            const end = new Date(endDateInput.value);
-
-            if (!isNaN(start) && !isNaN(end)) {
-                const selisihMs = end - start;
-                const hari = selisihMs / (1000 * 60 * 60 * 24);
-                durasiSpan.textContent = hari >= 0 ? hari : 0;
-            }
-        }
-
-        startDateInput.addEventListener('change', hitungDurasi);
-        endDateInput.addEventListener('change', hitungDurasi);
-    </script>
+  <style>
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+  </style>
 @endsection

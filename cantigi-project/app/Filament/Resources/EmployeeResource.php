@@ -33,11 +33,6 @@ class EmployeeResource extends Resource
                     ->required()
                     ->visibility('public')
                     ->columnSpan(2),
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('email')
-                    ->email()
-                    ->required(),
                 TextInput::make('position')
                     ->required(),
                 TextInput::make('phone')
@@ -51,7 +46,10 @@ class EmployeeResource extends Resource
                         'retired' => 'Retired'
                     ])
                     ->required(),
-                
+                Select::make('users_id')
+                    ->relationship('users', 'name')
+                    ->required()
+                    ->unique(ignoreRecord:true)
             ]);
     }
 
@@ -62,8 +60,10 @@ class EmployeeResource extends Resource
                 Tables\Columns\ImageColumn::make('portrait')
                     ->width(150)
                     ->height(150),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('users.name')
+                    ->label('Employee name'),
+                Tables\Columns\TextColumn::make('users.email')
+                    ->label('Email')
                     ->icon('heroicon-o-envelope'),
                 Tables\Columns\TextColumn::make('phone'),
                 Tables\Columns\TextColumn::make('position'),

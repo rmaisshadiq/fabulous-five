@@ -3,45 +3,41 @@
   <div class="container mx-auto px-6 lg:px-8">
     <div class="flex items-center justify-between py-4">
       <a href="{{ route('home') }}">
-      <!-- Logo Section -->
-      <div class="flex items-center space-x-3">
-        <!-- Logo -->
-        <div class="flex items-center space-x-2 mb-4 md:mb-0">
-          <img src="{{ asset('images/logo/LOGOFIX.png') }}" alt="CantigiTours Logo" class="w-10 md:w-12 lg:w-16">
+        <!-- Logo Section -->
+        <div class="flex items-center space-x-3">
+          <!-- Logo -->
+          <div class="flex items-center space-x-2 mb-4 md:mb-0">
+            <img src="{{ asset('images/logo/LOGOFIX.png') }}" alt="CantigiTours Logo" class="w-10 md:w-12 lg:w-16">
+          </div>
+          <div>
+            <h1 class="font-bold text-2xl lg:text-3xl text-gray-800">CantigiTours</h1>
+            <p class="text-xs text-gray-500 hidden sm:block">Come and Find Your Story</p>
+          </div>
         </div>
-        <div>
-          <h1 class="font-bold text-2xl lg:text-3xl text-gray-800">CantigiTours</h1>
-          <p class="text-xs text-gray-500 hidden sm:block">Come and Find Your Story</p>
-        </div>
-      </div>
       </a>
       <!-- Navigation -->
-<!-- Navigation -->
-<nav class="hidden md:flex space-x-8 text-gray-700 font-medium">
-  <a href="{{ route('home') }}" 
-     class="hover:text-green-600 transition-colors duration-300 relative group
+      <nav class="hidden md:flex space-x-8 text-gray-700 font-medium">
+        <a href="{{ route('home') }}" class="hover:text-green-600 transition-colors duration-300 relative group
             {{ request()->routeIs('home') ? 'text-green-600' : '' }}">
-    Home
-    <span class="absolute -bottom-1 left-0 h-0.5 bg-green-600 transition-all duration-300 
+          Home
+          <span class="absolute -bottom-1 left-0 h-0.5 bg-green-600 transition-all duration-300 
                  {{ request()->routeIs('home') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
-  </a>
-  
-  <a href="{{ route('kendaraan') }}" 
-     class="hover:text-green-600 transition-colors duration-300 relative group
+        </a>
+
+        <a href="{{ route('kendaraan') }}" class="hover:text-green-600 transition-colors duration-300 relative group
             {{ request()->routeIs('kendaraan') ? 'text-green-600' : '' }}">
-    Kendaraan
-    <span class="absolute -bottom-1 left-0 h-0.5 bg-green-600 transition-all duration-300 
+          Kendaraan
+          <span class="absolute -bottom-1 left-0 h-0.5 bg-green-600 transition-all duration-300 
                  {{ request()->routeIs('kendaraan') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
-  </a>
-  
-  <a href="{{ route('about-us') }}" 
-     class="hover:text-green-600 transition-colors duration-300 relative group
+        </a>
+
+        <a href="{{ route('about-us') }}" class="hover:text-green-600 transition-colors duration-300 relative group
             {{ request()->routeIs('about-us') ? 'text-green-600' : '' }}">
-    Tentang Kami
-    <span class="absolute -bottom-1 left-0 h-0.5 bg-green-600 transition-all duration-300 
+          Tentang Kami
+          <span class="absolute -bottom-1 left-0 h-0.5 bg-green-600 transition-all duration-300 
                  {{ request()->routeIs('about-us') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
-  </a>
-</nav>
+        </a>
+      </nav>
 
       <!-- CTA Buttons -->
       @auth
@@ -107,6 +103,22 @@
 
           <!-- Divider -->
           <div class="border-t border-gray-100 my-1"></div>
+
+          <!-- Admin Panel -->
+          @if (auth()->user()->hasRole('super_admin'))
+        <x-dropdown-link :href="route('filament.admin.pages.dashboard')"
+        class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-green-700 transition-colors duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+          <path fill-rule="evenodd"
+          d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+          clip-rule="evenodd" />
+          </svg>
+          {{ __('Admin Panel')}}
+        </x-dropdown-link>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-100 my-1"></div>
+      @endif
 
           <!-- Authentication -->
           <form method="POST" action="{{ route('logout') }}">
