@@ -9,9 +9,6 @@
         @csrf
 
         {{-- nama harga rental --}}
-        @include('form-pemesanan.style')
-
-        {{-- nama harga rental --}}
         @include('form-pemesanan.nama-harga-rental')
 
         {{-- opsi rental --}}
