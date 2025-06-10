@@ -1,0 +1,19 @@
+<!-- Footer Actions -->
+        <div class="bg-white rounded-b-2xl shadow-sm border border-gray-200 px-8 py-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center text-sm text-gray-500">
+                    <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                    <span>Pembayaran Aman & Terpercaya</span>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
+                        <i class="fas fa-download mr-2"></i>
+                        Unduh PDF
+                    </button>
+                    <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
+                        <i class="fas fa-whatsapp mr-2"></i>
+                        Hubungi CS
+                    </button>
+                </div>
+            </div>   
+        </div>

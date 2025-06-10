@@ -51,10 +51,10 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function customers() {
-        return $this->hasMany(Customer::class);
+        return $this->hasOne(Customer::class);
     }
 
     public function employees() {
-        return $this->hasMany(Employee::class);
+        return $this->hasOne(Employee::class);
     }
 }

@@ -19,6 +19,10 @@ Route::get('/about-us', function () {
     return view('about-us.main-page');
 })->name('about-us');
 
+Route::get('/Detail-Pemesanan', function () {
+    return view('Detail-Pemesanan.main-page');
+})->name('detail-pemesanan');
+
 Route::get('/hubungi-kami', function () {
     return view('footer.hubungi-kami');
 })->name('hubungi-kami');
@@ -43,6 +47,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+<<<<<<< HEAD
 Route::get('/article', function () {
     $articles = Article::all(); // ⬅️ Ini wajib ada
     return view('article.main-page', compact('articles'));
@@ -53,6 +58,8 @@ Route::get('/article', function () {
 //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
+=======
+>>>>>>> 6eb835779bf3c4fa3bcee6387569dfb9e0a0cb25
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -68,3 +75,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 require __DIR__ . '/auth.php';
+
+
+

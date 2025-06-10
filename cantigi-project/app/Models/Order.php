@@ -24,7 +24,7 @@ class Order extends Model
         return $this->hasMany(Feedback::class);
     }
 
-    public function customers() {
+    public function customer() {
         return $this->belongsTo(Customer::class);
     }
 
