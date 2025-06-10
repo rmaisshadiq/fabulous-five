@@ -27,12 +27,6 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                FileUpload::make('portrait')
-                    ->image()
-                    ->directory('employees')
-                    ->required()
-                    ->visibility('public')
-                    ->columnSpan(2),
                 TextInput::make('position')
                     ->required(),
                 TextInput::make('phone')
@@ -57,7 +51,8 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('portrait')
+                Tables\Columns\ImageColumn::make('users.profile_image')
+                    ->label('Foto Karyawan')
                     ->width(150)
                     ->height(150),
                 Tables\Columns\TextColumn::make('users.name')
