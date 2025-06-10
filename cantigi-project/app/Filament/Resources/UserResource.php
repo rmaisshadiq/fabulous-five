@@ -6,11 +6,13 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +28,12 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                FileUpload::make('profile_image')
+                    ->image()
+                    ->directory('user_profiles')
+                    ->required()
+                    ->visibility('public')
+                    ->columnSpan(2),
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('email')
@@ -43,6 +51,9 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('profile_image')
+                    ->width(150)
+                    ->height(150),
                 TextColumn::make('name'),
                 TextColumn::make('email')
                     ->icon('heroicon-o-envelope'),
@@ -55,7 +66,7 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

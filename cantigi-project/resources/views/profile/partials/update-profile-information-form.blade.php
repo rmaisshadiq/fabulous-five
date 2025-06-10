@@ -26,9 +26,63 @@
                         @csrf
                     </form>
 
-                    <form method="post" action="{{ route('profile.update') }}" class="space-y-6">
+                    <form method="post" action="{{ route('profile.update') }}" class="space-y-6" enctype="multipart/form-data">
                         @csrf
                         @method('patch')
+
+                        <!-- Profile Image Section -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-medium text-gray-900">{{ __('Profile Image') }}</h3>
+                            <div class="flex items-center space-x-6">
+                                <div class="shrink-0">
+                                    <img 
+                                        id="profile-image-preview"
+                                        class="h-24 w-24 rounded-full object-cover border-4 border-gray-200 shadow-lg" 
+                                        src="{{ $user->profile_image_url }}" 
+                                        alt="{{ $user->name }}"
+                                    >
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-4">
+                                        <label for="profile_image" class="cursor-pointer">
+                                            <span class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                {{ __('Change Photo') }}
+                                            </span>
+                                            <input 
+                                                id="profile_image" 
+                                                name="profile_image" 
+                                                type="file" 
+                                                class="hidden" 
+                                                accept="image/*"
+                                                onchange="previewImage(event)"
+                                            >
+                                        </label>
+                                        @if($user->profile_image)
+                                            <button 
+                                                type="button" 
+                                                onclick="removeProfileImage()"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors duration-200"
+                                            >
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                                {{ __('Remove') }}
+                                            </button>
+                                            <input type="hidden" id="remove_image" name="remove_image" value="0">
+                                        @endif
+                                    </div>
+                                    <p class="mt-2 text-xs text-gray-500">
+                                        {{ __('JPG, PNG or GIF. Max size 2MB.') }}
+                                    </p>
+                                    <x-input-error class="text-red-500 text-sm mt-1" :messages="$errors->get('profile_image')" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
@@ -137,3 +191,33 @@
                     </form>
                 </div>
             </div>
+
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profile-image-preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        
+        // Reset remove image flag if user selects new image
+        const removeInput = document.getElementById('remove_image');
+        if (removeInput) {
+            removeInput.value = '0';
+        }
+    }
+}
+
+function removeProfileImage() {
+    // Set default avatar
+    document.getElementById('profile-image-preview').src = '{{ asset("images/user_profiles/default-avatar.png") }}';
+    
+    // Clear file input
+    document.getElementById('profile_image').value = '';
+    
+    // Set remove flag
+    document.getElementById('remove_image').value = '1';
+}
+</script>

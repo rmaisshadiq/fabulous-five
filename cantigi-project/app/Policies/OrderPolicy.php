@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Order;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OrderPolicy
@@ -51,15 +51,15 @@ class OrderPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Determine whether the user can bulk delete.
      */
-    public function restore(User $user, Order $order): bool
+    public function deleteAny(User $user): bool
     {
-        return $user->can('restore_order');
+        return $user->can('delete_any_order');
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determine whether the user can permanently delete.
      */
     public function forceDelete(User $user, Order $order): bool
     {
@@ -67,28 +67,40 @@ class OrderPolicy
     }
 
     /**
-     * Determine whether the user can view multiple models.
+     * Determine whether the user can permanently bulk delete.
      */
-    public function deleteAny(User $user): bool
-    {
-        return $user->can('delete_any_order');
-    }
-
     public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_order');
     }
 
+    /**
+     * Determine whether the user can restore.
+     */
+    public function restore(User $user, Order $order): bool
+    {
+        return $user->can('restore_order');
+    }
+
+    /**
+     * Determine whether the user can bulk restore.
+     */
     public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_order');
     }
 
+    /**
+     * Determine whether the user can replicate.
+     */
     public function replicate(User $user, Order $order): bool
     {
         return $user->can('replicate_order');
     }
 
+    /**
+     * Determine whether the user can reorder.
+     */
     public function reorder(User $user): bool
     {
         return $user->can('reorder_order');
