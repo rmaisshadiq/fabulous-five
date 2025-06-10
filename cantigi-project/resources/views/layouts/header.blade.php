@@ -44,16 +44,31 @@
       {{-- Menu Profil jika telah log in --}}
       <!-- Settings Dropdown -->
       <div class="hidden sm:flex sm:items-center sm:ms-6">
-      <x-dropdown align="right" width="500">
+      <x-dropdown align="right" width="48" class="z-50">
         <x-slot name="trigger">
         <button
           class="group inline-flex items-center gap-3 px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
           <!-- User Avatar -->
           <div class="relative">
-          <div
-            class="h-8 w-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold text-sm ring-2 ring-white shadow-sm">
-            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-          </div>
+          @if(Auth::user()->profile_image)
+        <!-- Profile Image -->
+        <img src="{{ Auth::user()->profile_image_url }}" alt="{{ Auth::user()->name }}"
+        class="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <!-- Fallback Avatar (hidden by default) -->
+        <div
+        class="h-8 w-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold text-sm ring-2 ring-white shadow-sm"
+        style="display: none;">
+        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        </div>
+      @else
+        <!-- Default Avatar -->
+        <div
+        class="h-8 w-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold text-sm ring-2 ring-white shadow-sm">
+        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        </div>
+      @endif
+
           <!-- Online Status Indicator -->
           <div class="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-green-400 border-2 border-white rounded-full">
           </div>
@@ -79,10 +94,25 @@
         <!-- User Info Header -->
         <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
           <div class="flex items-center gap-3">
-          <div
-            class="h-10 w-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold ring-2 ring-white shadow-sm">
-            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-          </div>
+          @if(Auth::user()->profile_image)
+        <!-- Profile Image -->
+        <img src="{{ Auth::user()->profile_image_url }}" alt="{{ Auth::user()->name }}"
+        class="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <!-- Fallback Avatar (hidden by default) -->
+        <div
+        class="h-10 w-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold ring-2 ring-white shadow-sm"
+        style="display: none;">
+        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        </div>
+      @else
+        <!-- Default Avatar -->
+        <div
+        class="h-10 w-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold ring-2 ring-white shadow-sm">
+        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        </div>
+      @endif
+
           <div>
             <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
             <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
@@ -108,12 +138,12 @@
           @if (auth()->user()->hasRole('super_admin'))
         <x-dropdown-link :href="route('filament.admin.pages.dashboard')"
         class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-green-700 transition-colors duration-150">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-          <path fill-rule="evenodd"
-          d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-          clip-rule="evenodd" />
-          </svg>
-          {{ __('Admin Panel')}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+        <path fill-rule="evenodd"
+        d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+        clip-rule="evenodd" />
+        </svg>
+        {{ __('Admin Panel')}}
         </x-dropdown-link>
 
         <!-- Divider -->
