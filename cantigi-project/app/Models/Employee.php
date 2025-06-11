@@ -25,7 +25,7 @@ class Employee extends Model
     }
 
     public function users() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'users_id');
     }
 
     public function requirements() {

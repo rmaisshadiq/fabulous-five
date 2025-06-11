@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
 
 
 Route::get('/', function () {
-    return view('LandingPage.homePage');
+    $articles = Article::take(6)->get(); // Misalnya tampilkan 5 artikel saja
+    return view('LandingPage.homePage', compact('articles'));
 })->name('home');
 
 Route::get('/car', function () {
@@ -18,6 +20,17 @@ Route::get('/car', function () {
 Route::get('/about-us', function () {
     return view('about-us.main-page');
 })->name('about-us');
+
+Route::get('/artikel/{id}', function ($id) {
+    $article = Article::findOrFail($id);
+    return view('artikel.main-page', compact('article'));
+})->name('artikel.show');
+
+Route::get('/artikel/{id}', function ($id) {
+    $article = Article::findOrFail($id);
+    return view('artikel.main-page', compact('article'));
+})->name('artikel.detail');
+
 
 Route::get('/Detail-Pemesanan', function () {
     return view('Detail-Pemesanan.main-page');
@@ -57,11 +70,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $vehicles = Vehicle::findOrFail($id);
         return view('form-pemesanan.main-page', compact('vehicles'));
     })->name('form.pemesanan');
+    
+    //  Route::resource('orders', OrderController::class)->only(['index', 'create', 'store', 'show']);
+        Route::patch('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::post('/customer/orders', [OrderController::class, 'store'])
+     ->name('customer.orders.store');
+    
 });
 
 

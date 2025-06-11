@@ -10,65 +10,109 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    // Halaman index orders customer
+    public function index()
+    {
+        $customer = Customer::where('user_id', Auth::id())->first();
+        
+        if (!$customer) {
+            return redirect()->route('customer.profile')->with('error', 'Please complete your profile first.');
+        }
+
+        // Ambil semua order milik customer ini
+        $orders = Order::where('customer_id', $customer->id)
+                      ->orderBy('created_at', 'desc')
+                      ->get();
+
+        return view('customer.orders.index', compact('orders'));
+    }
+
+    // Form create order
     public function create()
     {
         $vehicles = Vehicle::where('status', 'available')->get();
-        return view('orders.create', compact('vehicles'));
+
+        return view('customer.orders.create', compact('vehicles'));
     }
 
+    // Simpan order baru
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'start_booking_date' => 'required|date|after_or_equal:today',
             'end_booking_date' => 'required|date|after_or_equal:start_booking_date',
             'start_booking_time' => 'required',
             'end_booking_time' => 'required',
-            'drop_address' => 'required|string|max:255',
+            'drop_address' => 'required|string|min:10',
         ]);
 
-        // Dapatkan customer_id dari user yang login
         $customer = Customer::where('user_id', Auth::id())->first();
         
         if (!$customer) {
-            return redirect()->back()->with('error', 'Customer profile not found.');
+            return redirect()->route('customer.profile')->with('error', 'Please complete your profile first.');
         }
 
-        $order = Order::create([
+        // Cek apakah kendaraan tersedia
+        $conflictingOrder = Order::where('vehicle_id', $request->vehicle_id)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('start_booking_date', [$request->start_booking_date, $request->end_booking_date])
+                      ->orWhereBetween('end_booking_date', [$request->start_booking_date, $request->end_booking_date])
+                      ->orWhere(function ($q) use ($request) {
+                          $q->where('start_booking_date', '<=', $request->start_booking_date)
+                            ->where('end_booking_date', '>=', $request->end_booking_date);
+                      });
+            })
+            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+            ->exists(); // <--- INI return bool TRUE / FALSE (AMAN, kamu sudah pakai exists() dengan benar!)
+
+        if ($conflictingOrder) {
+            return back()->withErrors(['vehicle_id' => 'Vehicle is not available for the selected dates.'])->withInput();
+        }
+
+        // Simpan order baru
+        Order::create([
             'customer_id' => $customer->id,
-            'vehicle_id' => $validated['vehicle_id'],
-            'start_booking_date' => $validated['start_booking_date'],
-            'end_booking_date' => $validated['end_booking_date'],
-            'start_booking_time' => $validated['start_booking_time'],
-            'end_booking_time' => $validated['end_booking_time'],
-            'drop_address' => $validated['drop_address'],
-            'status' => 'pending', // Status default
+            'vehicle_id' => $request->vehicle_id,
+            'start_booking_date' => $request->start_booking_date,
+            'end_booking_date' => $request->end_booking_date,
+            'start_booking_time' => $request->start_booking_time,
+            'end_booking_time' => $request->end_booking_time,
+            'drop_address' => $request->drop_address,
+            'status' => 'pending',
         ]);
 
-        return redirect()->route('orders.show', $order)
-                        ->with('success', 'Order berhasil dibuat! Menunggu konfirmasi admin.');
+        return redirect()->route('customer.orders.index')->with('success', 'Order submitted successfully! Please wait for admin confirmation.');
     }
 
+    // Menampilkan detail order
     public function show(Order $order)
     {
-        // Pastikan customer hanya bisa melihat order mereka sendiri
         $customer = Customer::where('user_id', Auth::id())->first();
         
         if ($order->customer_id !== $customer->id) {
-            abort(403, 'Unauthorized access.');
+            abort(403); // Forbidden jika bukan order milik customer ini
         }
 
-        return view('orders.show', compact('order'));
+        return view('customer.orders.show', compact('order'));
     }
 
-    public function index()
+    // Cancel order
+    public function cancel(Order $order)
     {
         $customer = Customer::where('user_id', Auth::id())->first();
-        $orders = Order::where('customer_id', $customer->id)
-                      ->with(['vehicles', 'payments'])
-                      ->orderBy('created_at', 'desc')
-                      ->get();
+        
+        if ($order->customer_id !== $customer->id) {
+            abort(403);
+        }
 
-        return view('orders.index', compact('orders'));
+        if (!in_array($order->status, ['pending', 'confirmed'])) {
+            return back()->with('error', 'Cannot cancel this order.');
+        }
+
+        // Update status ke cancelled
+        $order->update(['status' => 'cancelled']);
+
+        return back()->with('success', 'Order cancelled successfully.');
     }
 }

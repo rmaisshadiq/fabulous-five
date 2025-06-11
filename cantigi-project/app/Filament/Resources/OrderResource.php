@@ -20,18 +20,15 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-<<<<<<< HEAD
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-    
-=======
-    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationGroup = 'Manajemen Pemesanan';
->>>>>>> 54621ee0e62d3716db09643109c69ab1270e3dce
+
     protected static ?string $navigationLabel = 'Orders';
     
     protected static ?string $modelLabel = 'Order';
@@ -50,7 +47,7 @@ class OrderResource extends Resource
                     ->disabled(fn ($context) => $context === 'edit'),
 
                 Select::make('vehicle_id')
-                    ->relationship('vehicles', 'name')
+                    ->relationship('vehicle', 'name') // Fixed: vehicle instead of vehicles
                     ->required()
                     ->searchable()
                     ->preload()
@@ -86,14 +83,24 @@ class OrderResource extends Resource
                         'cancelled' => 'Cancelled',
                     ])
                     ->required()
-                    ->default('pending'),
+                    ->default('pending')
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, $record) {
+                        if ($record && $state === 'confirmed') {
+                            Notification::make()
+                                ->title('Order Confirmed')
+                                ->body('The order has been confirmed. You can now assign a driver.')
+                                ->success()
+                                ->send();
+                        }
+                    }),
 
                 Select::make('driver_id')
-                    ->relationship('drivers.user', 'name')
+                    ->relationship('driver.user', 'name') // Fixed: driver instead of drivers
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->visible(fn ($get) => in_array($get('status'), ['confirmed', 'in_progress'])),
+                    ->visible(fn ($get) => in_array($get('status'), ['confirmed', 'in_progress', 'completed'])),
             ]);
     }
 
@@ -103,7 +110,8 @@ class OrderResource extends Resource
             ->columns([
                 TextColumn::make('id')
                     ->label('Order ID')
-                    ->sortable(),
+                    ->sortable()
+                    ->prefix('#'),
 
                 TextColumn::make('customer_name')
                     ->label('Customer')
@@ -117,7 +125,7 @@ class OrderResource extends Resource
                 TextColumn::make('vehicle_name')
                     ->label('Vehicle')
                     ->searchable(query: function ($query, $search) {
-                        return $query->whereHas('vehicles', function ($q) use ($search) {
+                        return $query->whereHas('vehicle', function ($q) use ($search) { // Fixed: vehicle instead of vehicles
                             $q->where('name', 'like', "%{$search}%");
                         });
                     })
@@ -125,17 +133,17 @@ class OrderResource extends Resource
 
                 TextColumn::make('start_booking_date')
                     ->label('Start Date')
-                    ->date()
+                    ->date('M d, Y')
                     ->sortable(),
 
                 TextColumn::make('end_booking_date')
                     ->label('End Date')
-                    ->date()
+                    ->date('M d, Y')
                     ->sortable(),
 
                 TextColumn::make('start_booking_time')
                     ->label('Start Time')
-                    ->time(),
+                    ->time('H:i'),
 
                 TextColumn::make('drop_address')
                     ->label('Drop Address')
@@ -151,16 +159,21 @@ class OrderResource extends Resource
                 BadgeColumn::make('status')
                     ->colors([
                         'warning' => 'pending',
-                        'success' => 'confirmed',
-                        'primary' => 'in_progress',
+                        'primary' => 'confirmed',
+                        'info' => 'in_progress',
                         'success' => 'completed',
                         'danger' => 'cancelled',
                     ])
                     ->sortable(),
 
+                TextColumn::make('driver_name')
+                    ->label('Driver')
+                    ->default('Not Assigned')
+                    ->toggleable(),
+
                 TextColumn::make('created_at')
                     ->label('Created')
-                    ->dateTime()
+                    ->dateTime('M d, Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -173,16 +186,25 @@ class OrderResource extends Resource
                         'completed' => 'Completed',
                         'cancelled' => 'Cancelled',
                     ]),
+                
+                SelectFilter::make('vehicle')
+                    ->relationship('vehicle', 'name')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->color('warning'),
+                DeleteAction::make()
+                    ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->poll('30s'); // Auto-refresh every 30 seconds
     }
 
     public static function getRelations(): array
@@ -197,8 +219,18 @@ class OrderResource extends Resource
         return [
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
-            'view' => Pages\ViewOrder::route('/{record}'),
+            // 'view' => Pages\ViewOrder::route('/{record}'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'pending')->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
     }
 }

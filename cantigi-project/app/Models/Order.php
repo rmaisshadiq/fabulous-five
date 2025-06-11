@@ -12,12 +12,20 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'vehicle_id',
+        'driver_id', // Added driver_id to fillable
         'start_booking_date',
         'end_booking_date',
         'start_booking_time',
         'end_booking_time',
         'drop_address',
         'status',
+    ];
+
+    protected $casts = [
+        'start_booking_date' => 'date',
+        'end_booking_date' => 'date',
+        'start_booking_time' => 'datetime:H:i',
+        'end_booking_time' => 'datetime:H:i',
     ];
 
     public function feedback() {
@@ -28,15 +36,17 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function vehicles() {
+    // Fixed: should be vehicle (singular) not vehicles (plural)
+    public function vehicle() {
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function drivers() {
+    // Fixed: should be driver (singular) not drivers (plural)
+    public function driver() {
         return $this->belongsTo(Driver::class);
     }
 
-    public function payments() {
+    public function payment() {
         return $this->hasOne(Payment::class);
     }
 
@@ -44,14 +54,32 @@ class Order extends Model
         return $this->hasOne(ReturnLog::class);
     }
 
-    // Accessor agar bisa dipanggil sebagai "customer_name"
-    public function getCustomerNameAttribute()
-    {
-        return $this->customer?->user?->name;
-    }
+    // Accessor untuk mendapatkan nama customer
+   public function getCustomerNameAttribute()
+{
+    return optional($this->customer?->user)->name ?? 'Unknown Customer';
+}
 
+    // Fixed: using vehicle instead of vehicles
     public function getVehicleNameAttribute()
     {
-        return $this->vehicles?->name;
+        return $this->vehicle?->name;
+    }
+
+    // Accessor untuk mendapatkan nama driver
+public function getDriverNameAttribute()
+{
+    return $this->driver?->user?->name ?? 'Not Assigned';
+}
+    // Scope untuk filter berdasarkan status
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    // Scope untuk order yang aktif (tidak cancelled atau completed)
+    public function scopeActive($query)
+    {
+        return $query->whereNotIn('status', ['cancelled', 'completed']);
     }
 }

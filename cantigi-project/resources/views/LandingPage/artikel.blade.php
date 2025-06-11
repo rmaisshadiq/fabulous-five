@@ -1,241 +1,163 @@
-    <style>
-        /* Animasi dan efek hover untuk artikel */
-        .blog-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .blog-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-        
-        .blog-image-container {
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .blog-image {
-            transition: transform 0.6s ease;
-        }
-        
-        .blog-card:hover .blog-image {
-            transform: scale(1.08);
-        }
-        
-        .blog-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        
-        .blog-card:hover .blog-overlay {
-            opacity: 1;
-        }
-        
-        .read-more {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .read-more::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background-color: currentColor;
-            transition: width 0.3s ease;
-        }
-        
-        .blog-card:hover .read-more::after {
-            width: 100%;
-        }
-        
-        /* Efek shine pada hover */
-        .shine-effect {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .shine-effect::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -75%;
-            z-index: 2;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 100%);
-            transform: skewX(-25deg);
-            transition: all 0.75s;
-        }
-        
-        .blog-card:hover .shine-effect::before {
-            animation: shine 0.85s;
-        }
-        
-        @keyframes shine {
-            100% {
-                left: 125%;
-            }
-        }
-        
-        /* Animasi judul artikel */
-        .blog-title {
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .blog-card:hover .blog-title {
-            color: #34D399; /* green-400 */
-        }
-        
-        /* Animasi untuk header */
-        .article-header {
-            position: relative;
-        }
-        
-        .article-header::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 4px;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #34D399; /* green-400 */
-            transition: width 0.4s ease;
-        }
-        
-        .article-header:hover::after {
-            width: 100px;
-        }
-        
-        /* Responsivitas tambahan */
-        @media (max-width: 640px) {
-            .blog-card {
-                margin-bottom: 2rem;
-            }
-        }
-        
-        /* Fitur lazy load dengan placeholder */
-        .lazy-image {
-            filter: blur(5px);
-            transition: filter 0.5s ease;
-        }
-        
-        .lazy-loaded {
-            filter: blur(0);
-        }
-    </style>
-
-    <!-- BLOG HEADER -->
-    <div class="flex justify-center items-center mt-24 sm:mt-28 md:mt-32 lg:mt-36">
-        <h1 class="article-header text-center font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight">Article</h1>
+<!-- BLOG HEADER -->
+<div class="flex justify-center items-center mt-24 sm:mt-28 md:mt-32 lg:mt-36">
+    <div class="text-center">
+        <h1 class="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight text-gray-900 mb-4 relative">
+            <span class="text-black">
+                Articles
+            </span>
+            <!-- Underline effect -->
+            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-full transition-all duration-500 hover:w-24"></div>
+        </h1>
+        <p class="text-gray-600 text-lg mt-6 max-w-2xl mx-auto px-4">
+            Temukan artikel-artikel menarik dan informatif
+        </p>
     </div>
+</div>
 
-    <div class="max-w-7xl mx-auto p-4 sm:p-5 md:p-6 lg:p-8 space-y-8 lg:space-y-12">
-        <!-- Baris pertama: 3 blog -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            <!-- BLOG 1 -->
-            <div class="blog-card bg-white overflow-hidden rounded-xl">
-                <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
-                    <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/List harga.png') }}" alt="List Harga">
+<div class="max-w-7xl mx-auto p-4 sm:p-5 md:p-6 lg:p-8 space-y-8 lg:space-y-12">
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach ($articles as $article)
+            <article class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden border border-gray-100 relative">
+                
+                <!-- Image Container with Overlay Effects -->
+                <div class="relative overflow-hidden rounded-t-2xl">
+                    <img src="{{ asset('storage/' . $article->image) }}" 
+                         alt="{{ $article->title }}"
+                         class="w-full h-48 sm:h-56 object-cover transition-transform duration-700 group-hover:scale-110">
+                    
+                    <!-- Gradient Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <!-- Shine Effect -->
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                    </div>
+                    
+                    <!-- Date Badge -->
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+                            {{ $article->publish_date }}
+                        </span>
+                    </div>
                 </div>
-                <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
-                    <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">List Harga di CantigiTours</p>
-                    <p class="text-xs sm:text-sm text-gray-600 line-clamp-2">Lihat Lihat List Harga Rental Kendaraan di Cantigi Tours</p>
-                    <a href="#" class="read-more text-green-500 hover:text-green-600 text-xs sm:text-sm font-medium flex items-center">
-                        Baca Selengkapnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
 
-            <!-- BLOG 2 -->
-            <div class="blog-card bg-white overflow-hidden rounded-xl">
-                <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
-                    <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/Tentang Cantigi.png') }}" alt="Tentang CantigiTours">
+                <!-- Content Container -->
+                <div class="p-6 space-y-4">
+                    <!-- Article Title -->
+                    <h2 class="font-bold text-xl lg:text-2xl text-gray-900 group-hover:text-green-600 transition-colors duration-300 leading-tight line-clamp-2">
+                        {{ $article->title }}
+                    </h2>
+                    
+                    <!-- Article Excerpt -->
+                    <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                        {{ Str::limit($article->content, 120) }}
+                    </p>
+                    
+                    <!-- Meta Info -->
+                    <div class="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
+                                <span class="text-white font-semibold text-xs">
+                                    {{ substr($article->author ?? 'Admin', 0, 1) }}
+                                </span>
+                            </div>
+                            <span>{{ $article->author ?? 'Admin' }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Read More Button -->
+                    <div class="pt-4">
+                        <a href="{{ route('artikel.detail', $article->id) }}" 
+                           class="group/link inline-flex items-center text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 transform hover:translate-x-1">
+                            <span class="relative">
+                                Baca Selengkapnya
+                                <!-- Animated underline -->
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover/link:w-full transition-all duration-300"></span>
+                            </span>
+                            <svg class="w-4 h-4 ml-2 transform group-hover/link:translate-x-1 transition-transform duration-300" 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-                <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
-                    <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Tentang Cantigi Tours</p>
-                    <p class="text-xs sm:text-sm text-gray-600 line-clamp-2">Cari tahu bagaimana cara rental mobil di Cantigi Rent Car dan lihat-lihat harga!</p>
-                    <a href="#" class="read-more text-green-500 hover:text-green-600 text-xs sm:text-sm font-medium flex items-center">
-                        Baca Selengkapnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
 
-            <!-- BLOG 3 -->
-            <div class="blog-card bg-white overflow-hidden rounded-xl">
-                <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
-                    <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/Lalu Lintas.jpg') }}" alt="Rambu Lalu Lintas">
-                </div>
-                <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
-                    <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Lalu Lintas Padang</p>
-                    <p class="text-xs sm:text-sm text-gray-600 line-clamp-2">Info Lalu Lintas Padang Terkini</p>
-                    <a href="#" class="read-more text-green-500 hover:text-green-600 text-xs sm:text-sm font-medium flex items-center">
-                        Baca Selengkapnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Baris kedua: 2 blog -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-            <!-- BLOG 4 -->
-            <div class="blog-card bg-white overflow-hidden rounded-xl">
-                <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
-                    <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/kalender.png') }}" alt="Jadwal Libur">
-                </div>
-                <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
-                    <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Jadwal Libur 2025</p>
-                    <p class="text-xs sm:text-sm text-gray-600 line-clamp-3">Lihat Jadwal Libur Tahun 2025 siapkan uang anda</p>
-                    <a href="#" class="read-more text-green-500 hover:text-green-600 text-xs sm:text-sm font-medium flex items-center">
-                        Baca Selengkapnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            <!-- BLOG 5 -->
-            <div class="blog-card bg-white overflow-hidden rounded-xl">
-                <div class="blog-image-container w-full h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden p-2 shine-effect">
-                    <div class="blog-overlay"></div>
-                    <img class="blog-image w-full h-full object-cover rounded-lg" src="{{ asset('images/artikel/Avanza terbaru.png') }}" alt="Toyota Avanza">
-                </div>
-                <div class="px-4 sm:px-5 py-4 sm:py-5 space-y-2 sm:space-y-3">
-                    <p class="blog-title font-bold text-lg sm:text-xl md:text-2xl">Toyota Avanza Terbaru 2025</p>
-                    <p class="text-xs sm:text-sm text-gray-600 line-clamp-3 md:line-clamp-4">Toyota Avanza baru, yang juga dikenal sebagai All New Avanza, adalah MPV 7-seater yang populer di Indonesia. Avanza ini memiliki berbagai pilihan varian dan mesin, serta tersedia dengan transmisi manual dan otomatis (CVT).</p>
-                    <a href="#" class="read-more text-green-500 hover:text-green-600 text-xs sm:text-sm font-medium flex items-center">
-                        Baca Selengkapnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
+                <!-- Floating Animation Effect -->
+                <div class="absolute -top-1 -right-1 w-20 h-20 bg-gradient-to-br from-green-400/20 to-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </article>
+        @endforeach
+    </div>
+    
+    <!-- Pagination (jika ada) -->
+    @if(method_exists($articles, 'links'))
+    <div class="flex justify-center mt-12">
+        <div class="bg-white rounded-xl shadow-lg p-4">
+            {{ $articles->links() }}
         </div>
     </div>
+    @endif
+</div>
 
+<style>
+/* Custom animations yang tidak bisa dicapai dengan Tailwind saja */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.floating-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Loading skeleton untuk gambar */
+.lazy-image {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Line clamp untuk browser yang belum support */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #10b981, #3b82f6);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #059669, #2563eb);
+}
+</style>

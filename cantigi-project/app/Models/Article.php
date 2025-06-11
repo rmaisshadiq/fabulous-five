@@ -21,4 +21,6 @@ class Article extends Model
     public function employees() {
         return $this->belongsTo(Employee::class, 'author_id');
     }
+
+    
 }

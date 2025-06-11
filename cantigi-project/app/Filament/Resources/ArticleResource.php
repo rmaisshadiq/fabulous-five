@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArticleResource\Pages;
-use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,8 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ArticleResource extends Resource
 {
@@ -25,27 +22,35 @@ class ArticleResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                FileUpload::make('image')
-                    ->image()
-                    ->directory('articles')
-                    ->required()
-                    ->visibility('public')
-                    ->columnSpan(2),
-                TextInput::make('title')
-                ->required(),
-                TextInput::make('content')
-                ->required(),
-                DatePicker::make('publish_date')
-                    ->format('Y/m/d'),
-                Select::make('author_id')
-                ->relationship('employees', 'name')
+{
+    return $form
+        ->schema([
+            FileUpload::make('image')
+                ->image()
+                ->directory('articles')
                 ->required()
-                //
-            ]);
-    }
+                ->visibility('public')
+                ->columnSpan(2),
+            TextInput::make('title')
+                ->required(),
+            TextInput::make('content')
+                ->required(),
+            DatePicker::make('publish_date')
+                ->format('Y/m/d'),
+            Select::make('author_id')
+                ->label('Author')
+                ->options(function () {
+                    return \App\Models\Employee::with('users')
+                        ->get()
+                        ->mapWithKeys(function ($employee) {
+                            return [$employee->id => $employee->users?->name ?? 'Tanpa Nama'];
+                        });
+                })
+                ->searchable()
+                ->required(),
+        ]);
+}
+
 
     public static function table(Table $table): Table
     {
@@ -57,7 +62,7 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('publish_date')
                     ->date(),
-                Tables\Columns\TextColumn::make('employees.name')
+                Tables\Columns\TextColumn::make('employee.users.name') // 👈 fix: akses nama user lewat relasi
                     ->label('Author'),
             ])
             ->filters([
@@ -77,9 +82,7 @@ class ArticleResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
