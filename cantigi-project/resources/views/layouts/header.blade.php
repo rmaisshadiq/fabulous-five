@@ -44,7 +44,7 @@
       {{-- Menu Profil jika telah log in --}}
       <!-- Settings Dropdown -->
       <div class="hidden sm:flex sm:items-center sm:ms-6">
-      <x-dropdown align="right" width="48" class="z-50">
+      <x-dropdown align="right" width="60" class="z-50">
         <x-slot name="trigger">
         <button
           class="group inline-flex items-center gap-3 px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
