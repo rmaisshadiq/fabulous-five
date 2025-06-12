@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('users_id')->constrained('users')->cascadeOnDelete();
-            $table->string('portrait');
             $table->string('position');
             $table->string('phone');
             $table->date('hire_date')->default(date("Y-m-d"));

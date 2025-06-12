@@ -26,12 +26,12 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                FileUpload::make('portrait')
-                    ->label('Foto Karyawan')
-                    ->image()
-                    ->directory('portraits') // Disimpan di storage/app/public/portraits
-                    ->imageEditor()
-                    ->required(), // Ubah ke ->nullable() jika portrait sudah nullable di DB
+                // FileUpload::make('portrait')
+                //     ->label('Foto Karyawan')
+                //     ->image()
+                //     ->directory('portraits') // Disimpan di storage/app/public/portraits
+                //     ->imageEditor()
+                //     ->required(), // Ubah ke ->nullable() jika portrait sudah nullable di DB
 
                 TextInput::make('position')
                     ->label('Jabatan')
@@ -67,7 +67,7 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('portrait')
+                Tables\Columns\ImageColumn::make('users.profile_image')
                     ->label('Foto Karyawan')
                     ->width(80)
                     ->height(80),
