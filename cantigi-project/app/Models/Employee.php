@@ -12,7 +12,7 @@ class Employee extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'users_id',
+        'user_id',
         // 'portrait',
         'position',
         'phone',
@@ -25,7 +25,7 @@ class Employee extends Model
     }
 
     public function users() {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function requirements() {

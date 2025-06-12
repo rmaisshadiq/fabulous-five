@@ -55,7 +55,7 @@ class EmployeeResource extends Resource
                     ])
                     ->required(),
 
-                Select::make('users_id')
+                Select::make('user_id')
                     ->label('User')
                     ->relationship('users', 'name')
                     ->required()

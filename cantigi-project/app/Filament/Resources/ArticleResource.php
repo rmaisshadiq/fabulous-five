@@ -9,11 +9,14 @@ use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
+use function Symfony\Component\Clock\now;
 
 class ArticleResource extends Resource
 {
@@ -22,34 +25,42 @@ class ArticleResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            FileUpload::make('image')
-                ->image()
-                ->directory('articles')
-                ->required()
-                ->visibility('public')
-                ->columnSpan(2),
-            TextInput::make('title')
-                ->required(),
-            TextInput::make('content')
-                ->required(),
-            DatePicker::make('publish_date')
-                ->format('Y/m/d'),
-            Select::make('author_id')
-                ->label('Author')
-                ->options(function () {
-                    return \App\Models\Employee::with('users')
-                        ->get()
-                        ->mapWithKeys(function ($employee) {
-                            return [$employee->id => $employee->users?->name ?? 'Tanpa Nama'];
-                        });
-                })
-                ->searchable()
-                ->required(),
-        ]);
-}
+    {
+        return $form
+            ->schema([
+                FileUpload::make('image')
+                    ->image()
+                    ->directory('articles')
+                    ->required()
+                    ->visibility('public')
+                    ->columnSpan(2),
+                TextInput::make('title')
+                    ->required(),
+                TextInput::make('content')
+                    ->required(),
+                DatePicker::make('publish_date')
+                    ->format('Y/m/d')
+                    ->default(now()->format('Y-m-d'))
+                    ->hidden()
+                    ->required(),
+                // Select::make('author_id')
+                //     ->label('Author')
+                //     ->options(function () {
+                //         return \App\Models\Employee::with('users')
+                //             ->get()
+                //             ->mapWithKeys(function ($employee) {
+                //                 return [$employee->id => $employee->users?->name ?? 'Tanpa Nama'];
+                //             });
+                //     })
+                //     ->searchable()
+                //     ->required(),
+                Hidden::make('author_id')
+                    ->default(function () {
+                        $user = Auth::user();
+                        return $user->employee?->id ?? $user->id;
+                    }),
+            ]);
+    }
 
 
     public static function table(Table $table): Table
@@ -62,7 +73,7 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('publish_date')
                     ->date(),
-                Tables\Columns\TextColumn::make('employee.users.name') // 👈 fix: akses nama user lewat relasi
+                Tables\Columns\TextColumn::make('employees.users.name')
                     ->label('Author'),
             ])
             ->filters([
