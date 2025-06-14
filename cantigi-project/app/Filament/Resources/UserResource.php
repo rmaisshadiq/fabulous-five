@@ -24,28 +24,28 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                FileUpload::make('profile_image')
-                    ->image()
-                    ->directory('user_profiles')
-                    ->required()
-                    ->visibility('public')
-                    ->columnSpan(2),
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('email')
-                    ->email()
-                    ->unique(ignoreRecord: true),
-                Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->searchable(),
-            ]);
-    }
+    // public static function form(Form $form): Form
+    // {
+    //     return $form
+    //         ->schema([
+    //             FileUpload::make('profile_image')
+    //                 ->image()
+    //                 ->directory('user_profiles')
+    //                 ->required()
+    //                 ->visibility('public')
+    //                 ->columnSpan(2),
+    //             TextInput::make('name')
+    //                 ->required(),
+    //             TextInput::make('email')
+    //                 ->email()
+    //                 ->unique(ignoreRecord: true),
+    //             Select::make('roles')
+    //                 ->relationship('roles', 'name')
+    //                 ->multiple()
+    //                 ->preload()
+    //                 ->searchable(),
+    //         ]);
+    // }
 
     public static function table(Table $table): Table
     {
@@ -66,6 +66,7 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

@@ -24,7 +24,7 @@ class Vehicle extends Model
     ];
 
     public function maintenances() {
-        return $this->hasMany(Maintenance::class);
+        return $this->hasMany(Maintenance::class, 'vehicle_id');
     }
 
     public function orders() {
