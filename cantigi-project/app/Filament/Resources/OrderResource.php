@@ -47,7 +47,7 @@ class OrderResource extends Resource
                     ->disabled(fn ($context) => $context === 'edit'),
 
                 Select::make('vehicle_id')
-                    ->relationship('vehicle', 'name') // Fixed: vehicle instead of vehicles
+                    ->relationship('vehicle', 'name')
                     ->required()
                     ->searchable()
                     ->preload()
@@ -96,7 +96,7 @@ class OrderResource extends Resource
                     }),
 
                 Select::make('driver_id')
-                    ->relationship('driver.user', 'name') // Fixed: driver instead of drivers
+                    ->relationship('driver.user', 'name')
                     ->searchable()
                     ->preload()
                     ->nullable()
@@ -113,23 +113,17 @@ class OrderResource extends Resource
                     ->sortable()
                     ->prefix('#'),
 
-                TextColumn::make('customer_name')
+                TextColumn::make('customer.user.name')
                     ->label('Customer')
-                    ->searchable(query: function ($query, $search) {
-                        return $query->whereHas('customer.user', function ($q) use ($search) {
-                            $q->where('name', 'like', "%{$search}%");
-                        });
-                    })
-                    ->sortable(),
+                    ->searchable()
+                    ->sortable()
+                    ->default('Unknown Customer'),
 
-                TextColumn::make('vehicle_name')
+                TextColumn::make('vehicle.name')
                     ->label('Vehicle')
-                    ->searchable(query: function ($query, $search) {
-                        return $query->whereHas('vehicle', function ($q) use ($search) { // Fixed: vehicle instead of vehicles
-                            $q->where('name', 'like', "%{$search}%");
-                        });
-                    })
-                    ->sortable(),
+                    ->searchable()
+                    ->sortable()
+                    ->default('Unknown Vehicle'),
 
                 TextColumn::make('start_booking_date')
                     ->label('Start Date')
@@ -166,7 +160,7 @@ class OrderResource extends Resource
                     ])
                     ->sortable(),
 
-                TextColumn::make('driver_name')
+                TextColumn::make('driver.user.name')
                     ->label('Driver')
                     ->default('Not Assigned')
                     ->toggleable(),

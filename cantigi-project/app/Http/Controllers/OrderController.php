@@ -19,8 +19,9 @@ class OrderController extends Controller
             return redirect()->route('customer.profile')->with('error', 'Please complete your profile first.');
         }
 
-        // Ambil semua order milik customer ini
-        $orders = Order::where('customer_id', $customer->id)
+        // Ambil semua order milik customer ini dengan eager loading
+        $orders = Order::with(['vehicle', 'driver.user', 'customer.user'])
+                      ->where('customer_id', $customer->id)
                       ->orderBy('created_at', 'desc')
                       ->get();
 
@@ -28,12 +29,12 @@ class OrderController extends Controller
     }
 
     // Form create order
-    public function create()
-    {
-        $vehicles = Vehicle::where('status', 'available')->get();
+   public function create()
+{
+    $vehicles = Vehicle::all(); // Atau filter berdasarkan user
+    return view('form-pemesanan.main-page', compact('vehicles'));
+}
 
-        return view('customer.orders.create', compact('vehicles'));
-    }
 
     // Simpan order baru
     public function store(Request $request)
@@ -53,25 +54,24 @@ class OrderController extends Controller
             return redirect()->route('customer.profile')->with('error', 'Please complete your profile first.');
         }
 
-        // Cek apakah kendaraan tersedia
+        // Cek apakah kendaraan tersedia dengan proper date/time checking
         $conflictingOrder = Order::where('vehicle_id', $request->vehicle_id)
             ->where(function ($query) use ($request) {
-                $query->whereBetween('start_booking_date', [$request->start_booking_date, $request->end_booking_date])
-                      ->orWhereBetween('end_booking_date', [$request->start_booking_date, $request->end_booking_date])
-                      ->orWhere(function ($q) use ($request) {
-                          $q->where('start_booking_date', '<=', $request->start_booking_date)
-                            ->where('end_booking_date', '>=', $request->end_booking_date);
-                      });
+                // Check for date overlaps
+                $query->where(function ($q) use ($request) {
+                    $q->where('start_booking_date', '<=', $request->end_booking_date)
+                      ->where('end_booking_date', '>=', $request->start_booking_date);
+                });
             })
             ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
-            ->exists(); // <--- INI return bool TRUE / FALSE (AMAN, kamu sudah pakai exists() dengan benar!)
+            ->exists();
 
         if ($conflictingOrder) {
             return back()->withErrors(['vehicle_id' => 'Vehicle is not available for the selected dates.'])->withInput();
         }
 
         // Simpan order baru
-        Order::create([
+        $order = Order::create([
             'customer_id' => $customer->id,
             'vehicle_id' => $request->vehicle_id,
             'start_booking_date' => $request->start_booking_date,
@@ -90,9 +90,12 @@ class OrderController extends Controller
     {
         $customer = Customer::where('user_id', Auth::id())->first();
         
-        if ($order->customer_id !== $customer->id) {
+        if (!$customer || $order->customer_id !== $customer->id) {
             abort(403); // Forbidden jika bukan order milik customer ini
         }
+
+        // Load relationships to prevent N+1 queries
+        $order->load(['vehicle', 'driver.user', 'customer.user']);
 
         return view('customer.orders.show', compact('order'));
     }
@@ -102,7 +105,7 @@ class OrderController extends Controller
     {
         $customer = Customer::where('user_id', Auth::id())->first();
         
-        if ($order->customer_id !== $customer->id) {
+        if (!$customer || $order->customer_id !== $customer->id) {
             abort(403);
         }
 

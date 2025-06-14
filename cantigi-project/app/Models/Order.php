@@ -12,7 +12,7 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'vehicle_id',
-        'driver_id', // Added driver_id to fillable
+        'driver_id',
         'start_booking_date',
         'end_booking_date',
         'start_booking_time',
@@ -36,12 +36,10 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    // Fixed: should be vehicle (singular) not vehicles (plural)
     public function vehicle() {
         return $this->belongsTo(Vehicle::class);
     }
 
-    // Fixed: should be driver (singular) not drivers (plural)
     public function driver() {
         return $this->belongsTo(Driver::class);
     }
@@ -54,23 +52,39 @@ class Order extends Model
         return $this->hasOne(ReturnLog::class);
     }
 
-    // Accessor untuk mendapatkan nama customer
-   public function getCustomerNameAttribute()
-{
-    return optional($this->customer?->user)->name ?? 'Unknown Customer';
-}
-
-    // Fixed: using vehicle instead of vehicles
-    public function getVehicleNameAttribute()
+    // Fixed accessor with proper null checking
+    public function getCustomerNameAttribute()
     {
-        return $this->vehicle?->name;
+        // Load the relationship if not already loaded
+        if (!$this->relationLoaded('customer')) {
+            $this->load('customer.user');
+        }
+        
+        return $this->customer?->user?->name ?? 'Unknown Customer';
     }
 
-    // Accessor untuk mendapatkan nama driver
-public function getDriverNameAttribute()
-{
-    return $this->driver?->user?->name ?? 'Not Assigned';
-}
+    // Fixed accessor with proper null checking
+    public function getVehicleNameAttribute()
+    {
+        // Load the relationship if not already loaded
+        if (!$this->relationLoaded('vehicle')) {
+            $this->load('vehicle');
+        }
+        
+        return $this->vehicle?->name ?? 'Unknown Vehicle';
+    }
+
+    // Fixed accessor with proper null checking
+    public function getDriverNameAttribute()
+    {
+        // Load the relationship if not already loaded
+        if (!$this->relationLoaded('driver')) {
+            $this->load('driver.user');
+        }
+        
+        return $this->driver?->user?->name ?? 'Not Assigned';
+    }
+
     // Scope untuk filter berdasarkan status
     public function scopeByStatus($query, $status)
     {
