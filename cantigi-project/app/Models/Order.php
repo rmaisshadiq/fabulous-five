@@ -96,4 +96,6 @@ class Order extends Model
     {
         return $query->whereNotIn('status', ['cancelled', 'completed']);
     }
+
+    
 }

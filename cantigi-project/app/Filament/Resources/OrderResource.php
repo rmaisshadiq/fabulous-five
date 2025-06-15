@@ -30,9 +30,9 @@ class OrderResource extends Resource
     protected static ?string $navigationGroup = 'Manajemen Pemesanan';
 
     protected static ?string $navigationLabel = 'Orders';
-    
+
     protected static ?string $modelLabel = 'Order';
-    
+
     protected static ?string $pluralModelLabel = 'Orders';
 
     public static function form(Form $form): Form
@@ -44,35 +44,43 @@ class OrderResource extends Resource
                     ->required()
                     ->searchable()
                     ->preload()
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 Select::make('vehicle_id')
-                    ->relationship('vehicle', 'name')
+                    ->options(
+                        \App\Models\Vehicle::all()
+                            ->mapWithKeys(function ($v) {
+                                return [
+                                    $v->id => "{$v->brand} {$v->model} ({$v->license_plate})",
+                                ];
+                            })
+                            ->toArray()
+                    )
                     ->required()
                     ->searchable()
                     ->preload()
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 DatePicker::make('start_booking_date')
                     ->required()
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 DatePicker::make('end_booking_date')
                     ->required()
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 TimePicker::make('start_booking_time')
                     ->required()
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 TimePicker::make('end_booking_time')
                     ->required()
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 Textarea::make('drop_address')
                     ->required()
                     ->rows(3)
-                    ->disabled(fn ($context) => $context === 'edit'),
+                    ->disabled(fn($context) => $context === 'edit'),
 
                 Select::make('status')
                     ->options([
@@ -100,7 +108,7 @@ class OrderResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->visible(fn ($get) => in_array($get('status'), ['confirmed', 'in_progress', 'completed'])),
+                    ->visible(fn($get) => in_array($get('status'), ['confirmed', 'in_progress', 'completed'])),
             ]);
     }
 
@@ -119,11 +127,16 @@ class OrderResource extends Resource
                     ->sortable()
                     ->default('Unknown Customer'),
 
-                TextColumn::make('vehicle.name')
+                TextColumn::make('vehicle_info')
                     ->label('Vehicle')
+                    ->getStateUsing(function ($record) {
+                        if (!$record->vehicle) {
+                            return 'Unknown Vehicle';
+                        }
+                        return "{$record->vehicle->brand} {$record->vehicle->model} ({$record->vehicle->license_plate})";
+                    })
                     ->searchable()
-                    ->sortable()
-                    ->default('Unknown Vehicle'),
+                    ->sortable(),
 
                 TextColumn::make('start_booking_date')
                     ->label('Start Date')
@@ -172,34 +185,20 @@ class OrderResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'confirmed' => 'Confirmed',
-                        'in_progress' => 'In Progress',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
-                    ]),
-                
-                SelectFilter::make('vehicle')
-                    ->relationship('vehicle', 'name')
-                    ->searchable()
-                    ->preload(),
+                // Kosongkan atau tambahkan filter jika perlu
             ])
             ->actions([
-                ViewAction::make(),
-                EditAction::make()
-                    ->color('warning'),
-                DeleteAction::make()
-                    ->requiresConfirmation(),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make()->color('warning'),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
-                    ->requiresConfirmation(),
+                Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
             ])
             ->defaultSort('created_at', 'desc')
             ->poll('30s'); // Auto-refresh every 30 seconds
     }
+
 
     public static function getRelations(): array
     {
