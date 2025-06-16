@@ -10,6 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,7 +37,7 @@ class ArticleResource extends Resource
                     ->columnSpan(2),
                 TextInput::make('title')
                     ->required(),
-                TextInput::make('content')
+                RichEditor::make('content')
                     ->required(),
                 DatePicker::make('publish_date')
                     ->format('Y/m/d')
