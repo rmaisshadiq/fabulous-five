@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',        // Ganti dari customer_id ke user_id
+        'customer_id',        
         'vehicle_id',
         'driver_id',
         'start_booking_date',
@@ -33,8 +33,8 @@ class Order extends Model
     }
 
     // Ganti relationship customer dengan user
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function customer() {
+        return $this->belongsTo(Customer::class);
     }
 
     // Jika masih ingin menggunakan customer() method untuk backward compatibility
@@ -54,65 +54,65 @@ class Order extends Model
         return $this->hasOne(Payment::class);
     }
 
-    public function returnlog() {
+    public function return_log() {
         return $this->hasOne(ReturnLog::class);
     }
 
-    // Updated accessor untuk menggunakan user langsung
-    public function getCustomerNameAttribute()
-    {
-        if (!$this->relationLoaded('user')) {
-            $this->load('user');
-        }
+    // // Updated accessor untuk menggunakan user langsung
+    // public function getCustomerNameAttribute()
+    // {
+    //     if (!$this->relationLoaded('users')) {
+    //         $this->load('users');
+    //     }
         
-        return $this->user?->name ?? 'Unknown Customer';
-    }
+    //     return $this->user?->name ?? 'Unknown Customer';
+    // }
 
-    // Atau bisa rename jadi getUserNameAttribute untuk lebih konsisten
-    public function getUserNameAttribute()
-    {
-        if (!$this->relationLoaded('user')) {
-            $this->load('user');
-        }
+    // // Atau bisa rename jadi getUserNameAttribute untuk lebih konsisten
+    // public function getUserNameAttribute()
+    // {
+    //     if (!$this->relationLoaded('users')) {
+    //         $this->load('users');
+    //     }
         
-        return $this->user?->name ?? 'Unknown User';
-    }
+    //     return $this->user?->name ?? 'Unknown User';
+    // }
 
-    public function getVehicleNameAttribute()
-    {
-        if (!$this->relationLoaded('vehicle')) {
-            $this->load('vehicle');
-        }
+    // public function getVehicleNameAttribute()
+    // {
+    //     if (!$this->relationLoaded('vehicles')) {
+    //         $this->load('vehicles');
+    //     }
         
-        return $this->vehicle?->name ?? 'Unknown Vehicle';
-    }
+    //     return $this->vehicle?->name ?? 'Unknown Vehicle';
+    // }
 
-    public function getDriverNameAttribute()
-    {
-        if (!$this->relationLoaded('driver')) {
-            $this->load('driver.user');
-        }
+    // public function getDriverNameAttribute()
+    // {
+    //     if (!$this->relationLoaded('drivers')) {
+    //         $this->load('drivers.employees');
+    //     }
         
-        return $this->driver?->user?->name ?? 'Not Assigned';
-    }
+    //     return $this->driver?->user?->name ?? 'Not Assigned';
+    // }
 
-    // Scope untuk filter berdasarkan status
-    public function scopeByStatus($query, $status)
-    {
-        return $query->where('status', $status);
-    }
+    // // Scope untuk filter berdasarkan status
+    // public function scopeByStatus($query, $status)
+    // {
+    //     return $query->where('status', $status);
+    // }
 
-    // Scope untuk order yang aktif (tidak cancelled atau completed)
-    public function scopeActive($query)
-    {
-        return $query->whereNotIn('status', ['cancelled', 'completed']);
-    }
+    // // Scope untuk order yang aktif (tidak cancelled atau completed)
+    // public function scopeActive($query)
+    // {
+    //     return $query->whereNotIn('status', ['cancelled', 'completed']);
+    // }
 
-    // Scope untuk order berdasarkan user
-    public function scopeByUser($query, $userId)
-    {
-        return $query->where('user_id', $userId);
-    }
+    // // Scope untuk order berdasarkan user
+    // public function scopeByUser($query, $customerId)
+    // {
+    //     return $query->where('customer_id', $customerId);
+    // }
 
     
 }

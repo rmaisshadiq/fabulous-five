@@ -57,7 +57,7 @@ class EmployeeResource extends Resource
 
                 Select::make('user_id')
                     ->label('User')
-                    ->relationship('users', 'name')
+                    ->relationship('user', 'name')
                     ->required()
                     ->unique(ignoreRecord: true),
             ]);
@@ -67,15 +67,15 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('users.profile_image')
+                Tables\Columns\ImageColumn::make('user.profile_image')
                     ->label('Foto Karyawan')
                     ->width(80)
                     ->height(80),
 
-                Tables\Columns\TextColumn::make('users.name')
+                Tables\Columns\TextColumn::make('user.name')
                     ->label('Nama Karyawan'),
 
-                Tables\Columns\TextColumn::make('users.email')
+                Tables\Columns\TextColumn::make('user.email')
                     ->label('Email')
                     ->icon('heroicon-o-envelope'),
 

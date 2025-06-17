@@ -20,15 +20,15 @@ class Employee extends Model
         'status'
     ];
 
-    public function articles() {
+    public function article() {
         return $this->hasMany(Article::class);
     }
 
-    public function users() {
+    public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function requirements() {
+    public function requirement() {
         return $this->hasMany(RentalRequirements::class);
     }
 }

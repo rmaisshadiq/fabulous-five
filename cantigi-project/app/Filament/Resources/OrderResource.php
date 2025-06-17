@@ -39,8 +39,8 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                    Select::make('user_id')
-                    ->relationship('user', 'name')
+                    Select::make('customer_id')
+                    ->relationship('customer.user', 'name')
                     ->required()
                     ->searchable()
                     ->preload()
@@ -48,6 +48,7 @@ class OrderResource extends Resource
 
 
                 Select::make('vehicle_id')
+                    ->relationship('vehicle')
                     ->options(
                         \App\Models\Vehicle::all()
                             ->mapWithKeys(function ($v) {
@@ -105,11 +106,11 @@ class OrderResource extends Resource
                     }),
 
                 Select::make('driver_id')
-                    ->relationship('driver.user', 'name')
+                    ->relationship('driver.employee.user', 'name')
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->visible(fn($get) => in_array($get('status'), ['confirmed', 'in_progress', 'completed'])),
+                    // ->visible(fn($get) => in_array($get('status'), ['confirmed', 'in_progress', 'completed'])),
             ]);
     }
 
@@ -122,20 +123,13 @@ class OrderResource extends Resource
                     ->sortable()
                     ->prefix('#'),
 
-                TextColumn::make('user.name')
+                TextColumn::make('customer.user.name')
                     ->label('Customer')
                     ->searchable()
-                    ->sortable()
-                    ->default('Unknown User'),
+                    ->sortable(),
 
-                TextColumn::make('vehicle_info')
+                TextColumn::make('vehicle.model')
                     ->label('Vehicle')
-                    ->getStateUsing(function ($record) {
-                        if (!$record->vehicle) {
-                            return 'Unknown Vehicle';
-                        }
-                        return "{$record->vehicle->brand} {$record->vehicle->model} ({$record->vehicle->license_plate})";
-                    })
                     ->searchable()
                     ->sortable(),
 
@@ -174,9 +168,8 @@ class OrderResource extends Resource
                     ])
                     ->sortable(),
 
-                TextColumn::make('driver.user.name')
+                TextColumn::make('driver.employee.user.name')
                     ->label('Driver')
-                    ->default('Not Assigned')
                     ->toggleable(),
 
                 TextColumn::make('created_at')
@@ -213,7 +206,6 @@ class OrderResource extends Resource
         return [
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
-            // 'view' => Pages\ViewOrder::route('/{record}'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }

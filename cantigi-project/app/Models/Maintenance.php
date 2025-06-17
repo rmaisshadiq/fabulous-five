@@ -18,7 +18,7 @@ class Maintenance extends Model
     ];
 
     // Perbaiki relasi, cukup satu kendaraan
-    public function vehicles()
+    public function vehicle()
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }

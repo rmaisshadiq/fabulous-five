@@ -59,7 +59,7 @@ class MaintenanceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('vehicles.model')
+                Tables\Columns\TextColumn::make('vehicle.model')
                     ->label('Nama Kendaraan')
                     ->searchable()
                     ->sortable(),

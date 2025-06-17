@@ -23,11 +23,11 @@ class Customer extends Model
         return $this->hasMany(Feedback::class);
     }
 
-    public function orders() {
+    public function order() {
         return $this->hasMany(Order::class);
     }
 
-    public function requirements() {
+    public function requirement() {
         return $this->hasOne(RentalRequirements::class);
     }
 

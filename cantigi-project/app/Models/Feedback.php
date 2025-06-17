@@ -18,11 +18,11 @@ class Feedback extends Model
         'feedback_date'
     ];
 
-    public function orders() {
+    public function order() {
         return $this->belongsTo(Order::class);
     }
 
-    public function customers() {
+    public function customer() {
         return $this->belongsTo(Customer::class);
     }
 }
