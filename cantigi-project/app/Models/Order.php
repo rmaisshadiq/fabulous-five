@@ -50,6 +50,10 @@ class Order extends Model
         return $this->belongsTo(Driver::class);
     }
 
+    public function order_reports() {
+        return $this->hasOne(OrderReport::class);
+    }
+
     public function payment() {
         return $this->hasOne(Payment::class);
     }

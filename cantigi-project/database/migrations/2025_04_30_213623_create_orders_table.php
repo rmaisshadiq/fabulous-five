@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('start_booking_time');
             $table->time('end_booking_time');
             $table->string('drop_address');
+            $table->enum('status', ['cancelled', 'pending', 'completed', 'confirmed', 'in_progress'])->default('pending');
             $table->timestamps();
         });
     }

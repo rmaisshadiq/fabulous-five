@@ -62,20 +62,33 @@ class User extends Authenticatable implements FilamentUser
         if ($this->profile_image) {
             return asset('storage/' . $this->profile_image);
         }
-        
+
         return asset('images/user_profiles/default-avatar.png');
     }
 
-    public function customers() {
+    public function customers()
+    {
         return $this->hasOne(Customer::class);
     }
 
-    public function employees() {
+    public function employees()
+    {
         return $this->hasOne(Employee::class);
     }
 
-        public function orders()
+    public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    protected static function booted()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            Customer::create([
+                'user_id' => $user->id
+            ]);
+        });
     }
 }

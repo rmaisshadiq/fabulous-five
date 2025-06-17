@@ -31,4 +31,8 @@ class Customer extends Model
         return $this->hasOne(RentalRequirements::class);
     }
 
+    public function order_reports() {
+        return $this->hasMany(OrderReport::class);
+    }
+
 }
