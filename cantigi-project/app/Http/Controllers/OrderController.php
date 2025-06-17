@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Vehicle;
-use App\Models\Customer;
+use App\Models\User; // Tambahkan import User
+// use App\Models\Customer; // Hapus atau comment jika tidak digunakan lagi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -68,13 +69,19 @@ class OrderController extends Controller
             return back()->withErrors($e->errors())->withInput();
         }
 
-        // Get customer
-        $customer = Customer::where('user_id', Auth::id())->first();
+        // Get current authenticated user
+        $user = Auth::user();
         
-        if (!$customer) {
-            Log::warning('Customer not found for user', ['user_id' => Auth::id()]);
-            return redirect()->route('detail-pemesanan')->with('error', 'Please complete your profile first.');
+        if (!$user) {
+            Log::warning('User not authenticated');
+            return redirect()->route('login')->with('error', 'Please login first.');
         }
+
+        // Optional: Check if user profile is complete (if needed)
+        // if (!$user->name || !$user->email || !$user->phone) {
+        //     Log::warning('User profile incomplete', ['user_id' => $user->id]);
+        //     return redirect()->route('profile.edit')->with('error', 'Please complete your profile first.');
+        // }
 
         // Check if vehicle exists and is available
         $vehicle = Vehicle::find($validated['vehicle_id']);
@@ -109,9 +116,9 @@ class OrderController extends Controller
             // Use database transaction for safety
             DB::beginTransaction();
 
-            // Create order
+            // Create order - langsung menggunakan user_id dari Auth
             $order = Order::create([
-                'customer_id' => $customer->id,
+                'user_id' => $user->id, // Langsung menggunakan ID dari user yang login
                 'vehicle_id' => $validated['vehicle_id'],
                 'driver_id' => null, // Will be assigned later by admin
                 'start_booking_date' => $validated['start_booking_date'],
@@ -124,6 +131,7 @@ class OrderController extends Controller
 
             Log::info('Order created successfully', [
                 'order_id' => $order->id,
+                'user_id' => $user->id,
                 'order_data' => $order->toArray()
             ]);
 
@@ -138,7 +146,7 @@ class OrderController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'validated_data' => $validated,
-                'customer_id' => $customer->id ?? null
+                'user_id' => $user->id ?? null
             ]);
 
             return back()
@@ -160,17 +168,17 @@ class OrderController extends Controller
             // Test orders count
             $orderCount = Order::count();
             
-            // Test customer and vehicle relationships
-            $customerCount = Customer::count();
+            // Test user and vehicle relationships
+            $userCount = User::count(); // Menggunakan User instead of Customer
             $vehicleCount = Vehicle::count();
             
             return response()->json([
                 'status' => 'OK',
                 'orders_table_columns' => $columns,
                 'orders_count' => $orderCount,
-                'customers_count' => $customerCount,
+                'users_count' => $userCount,
                 'vehicles_count' => $vehicleCount,
-                'current_user_customer' => Customer::where('user_id', Auth::id())->first()
+                'current_user' => Auth::user() // Langsung menggunakan Auth::user()
             ]);
             
         } catch (\Exception $e) {
