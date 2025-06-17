@@ -1,11 +1,13 @@
-      <!-- Button booking -->
-    <div class="text-center">
-      <button class="w-full p-4 rounded-xl bg-gradient-to-r from-green-700 to-green-500 hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-green-500/40 relative overflow-hidden group">
-        <div class="flex items-center justify-center text-white font-bold text-lg relative z-10">
-          <i class="fas fa-calendar-check mr-3"></i>
-          <span><a href="{{ route('detail-pemesanan') }}">Booking Sekarang</a></span>
-          <i class="fa fa-arrow-right ml-3 transition-transform duration-300 group-hover:translate-x-1"></i>
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
-      </button>
-    </div>
+ <!-- Submit Buttons -->
+                    <div class="flex space-x-4">
+                        @if(isset($vehicles))
+                            <button type="submit"
+                                class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                                Submit Order
+                            </button>
+                        @endif
+                        <a href="{{ route('kendaraan') }}"
+                            class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md text-center hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200">
+                            {{ isset($vehicles) ? 'Change Vehicle' : 'Select Vehicle' }}
+                        </a>
+                    </div>

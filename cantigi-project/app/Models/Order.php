@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',        // Ganti dari customer_id ke user_id
+        'customer_id',        // Ganti dari customer_id ke user_id
         'vehicle_id',
         'driver_id',
         'start_booking_date',
