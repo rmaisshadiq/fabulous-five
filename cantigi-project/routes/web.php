@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Article;
+use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
 
@@ -59,6 +62,18 @@ Route::get('/syarat-ketentuan', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/feedback', function () {
+    $orders = Order::all();
+    $customers = Customer::all();
+    return view('feedback.main-page', compact('orders', 'customers'));
+})->middleware(['auth', 'verified'])->name('feedback');
+
+
+
+Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
+// Route untuk menyimpan feedback
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 
 
