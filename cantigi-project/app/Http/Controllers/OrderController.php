@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Vehicle;
 use App\Models\User; // Tambahkan import User
@@ -43,7 +44,7 @@ class OrderController extends Controller
     {
         // Debug log incoming request
         Log::info('Order store attempt', [
-            'user_id' => Auth::id(),
+            'customer_id' => Auth::id(),
             'request_data' => $request->all(),
             'request_method' => $request->method(),
             'request_url' => $request->url()
@@ -118,7 +119,7 @@ class OrderController extends Controller
 
             // Create order - langsung menggunakan user_id dari Auth
             $order = Order::create([
-                'user_id' => $user->id, // Langsung menggunakan ID dari user yang login
+                'customer_id' => $user->id, // Langsung menggunakan ID dari user yang login
                 'vehicle_id' => $validated['vehicle_id'],
                 'driver_id' => null, // Will be assigned later by admin
                 'start_booking_date' => $validated['start_booking_date'],
@@ -131,7 +132,7 @@ class OrderController extends Controller
 
             Log::info('Order created successfully', [
                 'order_id' => $order->id,
-                'user_id' => $user->id,
+                'customer_id' => $user->id,
                 'order_data' => $order->toArray()
             ]);
 
@@ -169,7 +170,7 @@ class OrderController extends Controller
             $orderCount = Order::count();
             
             // Test user and vehicle relationships
-            $userCount = User::count(); // Menggunakan User instead of Customer
+            $userCount = Customer::count(); // Menggunakan User instead of Customer
             $vehicleCount = Vehicle::count();
             
             return response()->json([
