@@ -39,12 +39,13 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('customer_id')
-                    ->relationship('customer.user', 'name')
+                    Select::make('user_id')
+                    ->relationship('user', 'name')
                     ->required()
                     ->searchable()
                     ->preload()
                     ->disabled(fn($context) => $context === 'edit'),
+
 
                 Select::make('vehicle_id')
                     ->options(
@@ -121,11 +122,11 @@ class OrderResource extends Resource
                     ->sortable()
                     ->prefix('#'),
 
-                TextColumn::make('customer.user.name')
+                TextColumn::make('user.name')
                     ->label('Customer')
                     ->searchable()
                     ->sortable()
-                    ->default('Unknown Customer'),
+                    ->default('Unknown User'),
 
                 TextColumn::make('vehicle_info')
                     ->label('Vehicle')

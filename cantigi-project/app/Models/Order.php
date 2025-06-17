@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id',
+        'user_id',        // Ganti dari customer_id ke user_id
         'vehicle_id',
         'driver_id',
         'start_booking_date',
@@ -32,9 +32,15 @@ class Order extends Model
         return $this->hasMany(Feedback::class);
     }
 
-    public function customer() {
-        return $this->belongsTo(Customer::class);
+    // Ganti relationship customer dengan user
+    public function user() {
+        return $this->belongsTo(User::class);
     }
+
+    // Jika masih ingin menggunakan customer() method untuk backward compatibility
+    // public function customer() {
+    //     return $this->belongsTo(Customer::class, 'user_id', 'user_id');
+    // }
 
     public function vehicle() {
         return $this->belongsTo(Vehicle::class);
@@ -52,21 +58,28 @@ class Order extends Model
         return $this->hasOne(ReturnLog::class);
     }
 
-    // Fixed accessor with proper null checking
+    // Updated accessor untuk menggunakan user langsung
     public function getCustomerNameAttribute()
     {
-        // Load the relationship if not already loaded
-        if (!$this->relationLoaded('customer')) {
-            $this->load('customer.user');
+        if (!$this->relationLoaded('user')) {
+            $this->load('user');
         }
         
-        return $this->customer?->user?->name ?? 'Unknown Customer';
+        return $this->user?->name ?? 'Unknown Customer';
     }
 
-    // Fixed accessor with proper null checking
+    // Atau bisa rename jadi getUserNameAttribute untuk lebih konsisten
+    public function getUserNameAttribute()
+    {
+        if (!$this->relationLoaded('user')) {
+            $this->load('user');
+        }
+        
+        return $this->user?->name ?? 'Unknown User';
+    }
+
     public function getVehicleNameAttribute()
     {
-        // Load the relationship if not already loaded
         if (!$this->relationLoaded('vehicle')) {
             $this->load('vehicle');
         }
@@ -74,10 +87,8 @@ class Order extends Model
         return $this->vehicle?->name ?? 'Unknown Vehicle';
     }
 
-    // Fixed accessor with proper null checking
     public function getDriverNameAttribute()
     {
-        // Load the relationship if not already loaded
         if (!$this->relationLoaded('driver')) {
             $this->load('driver.user');
         }
@@ -95,6 +106,12 @@ class Order extends Model
     public function scopeActive($query)
     {
         return $query->whereNotIn('status', ['cancelled', 'completed']);
+    }
+
+    // Scope untuk order berdasarkan user
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 
     
