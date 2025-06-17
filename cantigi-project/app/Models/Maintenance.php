@@ -24,41 +24,29 @@ class Maintenance extends Model
     }
 
     protected static function booted()
-    {
-        // Saat dibuat
-        static::created(function ($maintenance) {
-            $vehicle = $maintenance->vehicle;
+{
+    // Saat maintenance dibuat
+    static::created(function ($maintenance) {
+        $vehicle = Vehicle::find($maintenance->vehicle_id);
+        if ($vehicle) {
+            $vehicle->status = 'maintenance';
+            $vehicle->save();
+        }
+    });
 
-            if ($vehicle) {
-                $vehicle->status = 'maintenance';
-                $vehicle->last_maintenance_date = $maintenance->maintenance_date;
-                $vehicle->save();
-            }
-        });
+    // Saat maintenance dihapus
+    static::deleted(function ($maintenance) {
+        $vehicle = Vehicle::find($maintenance->vehicle_id);
+        if ($vehicle) {
+            // Ambil maintenance terakhir yang masih ada
+            $lastMaintenance = Maintenance::where('vehicle_id', $vehicle->id)
+                ->orderBy('maintenance_date', 'desc')
+                ->first();
 
-        // Saat dihapus
-        static::deleted(function ($maintenance) {
-            $vehicle = $maintenance->vehicle;
-
-            if ($vehicle) {
-                $remainingMaintenances = $vehicle->maintenances()
-                    ->where('id', '!=', $maintenance->id)
-                    ->count();
-
-                if ($remainingMaintenances === 0) {
-                    $vehicle->status = 'active';
-                    $vehicle->last_maintenance_date = $vehicle->purchase_date; // fallback
-                } else {
-                    $last = $vehicle->maintenances()
-                        ->where('id', '!=', $maintenance->id)
-                        ->latest('maintenance_date')
-                        ->first();
-
-                    $vehicle->last_maintenance_date = $last?->maintenance_date;
-                }
-
-                $vehicle->save();
-            }
-        });
-    }
+            $vehicle->status = 'active';
+            $vehicle->last_maintenance_date = $lastMaintenance?->maintenance_date;
+            $vehicle->save();
+        }
+    });
+}
 }
