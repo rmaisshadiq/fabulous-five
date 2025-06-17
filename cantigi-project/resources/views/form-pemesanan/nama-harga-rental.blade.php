@@ -1,13 +1,19 @@
-        <!-- Nama dan harga rental -->
-    <div class="flex justify-between items-center mb-8 p-6 bg-gray-50 rounded-2xl">
-      <div class="flex items-center">
-        <div>
-          <p class="text-xl font-bold text-gray-800">{{ $vehicles->brand }} {{ $vehicles->model }}</p>
-          <p class="text-sm text-gray-500">{{ $vehicles->car_type }}</p>
-        </div>
-      </div>
-      <div class="text-right">
-        <p class="text-2xl font-bold text-black ">{{ $vehicles->price_per_day }}</p>
-        <p class="text-sm text-gray-500">per hari</p>
-      </div>
-    </div>
+<!-- Display selected vehicle -->
+                    @if(isset($vehicles))
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Selected Vehicle
+                            </label>
+
+                            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm text-gray-700">
+                                {{ $vehicles->brand }} - {{ $vehicles->model }} ({{ $vehicles->license_plate }})
+                            </div>
+
+                            <!-- Hidden input for vehicle_id -->
+                            <input type="hidden" name="vehicle_id" value="{{ $vehicles->id }}">
+                        </div>
+                    @else
+                        <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                            <p>No vehicle selected. Please <a href="{{ route('kendaraan') }}" class="underline">select a vehicle</a> first.</p>
+                        </div>
+                    @endif

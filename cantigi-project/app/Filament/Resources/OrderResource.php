@@ -123,7 +123,7 @@ class OrderResource extends Resource
                     ->prefix('#'),
 
                 TextColumn::make('user.name')
-                    ->label('Customer')
+                    ->label('user')
                     ->searchable()
                     ->sortable()
                     ->default('Unknown User'),

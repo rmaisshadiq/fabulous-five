@@ -77,7 +77,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/form-pemesanan', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     
-Route::get('/test-db', [OrderController::class, 'testDatabase']);
 //     Route::resource('orders', OrderController::class);
 // // atau minimal:
 // Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
