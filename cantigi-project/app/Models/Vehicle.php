@@ -31,7 +31,4 @@ class Vehicle extends Model
         return $this->hasMany(Order::class);
     }
 
-    public function order_reports() {
-        return $this->hasMany(OrderReport::class);
-    }
 }
