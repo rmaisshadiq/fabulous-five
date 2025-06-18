@@ -59,7 +59,7 @@ class VehicleResource extends Resource
                     ->options([
                         'active' => 'Active',
                         'maintenance' => 'In Maintenance',
-                        'retired' => 'Retired',
+                        'rented' => 'Rented',
                     ])
             ]);
     }
