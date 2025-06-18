@@ -67,11 +67,7 @@ class OrderController extends Controller
             ]);
             return back()->withErrors($e->errors())->withInput();
         }
-
-<<<<<<< HEAD
-    return redirect()->route('detail-pemesanan')->with('success', 'Order berhasil dibuat!');
-}
-=======
+        
         // Get current authenticated user
         $user = Auth::user();
         
@@ -192,5 +188,4 @@ class OrderController extends Controller
             ], 500);
         }
     }
->>>>>>> b700f0b4e7b10b9742b96c368bf91ee38dcfc088
 }

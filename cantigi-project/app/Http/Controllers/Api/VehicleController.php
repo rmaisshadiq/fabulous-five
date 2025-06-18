@@ -43,7 +43,7 @@ class VehicleController extends Controller
             'price_per_day' => 'required|numeric|min:0',
             'purchase_date' => 'required|date',
             'last_maintenance_date' => 'nullable|date',
-            'status' => 'required|in:active,retired,maintenance'
+            'status' => 'required|in:active,rented,maintenance'
         ]);
 
         if ($validator->fails()) {
