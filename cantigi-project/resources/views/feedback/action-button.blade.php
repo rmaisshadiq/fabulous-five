@@ -11,7 +11,7 @@
                     <button 
                         type="submit" 
                         id="submit-btn"
-                        class="px-8 py-3 bg-blue-600 text-white font-roboto font-semibold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="px-8 py-3 bg-green-600 text-white font-roboto font-semibold rounded-xl hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <span id="submit-text">Kirim Feedback</span>
                         <span id="loading-text" class="hidden">Mengirim...</span>
