@@ -3,6 +3,7 @@
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VerificationController;
 use App\Models\Article;
 use App\Models\Customer;
 use App\Models\Order;
@@ -85,6 +86,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/verify', [VerificationController::class, 'show'])->name('profile.verify');
+        Route::post('/verify', [VerificationController::class, 'store'])->name('profile.verify.store');
     });
     Route::get('/form-pemesanan/main-page/{id}', function ($id) {
         $vehicles = Vehicle::findOrFail($id);

@@ -13,8 +13,6 @@ class RentalRequirements extends Model
         'customer_id',
         'resident_id_card',
         'work_or_student_id_card',
-        'guarantee_type',
-        'motorcycle_guarantee_doc',
         'deposit_amount',
         'social_media_link',
         'verified_by',
@@ -27,5 +25,10 @@ class RentalRequirements extends Model
 
     public function employee() {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function verifiedBy()
+    {
+        return $this->belongsTo(Employee::class, 'verified_by');
     }
 }

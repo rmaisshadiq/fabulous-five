@@ -11,7 +11,9 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id'
+        'user_id',
+        'rental_requirement_id',
+        'verification_status'
     ];
 
     // GANTI dari "users()" ke "user()"
@@ -31,5 +33,18 @@ class Customer extends Model
         return $this->hasOne(RentalRequirements::class);
     }
 
+    public function isVerified(): bool
+    {
+        return $this->verification_status === 'verified';
+    }
 
+    public function needsVerification(): bool
+    {
+        return $this->verification_status === 'unverified';
+    }
+
+    public function isPending(): bool
+    {
+        return $this->verification_status === 'pending';
+    }
 }

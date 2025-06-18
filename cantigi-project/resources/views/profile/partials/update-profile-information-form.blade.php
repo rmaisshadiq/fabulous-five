@@ -7,20 +7,104 @@
         </div>
 
         <div class="space-y-8">
-            <!-- Profile Information Section -->
+            @if($customer->needsVerification())
+            <section class="bg-white rounded-xl shadow-sm overflow-hidden border">
+                <div class="bg-gradient-to-r from-yellow-500 to-yellow-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        {{ __('Account Verification') }}
+                    </h2>
+                    <p class="mt-1 text-gray-100">
+                        {{ __('Your account requires verification to access all features. Please complete the verification process.') }}
+                    </p>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                {{ __('Verification Required') }}
+                            </h3>
+                            <p class="mt-2 text-gray-600">
+                                {{ __('To continue using our services, please verify your account by providing the required documents and information.') }}
+                            </p>
+                            <div class="mt-4">
+                                <a href="{{ route('profile.verify') }}" 
+                                   class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-sm font-medium transition-colors duration-200">
+                                    {{ __('Start Verification') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            @elseif($customer->isPending())
+            <section class="bg-white rounded-xl shadow-sm overflow-hidden border">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {{ __('Verification Pending') }}
+                    </h2>
+                    <p class="mt-1 text-gray-100">
+                        {{ __('Your verification documents have been submitted and are currently under review.') }}
+                    </p>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                {{ __('Under Review') }}
+                            </h3>
+                            <p class="mt-2 text-gray-600">
+                                {{ __('Thank you for submitting your verification documents. Our team is currently reviewing your information. You will be notified via email once the verification process is complete.') }}
+                            </p>
+                            <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <p class="text-sm text-blue-800 font-medium">
+                                        {{ __('Estimated review time: 1-3 business days') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            @endif            <!-- Profile Information Section -->
             <div class="bg-white rounded-xl shadow-sm overflow-hidden border">
                 <div class="bg-gradient-to-r from-green-500 to-green-700 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white flex items-center">
+                        @if($customer->isVerified())
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {{ __('Profile Information - Verified') }}
+                        @else
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         {{ __('Profile Information') }}
+                        @endif
                     </h2>
                     <p class="mt-1 text-gray-100">
                         {{ __("Update your account's profile information and email address.") }}
                     </p>
-                </div>
 
+                </div>
                 <div class="p-6">
                     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
                         @csrf
