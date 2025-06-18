@@ -25,7 +25,10 @@ class EditVehicle extends EditRecord
             ->label('Selesaikan Maintenance')
             ->color('success')
             ->icon('heroicon-o-wrench')
-            ->visible(fn () => true) // debug: pastikan tombol muncul
+            ->visible(function () {
+                    $vehicle = $this->record;
+                    return \App\Models\Maintenance::where('vehicle_id', $vehicle->id)->exists();
+                })
             ->action(function () {
                 $vehicle = $this->record;
 
