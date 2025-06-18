@@ -66,17 +66,17 @@ class User extends Authenticatable implements FilamentUser
         return asset('images/user_profiles/default-avatar.png');
     }
 
-    public function customers()
+    public function customer()
     {
         return $this->hasOne(Customer::class);
     }
 
-    public function employees()
+    public function employee()
     {
         return $this->hasOne(Employee::class);
     }
 
-    public function orders()
+    public function order()
     {
         return $this->hasMany(Order::class);
     }

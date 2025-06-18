@@ -11,28 +11,23 @@ class Driver extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employees_id',
+        'employee_id',
         'license_number',
         'available_status'
     ];
 
-    public function employees()
+    public function employee()
     {
         return $this->belongsTo(Employee::class);
     }
 
-    public function orders()
+    public function order()
     {
         return $this->hasMany(Order::class);
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function order_reports()
-    {
-        return $this->hasMany(Order::class);
     }
 }
