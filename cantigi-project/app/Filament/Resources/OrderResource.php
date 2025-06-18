@@ -130,6 +130,7 @@ class OrderResource extends Resource
 
                 TextColumn::make('vehicle.model')
                     ->label('Vehicle')
+                    ->formatStateUsing(fn ($record) => $record->vehicle->brand . ' ' . $record->vehicle->model)
                     ->searchable()
                     ->sortable(),
 
