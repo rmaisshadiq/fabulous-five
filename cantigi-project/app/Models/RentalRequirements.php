@@ -21,11 +21,11 @@ class RentalRequirements extends Model
         'verified_at'
     ];
 
-    public function customers() {
+    public function customer() {
         return $this->belongsTo(Customer::class);
     }
 
-    public function employees() {
+    public function employee() {
         return $this->belongsTo(Employee::class);
     }
 }

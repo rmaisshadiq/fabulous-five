@@ -16,7 +16,7 @@ class ReturnLog extends Model
         'return_time'
     ];
 
-    public function orders() {
+    public function order() {
         return $this->belongsTo(Order::class);
     }
 }

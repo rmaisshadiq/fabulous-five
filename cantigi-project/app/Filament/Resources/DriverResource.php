@@ -26,8 +26,8 @@ class DriverResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('employees_id')
-                ->relationship('employees', 'name')
+                Select::make('employee_id')
+                ->relationship('employee.user', 'name')
                 ->required()
                 ->unique(ignoreRecord:true),
                 TextInput::make('license_number')
@@ -45,11 +45,11 @@ class DriverResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('employees.portrait')
+                Tables\Columns\ImageColumn::make('employee.portrait')
                     ->label('Employee portrait')
                     ->width(150)
                     ->height(150),
-                Tables\Columns\TextColumn::make('employees.name')
+                Tables\Columns\TextColumn::make('employee.user.name')
                     ->label('Employee name'),
                 Tables\Columns\TextColumn::make('license_number'),
                 Tables\Columns\TextColumn::make('available_status')
