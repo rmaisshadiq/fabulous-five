@@ -38,9 +38,15 @@ Route::get('/artikel/{id}', function ($id) {
 })->name('artikel.detail');
 
 
-Route::get('/Detail-Pemesanan', function () {
-    return view('Detail-Pemesanan.main-page');
+Route::get('/Detail-Pemesanan/{id}', function ($id) {
+    $orders = Order::with('vehicle')->findOrFail($id);
+    $vehicles = $orders->vehicles; // ambil langsung dari relasi
+    return view('Detail-Pemesanan.main-page', compact('orders', 'vehicles'));
 })->name('detail-pemesanan');
+
+Route::get('/pembayaran', function () {
+    return view('pembayaran.main-page');
+})->name('pembayaran');
 
 Route::get('/hubungi-kami', function () {
     return view('footer.hubungi-kami');

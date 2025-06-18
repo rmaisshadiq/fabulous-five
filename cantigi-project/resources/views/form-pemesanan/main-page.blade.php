@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
         <div class="bg-white shadow-lg rounded-lg p-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">Create New Order</h1>
+            <h1 class="text-2xl font-bold text-gray-900 mb-6">Form Rental Kendaraan</h1>
 
             @if ($errors->any())
                 <div class="mb-4 text-red-600">
@@ -24,7 +24,7 @@
                 {{-- Selected Vehicle --}}
                 @if(isset($vehicles))
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Selected Vehicle</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kendaraan yang dipilih</label>
                         <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm text-gray-700">
                             {{ $vehicles->brand }} - {{ $vehicles->model }} ({{ $vehicles->license_plate }})
                         </div>
@@ -78,7 +78,6 @@
 
                 {{-- Drop Address --}}
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Alamat Pengantaran</h3>
                     <div>
                         <label for="drop_address" class="block text-gray-800 font-semibold mb-2">Masukkan Alamat Anda <span class="text-red-500">*</span></label>
                         <input type="text" name="drop_address" id="drop_address" placeholder="Contoh: Jl. By Pass" required
@@ -93,7 +92,7 @@
                 {{-- Tombol --}}
                 <div class="flex space-x-4">
                     @if(isset($vehicles))
-                        <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Submit Order</button>
+                        <button type="submit" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">Submit Order</button>
                     @endif
                     <a href="{{ route('kendaraan') }}" class="flex-1 text-center bg-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-400">
                         {{ isset($vehicle) ? 'Change Vehicle' : 'Select Vehicle' }}
