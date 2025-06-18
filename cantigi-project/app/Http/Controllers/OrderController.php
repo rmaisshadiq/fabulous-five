@@ -61,6 +61,6 @@ public function store(Request $request)
         'status' => 'pending',
     ]);
 
-    return redirect()->route('orders.create')->with('success', 'Order berhasil dibuat!');
+    return redirect()->route('detail-pemesanan')->with('success', 'Order berhasil dibuat!');
 }
 }

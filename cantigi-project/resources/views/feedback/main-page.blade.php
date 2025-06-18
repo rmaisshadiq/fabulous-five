@@ -13,18 +13,18 @@
             <div class="bg-white rounded-2xl shadow-lg p-8">
                 <form id="feedback-form" action="{{ route('feedback.store') }}" method="POST">
                     @csrf
-                    
-                   <!-- Hidden Order (tidak ditampilkan ke user, tapi dikirim ke server) -->
-@if($orders->isNotEmpty())
-    @php $latestOrder = $orders->last(); @endphp
-    <input type="hidden" name="order_id" value="{{ $latestOrder->id }}">
-@endif
 
-<!-- Hidden Customer (tidak ditampilkan ke user, tapi dikirim ke server) -->
-@if($customers->isNotEmpty())
-    @php $activeCustomer = $customers->first(); @endphp
-    <input type="hidden" name="customer_id" value="{{ $activeCustomer->id }}">
-@endif
+                    <!-- Hidden Order (tidak ditampilkan ke user, tapi dikirim ke server) -->
+                    @if($orders->isNotEmpty())
+                        @php $latestOrder = $orders->last(); @endphp
+                        <input type="hidden" name="order_id" value="{{ $latestOrder->id }}">
+                    @endif
+
+                    <!-- Hidden Customer (tidak ditampilkan ke user, tapi dikirim ke server) -->
+                    @if($customers->isNotEmpty())
+                        @php $activeCustomer = $customers->first(); @endphp
+                        <input type="hidden" name="customer_id" value="{{ $activeCustomer->id }}">
+                    @endif
 
 
 
