@@ -12,6 +12,7 @@
 
         {{-- visi misi --}}
         @include('profile.partials.delete-user-form')
+        
 
     </section>
 @endsection

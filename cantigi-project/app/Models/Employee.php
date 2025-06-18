@@ -31,4 +31,9 @@ class Employee extends Model
     public function requirement() {
         return $this->hasMany(RentalRequirements::class);
     }
+
+    public function verifiedUsers()
+    {
+        return $this->hasMany(RentalRequirements::class, 'verified_by');
+    }
 }
