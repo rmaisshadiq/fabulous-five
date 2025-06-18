@@ -21,7 +21,9 @@ Route::get('/car', function () {
 })->name('kendaraan');
 
 Route::get('/about-us', function () {
-    return view('about-us.main-page');
+    $orders = Order::all();
+    $customers = Customer::all();
+    return view('about-us.main-page',compact('orders', 'customers'));
 })->name('about-us');
 
 Route::get('/artikel/{id}', function ($id) {

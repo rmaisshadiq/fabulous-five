@@ -44,6 +44,7 @@
           <h1 class="font-semibold text-lg xs:text-xl mb-2">Lainnya</h1>
           <ul class="space-y-1 text-sm">
             <li><a href="{{ route('syarat-ketentuan')}}" class="hover:underline">Syarat & Ketentuan</></li>
+            <li><a href="{{ route('feedback')}}" class="hover:underline">Rating & Ulasan</></li>
           </ul>
         </div>
       </div>
