@@ -38,6 +38,11 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('order-history')">
+                            {{ __('Order History') }}
+                    </x-dropdown-link>
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
