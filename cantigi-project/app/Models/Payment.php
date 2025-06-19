@@ -17,7 +17,11 @@ class Payment extends Model
         'status',
         'card_number',
         'card_holder_name',
-        'transaction_id'
+        'transaction_id',
+        'cvv',
+        'expiry_date',
+        'save_card',
+        'bank'
     ];
 
     protected $casts = [

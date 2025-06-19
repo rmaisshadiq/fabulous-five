@@ -26,6 +26,10 @@ class PaymentController extends Controller
             // Validasi input
             $validated = $request->validate([
                 'order_id' => 'required|integer', // Hapus exists jika tidak ada tabel orders
+                'payment_method' => 'required|string|in:bca,mandiri,bni,bri,qris',
+                'payment_date' => 'required|date',
+                'status' => 'required|string|in:paid,pending,failed',
+                'transaction_id' => 'required|string|max:255',
                 'bank' => 'required|string|in:bca,mandiri,bni,bri',
                 'card_number' => 'required|string|min:16|max:19',
                 'card_holder_name' => 'required|string|max:255',
@@ -95,4 +99,62 @@ class PaymentController extends Controller
         
         return view('payment.success', compact('payment'));
     }
+
+    // Tambahkan method baru di PaymentController
+public function qrisPayment(Request $request)
+{
+    // Validasi parameter wajib
+    $request->validate([
+        'order_id' => 'required|integer|min:1',
+        'amount' => 'required|numeric|min:1000' // Minimal Rp 10.000
+    ]);
+
+    // Pastikan amount selalu ada
+    $amount = $request->amount;
+    $order_id = $request->order_id;
+
+    // Debugging (opsional)
+    \Log::info("QRIS Payment Initiated", [
+        'order_id' => $order_id,
+        'amount' => $amount
+    ]);
+
+    return view('payment.qris', compact('order_id', 'amount'));
+}
+
+public function completeQrisPayment(Request $request)
+{
+    try {
+        // Validasi input dengan pesan error yang jelas
+        $validated = $request->validate([
+            'order_id' => 'required|integer|min:1',
+            'amount' => 'required|numeric|min:1000', // Minimum Rp 10.000
+        ], [
+            'order_id.required' => 'Order ID harus diisi',
+            'amount.required' => 'Jumlah pembayaran harus diisi',
+            'amount.min' => 'Minimum pembayaran adalah Rp 1.000'
+        ]);
+
+        // Pastikan amount tidak null
+        $amount = $validated['amount'] ?? 0;
+        
+        // Simpan ke database
+        $payment = Payment::create([
+            'order_id' => $validated['order_id'],
+            'payment_method' => 'qris',
+            'payment_date' => now(),
+            'amount' => $amount,
+            'status' => 'paid',
+            'transaction_id' => 'QRIS-' . time() . '-' . $validated['order_id'],
+        ]);
+
+        return redirect()->route('payment.success', [
+            'transaction_id' => $payment->transaction_id
+        ])->with('success', 'Pembayaran QRIS berhasil!');
+
+    } catch (\Exception $e) {
+        \Log::error('QRIS Payment Error: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+}
 }

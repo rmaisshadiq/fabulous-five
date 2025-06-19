@@ -78,6 +78,11 @@ Route::get('/feedback', function () {
     return view('feedback.main-page', compact('orders', 'customers'));
 })->middleware(['auth', 'verified'])->name('feedback');
 
+Route::get('/order-history', function () {
+    $orders = Order::with(['driver', 'vehicle'])->get();
+    return view('order-history.main-page', compact('orders'));
+})->name('order-history');
+
 
 
 Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
@@ -123,6 +128,20 @@ Route::get('/payment/success', [PaymentController::class, 'success'])->name('pay
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/qris', function () {
+    return view('pembayaran.qris');
+})->name('qris');
+
+// routes/web.php
+Route::get('/payment/qris', [PaymentController::class, 'qrisPayment'])
+     ->name('payment.qris')
+     ->defaults('amount', 0); // Nilai default jika amount tidak diberikan
+
+Route::post('/payment/qris/complete', [PaymentController::class, 'completeQrisPayment'])
+     ->name('payment.qris.complete');
+
+     
 
 require __DIR__ . '/auth.php';
 
