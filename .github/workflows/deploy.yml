@@ -31,3 +31,4 @@ jobs:
         
         - name: Build NPM Dependencies
           run: cd cantigi-project && npm run build
+  
