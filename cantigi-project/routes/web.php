@@ -78,6 +78,11 @@ Route::get('/feedback', function () {
     return view('feedback.main-page', compact('orders', 'customers'));
 })->middleware(['auth', 'verified'])->name('feedback');
 
+Route::get('/order-history', function () {
+    $orders = Order::with(['driver', 'vehicle'])->get();
+    return view('order-history.main-page', compact('orders'));
+})->name('order-history');
+
 
 
 Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');

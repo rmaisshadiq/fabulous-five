@@ -6,116 +6,18 @@
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Lakukan Pembayaran</h1>
-            <p class="text-gray-600">Lengkapi data pembayaran Anda dengan aman</p>
-        </div>
+        @include('pembayaran.header')
 
         <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-            <!-- Form Pembayaran -->
-            <div class="bg-white rounded-2xl shadow-xl p-8">
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Informasi Pembayaran</h2>
-                    
-                    <!-- Pilihan Bank -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Pilih Bank</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="bank-option relative">
-                                <input type="radio" id="bca" name="bank" value="bca" class="peer sr-only">
-                                <label for="bca" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="{{ asset('images/BANKING/BCA.png') }}" alt="BCA" class="w-12 h-4 mr-3">
-                                    <span class="font-medium">BCA</span>
-                                </label>
-                            </div>
-                            <div class="bank-option relative">
-                                <input type="radio" id="mandiri" name="bank" value="mandiri" class="peer sr-only">
-                                <label for="mandiri" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="{{ asset('images/BANKING/MANDIRI.png') }}" alt="Mandiri" class="w-10 h-4 mr-3">
-                                    <span class="font-medium">Mandiri</span>
-                                </label>
-                            </div>
-                            <div class="bank-option relative">
-                                <input type="radio" id="bni" name="bank" value="bni" class="peer sr-only">
-                                <label for="bni" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="{{ asset('images/BANKING/BNI.png') }}" alt="BNI" class="w-12 h-4 mr-3">
-                                    <span class="font-medium">BNI</span>
-                                </label>
-                            </div>
-                            <div class="bank-option relative">
-                                <input type="radio" id="bri" name="bank" value="bri" class="peer sr-only">
-                                <label for="bri" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="{{ asset('images/BANKING/BRI.png') }}" alt="BRI" class="w-10 h-5 mr-3">
-                                    <span class="font-medium">BRI</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Form Pembayaran -->
+        @include('pembayaran.form-pembayaran')
 
-                    <!-- Detail Kartu -->
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Kartu</label>
-                            <div class="relative">
-                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                       maxlength="19">
-                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                    <i class="fa fa-credit-card text-gray-400"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Pemegang Kartu</label>
-                            <input type="text" placeholder="Nama Lengkap" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ringkasan Pesanan -->
-            <div class="bg-white rounded-2xl shadow-xl p-8">
-                <h2 class="text-xl font-semibold text-gray-800 mb-6">Ringkasan Pesanan</h2>
-                
-                <div class="space-y-4 mb-6">
-                    <div class="flex justify-between items-center py-2">
-                        <span class="text-gray-600">Subtotal</span>
-                        <span class="font-medium">Rp 150.000</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2">
-                        <span class="text-gray-600">Biaya Admin</span>
-                        <span class="font-medium">Rp 2.500</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2">
-                        <span class="text-gray-600">PPN (11%)</span>
-                        <span class="font-medium">Rp 16.500</span>
-                    </div>
-                    <hr class="my-4">
-                    <div class="flex justify-between items-center py-2">
-                        <span class="text-lg font-semibold text-gray-800">Total</span>
-                        <span class="text-xl font-bold text-gray-8  00">Rp 169.000</span>
-                    </div>
-                </div>
-
-                <!-- Tombol Bayar -->
-                <button class="w-full bg-green-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-green-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
-                    <i class="fa fa-lock mr-2"></i>
-                    Bayar Sekarang
-                </button>
-
-                <!-- Metode Pembayaran Lain -->
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-600 mb-3">Atau bayar dengan</p>
-                    <div class="flex justify-center space-x-4">
-                        <div class="w-12 h-8 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold"><img src="{{ asset('images/BANKING/QRIS.png') }}" alt=""></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Ringkasan Pesanan -->
+        @include('pembayaran.ringkasan-pesanan')
         </div>
+
+        <!-- Footer Info -->
+        @include('pembayaran.footer-info')
     </div>
 
     <script>
