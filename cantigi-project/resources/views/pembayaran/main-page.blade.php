@@ -7,7 +7,7 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Checkout Pembayaran</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Lakukan Pembayaran</h1>
             <p class="text-gray-600">Lengkapi data pembayaran Anda dengan aman</p>
         </div>
 
@@ -24,28 +24,28 @@
                             <div class="bank-option relative">
                                 <input type="radio" id="bca" name="bank" value="bca" class="peer sr-only">
                                 <label for="bca" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="https://via.placeholder.com/40x25/0066CC/FFFFFF?text=BCA" alt="BCA" class="w-10 h-6 mr-3 rounded">
+                                    <img src="{{ asset('images/BANKING/BCA.png') }}" alt="BCA" class="w-12 h-4 mr-3">
                                     <span class="font-medium">BCA</span>
                                 </label>
                             </div>
                             <div class="bank-option relative">
                                 <input type="radio" id="mandiri" name="bank" value="mandiri" class="peer sr-only">
                                 <label for="mandiri" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="https://via.placeholder.com/40x25/FFD700/000000?text=MDR" alt="Mandiri" class="w-10 h-6 mr-3 rounded">
+                                    <img src="{{ asset('images/BANKING/MANDIRI.png') }}" alt="Mandiri" class="w-10 h-4 mr-3">
                                     <span class="font-medium">Mandiri</span>
                                 </label>
                             </div>
                             <div class="bank-option relative">
                                 <input type="radio" id="bni" name="bank" value="bni" class="peer sr-only">
                                 <label for="bni" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="https://via.placeholder.com/40x25/FF6600/FFFFFF?text=BNI" alt="BNI" class="w-10 h-6 mr-3 rounded">
+                                    <img src="{{ asset('images/BANKING/BNI.png') }}" alt="BNI" class="w-12 h-4 mr-3">
                                     <span class="font-medium">BNI</span>
                                 </label>
                             </div>
                             <div class="bank-option relative">
                                 <input type="radio" id="bri" name="bank" value="bri" class="peer sr-only">
                                 <label for="bri" class="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                                    <img src="https://via.placeholder.com/40x25/003366/FFFFFF?text=BRI" alt="BRI" class="w-10 h-6 mr-3 rounded">
+                                    <img src="{{ asset('images/BANKING/BRI.png') }}" alt="BRI" class="w-10 h-5 mr-3">
                                     <span class="font-medium">BRI</span>
                                 </label>
                             </div>
@@ -61,7 +61,7 @@
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                        maxlength="19">
                                 <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                    <i class="fas fa-credit-card text-gray-400"></i>
+                                    <i class="fa fa-credit-card text-gray-400"></i>
                                 </div>
                             </div>
                         </div>
@@ -71,34 +71,6 @@
                             <input type="text" placeholder="Nama Lengkap" 
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                         </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Expired</label>
-                                <input type="text" placeholder="MM/YY" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                       maxlength="5">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
-                                <div class="relative">
-                                    <input type="password" placeholder="123" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                           maxlength="3">
-                                    <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                        <i class="fas fa-lock text-gray-400"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Checkbox -->
-                    <div class="mt-6">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-600">Simpan informasi kartu untuk pembelian selanjutnya</span>
-                        </label>
                     </div>
                 </div>
             </div>
@@ -123,24 +95,13 @@
                     <hr class="my-4">
                     <div class="flex justify-between items-center py-2">
                         <span class="text-lg font-semibold text-gray-800">Total</span>
-                        <span class="text-xl font-bold text-blue-600">Rp 169.000</span>
-                    </div>
-                </div>
-
-                <!-- Keamanan -->
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                    <div class="flex items-center">
-                        <i class="fas fa-shield-alt text-green-600 mr-3"></i>
-                        <div>
-                            <h3 class="font-medium text-green-800">Pembayaran Aman</h3>
-                            <p class="text-sm text-green-600">Data Anda dienkripsi dengan SSL 256-bit</p>
-                        </div>
+                        <span class="text-xl font-bold text-gray-8  00">Rp 169.000</span>
                     </div>
                 </div>
 
                 <!-- Tombol Bayar -->
-                <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
-                    <i class="fas fa-lock mr-2"></i>
+                <button class="w-full bg-green-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-green-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                    <i class="fa fa-lock mr-2"></i>
                     Bayar Sekarang
                 </button>
 
@@ -148,26 +109,12 @@
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600 mb-3">Atau bayar dengan</p>
                     <div class="flex justify-center space-x-4">
-                        <div class="w-12 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">VISA</span>
-                        </div>
-                        <div class="w-12 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">MC</span>
-                        </div>
-                        <div class="w-12 h-8 bg-gradient-to-r from-blue-800 to-blue-900 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">AMEX</span>
+                        <div class="w-12 h-8 rounded flex items-center justify-center">
+                            <span class="text-white text-xs font-bold"><img src="{{ asset('images/BANKING/QRIS.png') }}" alt=""></span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Footer Info -->
-        <div class="max-w-4xl mx-auto mt-8 text-center">
-            <p class="text-sm text-gray-600">
-                <i class="fas fa-info-circle mr-1"></i>
-                Transaksi Anda akan muncul sebagai "MERCHANT NAME" di rekening bank Anda
-            </p>
         </div>
     </div>
 
