@@ -9,7 +9,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
-
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     $articles = Article::take(6)->get(); // Misalnya tampilkan 5 artikel saja
@@ -111,7 +111,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
 });
 
+Route::get('/payment', [PaymentController::class, 'create'])->name('payment.create');
 
+// Route untuk menyimpan data pembayaran
+Route::post('/payment', [PaymentController::class, 'store'])->name('payment.store');
+
+// Route untuk halaman sukses pembayaran
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+
+// Route lainnya...
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
 require __DIR__ . '/auth.php';
 

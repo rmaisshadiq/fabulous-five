@@ -136,7 +136,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('detail-pemesanan')->with('success', 'Order submitted successfully! Please wait for admin confirmation.');
+            return redirect()->route('detail-pemesanan', ['id'=> $order->id])->with('success', 'Order submitted successfully! Please wait for admin confirmation.');
 
         } catch (\Exception $e) {
             DB::rollBack();
