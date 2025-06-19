@@ -29,6 +29,7 @@ class EditVehicle extends EditRecord
                     $vehicle = $this->record;
                     return \App\Models\Maintenance::where('vehicle_id', $vehicle->id)->exists();
                 })
+            ->requiresConfirmation()
             ->action(function () {
                 $vehicle = $this->record;
 
