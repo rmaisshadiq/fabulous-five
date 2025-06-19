@@ -1,0 +1,33 @@
+name : Deploy Laravel Application to Production ServerAdd commentMore actions
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout Code
+          uses: actions/checkout@v3
+
+        
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+            php-version: 8.3
+        
+        - name: Install Composer Dependencies
+          run: cd cantigi-project && composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
+
+        - name: Install Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '20'
+
+        - name: Install NPM Dependencies
+          run: cd cantigi-project && npm install
+        
+        - name: Build NPM Dependencies
+          run: cd cantigi-project && npm run build
