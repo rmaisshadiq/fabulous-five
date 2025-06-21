@@ -44,13 +44,7 @@
                     <p class="text-sm text-gray-600 mb-3">Atau bayar dengan</p>
                     <div class="flex justify-center space-x-4">
                         <div class="w-12 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">VISA</span>
-                        </div>
-                        <div class="w-12 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">MC</span>
-                        </div>
-                        <div class="w-12 h-8 bg-gradient-to-r from-blue-800 to-blue-900 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">AMEX</span>
+                            <span class="text-white text-xs font-bold"><a href="{{ route('qris') }}">QRIS</a></span>
                         </div>
                     </div>
                 </div>

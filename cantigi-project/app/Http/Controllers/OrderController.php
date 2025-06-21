@@ -67,7 +67,7 @@ class OrderController extends Controller
             ]);
             return back()->withErrors($e->errors())->withInput();
         }
-        
+
         // Get current authenticated user
         $user = Auth::user();
         
@@ -136,8 +136,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-           return redirect()->route('detail-pemesanan', ['id' => $order->id])
-            ->with('success', 'Order submitted successfully! Please wait for admin confirmation.');
+            return redirect()->route('detail-pemesanan', ['id'=> $order->id])->with('success', 'Order submitted successfully! Please wait for admin confirmation.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -152,6 +151,41 @@ class OrderController extends Controller
             return back()
                 ->with('error', 'Failed to create order. Please try again.')
                 ->withInput();
+        }
+    }
+
+    // Method untuk debug database
+    public function testDatabase()
+    {
+        try {
+            // Test basic connection
+            DB::select('SELECT 1 as test');
+            
+            // Test orders table structure
+            $columns = DB::select('DESCRIBE orders');
+            
+            // Test orders count
+            $orderCount = Order::count();
+            
+            // Test user and vehicle relationships
+            $userCount = Customer::count(); // Menggunakan User instead of Customer
+            $vehicleCount = Vehicle::count();
+            
+            return response()->json([
+                'status' => 'OK',
+                'orders_table_columns' => $columns,
+                'orders_count' => $orderCount,
+                'users_count' => $userCount,
+                'vehicles_count' => $vehicleCount,
+                'current_user' => Auth::user() // Langsung menggunakan Auth::user()
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
         }
     }
 }

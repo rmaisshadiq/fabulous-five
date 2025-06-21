@@ -29,7 +29,7 @@
         });
 
         // Format tanggal expired
-        document.querySelector('input[placeholder="MM/YY"]').addEventListener('input', function(e) {
+        document.querySelector('input[name="expiry_date"]').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length >= 2) {
                 value = value.substring(0, 2) + '/' + value.substring(2, 4);
@@ -47,33 +47,13 @@
             });
         });
 
-        // Validasi form
-        document.querySelector('button').addEventListener('click', function(e) {
-            e.preventDefault();
+        // Handle form submission
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            const payButton = document.getElementById('payButton');
             
-            const cardNumber = document.getElementById('cardNumber').value;
-            const selectedBank = document.querySelector('input[name="bank"]:checked');
-            
-            if (!selectedBank) {
-                alert('Silakan pilih bank terlebih dahulu');
-                return;
-            }
-            
-            if (cardNumber.replace(/\s/g, '').length < 16) {
-                alert('Nomor kartu tidak valid');
-                return;
-            }
-            
-            // Simulasi proses pembayaran
-            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
-            this.disabled = true;
-            
-            setTimeout(() => {
-                alert('Pembayaran berhasil! Terima kasih.');
-                this.innerHTML = '<i class="fas fa-check mr-2"></i>Pembayaran Berhasil';
-                this.classList.remove('from-blue-600', 'to-blue-700');
-                this.classList.add('from-green-600', 'to-green-700');
-            }, 2000);
+            // Show loading state
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+            payButton.disabled = true;
         });
     </script>
 </body>

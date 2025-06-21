@@ -1,5 +1,9 @@
-<x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-green-200 py-12 px-4 sm:px-6 lg:px-8">
+@extends('layouts.main')
+
+@section('title','Registrasi')
+
+@section('content')
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
                 <!-- Header -->
@@ -106,4 +110,4 @@
             </div>
         </div>
     </div>
-</x-guest-layout>
+@endsection

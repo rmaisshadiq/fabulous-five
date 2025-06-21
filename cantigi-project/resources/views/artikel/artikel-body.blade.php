@@ -6,7 +6,7 @@
             <div class="prose prose-lg prose-gray max-w-none">
                 <div class="text-gray-700 leading-relaxed text-lg">
                     <div class="first-letter:text-6xl first-letter:font-bold first-letter:text-green-600 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
-                        {!! nl2br(e($article->content)) !!}
+                        {!! $article->content !!}
                     </div>
                 </div>
             </div>

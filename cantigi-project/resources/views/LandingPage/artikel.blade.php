@@ -57,12 +57,13 @@
                     <!-- Meta Info -->
                     <div class="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
                         <div class="flex items-center space-x-2">
-                            <div class="w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
-                                <span class="text-white font-semibold text-xs">
-                                    {{ substr($article->author ?? 'Admin', 0, 1) }}
-                                </span>
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center">
+                                {{-- <span class="text-white font-semibold text-xs">
+                                    {{ substr($article->employees->user->name ?? 'Admin', 0, 1) }}
+                                </span> --}}
+                                <img src="{{ asset('storage/' . $article->employees->user->profile_image) }}" alt="{{ $article->employees->user->name }}" class="w-full h-full object-cover rounded-full">
                             </div>
-                            <span>{{ $article->author ?? 'Admin' }}</span>
+                            <span>{{ $article->employees->user->name ?? 'Admin' }}</span>
                         </div>
                     </div>
                     

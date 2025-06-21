@@ -1,7 +1,11 @@
-<x-guest-layout>
+@extends('layouts.main')
+
+@section('title', 'Login')
+
+@section('content')
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-        <div class="min-h-screen flex items-center justify-center bg-green-200 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="w-full max-w-md mx-auto relative z-10">
         <!-- Main form container -->
         <div class="backdrop-blur-lg bg-white/95 rounded-2xl shadow-2xl p-8 border border-white/20">
@@ -231,4 +235,4 @@
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
         }
     </style>
-</x-guest-layout>
+@endsection
