@@ -51,17 +51,20 @@
                     
                     <!-- Article Excerpt -->
                     <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                        {{ Str::limit($article->content, 120) }}
+                        {{ Str::limit(strip_tags($article->content), 80) }}
                     </p>
                     
                     <!-- Meta Info -->
                     <div class="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
                         <div class="flex items-center space-x-2">
                             <div class="w-6 h-6 rounded-full flex items-center justify-center">
-                                {{-- <span class="text-white font-semibold text-xs">
-                                    {{ substr($article->employees->user->name ?? 'Admin', 0, 1) }}
-                                </span> --}}
-                                <img src="{{ asset('storage/' . $article->employees->user->profile_image) }}" alt="{{ $article->employees->user->name }}" class="w-full h-full object-cover rounded-full">
+                                @if($article->employees->user->profile_image)
+                                    <img src="{{ asset('storage/' . $article->employees->user->profile_image) }}" alt="{{ $article->employees->user->name }}" class="w-full h-full object-cover rounded-full">
+                                @else
+                                    <span class="h-6 w-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-semibold text-xs ring-2 ring-white shadow-sm">
+                                        {{ strtoupper(substr($article->employees->user->name ?? 'A', 0, 1)) }}
+                                    </span>
+                                @endif
                             </div>
                             <span>{{ $article->employees->user->name ?? 'Admin' }}</span>
                         </div>
