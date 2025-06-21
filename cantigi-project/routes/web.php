@@ -24,7 +24,7 @@ Route::get('/car', function () {
 Route::get('/about-us', function () {
     $orders = Order::all();
     $customers = Customer::all();
-    return view('about-us.main-page',compact('orders', 'customers'));
+    return view('about-us.main-page', compact('orders', 'customers'));
 })->name('about-us');
 
 Route::get('/artikel/{id}', function ($id) {
@@ -107,43 +107,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/form-pemesanan', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    
-//     Route::resource('orders', OrderController::class);
-// // atau minimal:
-// Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
-// Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
 
-    
+    Route::prefix('payment')->group(function () {
+        Route::get('/', [PaymentController::class, 'create'])->name('payment.create');
+        Route::get('/', [PaymentController::class, 'store'])->name('payment.store');
+        Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
+        Route::get('/qris', function () {
+            return view('pembayaran.qris');
+        })->name('qris');
+        Route::get('/payment/qris', [PaymentController::class, 'qrisPayment'])
+            ->name('payment.qris')
+            ->defaults('amount', 0); // Nilai default jika amount tidak diberikan
+        Route::post('/payment/qris/complete', [PaymentController::class, 'completeQrisPayment'])
+            ->name('payment.qris.complete');
+    });
 });
 
-Route::get('/payment', [PaymentController::class, 'create'])->name('payment.create');
-
-// Route untuk menyimpan data pembayaran
-Route::post('/payment', [PaymentController::class, 'store'])->name('payment.store');
-
-// Route untuk halaman sukses pembayaran
-Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
-
-// Route lainnya...
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-Route::get('/qris', function () {
-    return view('pembayaran.qris');
-})->name('qris');
-
-// routes/web.php
-Route::get('/payment/qris', [PaymentController::class, 'qrisPayment'])
-     ->name('payment.qris')
-     ->defaults('amount', 0); // Nilai default jika amount tidak diberikan
-
-Route::post('/payment/qris/complete', [PaymentController::class, 'completeQrisPayment'])
-     ->name('payment.qris.complete');
-
-     
 
 require __DIR__ . '/auth.php';
-
-
-
