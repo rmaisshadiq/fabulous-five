@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     $articles = Article::take(6)->get(); // Misalnya tampilkan 5 artikel saja
+    $article = Article::all();
     return view('LandingPage.homePage', compact('articles'));
 })->name('home');
 
