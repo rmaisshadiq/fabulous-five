@@ -10,6 +10,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     $articles = Article::take(6)->get(); // Misalnya tampilkan 5 artikel saja
@@ -42,6 +43,9 @@ Route::get('/artikel/{id}', function ($id) {
 Route::get('/Detail-Pemesanan/{id}', function ($id) {
     $orders = Order::with('vehicle')->findOrFail($id);
     $vehicles = $orders->vehicles; // ambil langsung dari relasi
+    if ($orders->customer_id != Auth::user()->id) {
+        return redirect()->route('home');
+    }
     return view('Detail-Pemesanan.main-page', compact('orders', 'vehicles'));
 })->name('detail-pemesanan');
 

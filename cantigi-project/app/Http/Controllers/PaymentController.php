@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
@@ -16,10 +17,15 @@ class PaymentController extends Controller
     public function create(Request $request, $id)
     {
         $orders = Order::find($id);
+        if ($orders->customer_id != Auth::user()->id) {
+            return redirect()->route('home');
+        }
         if (!$orders) {
             return redirect()->route('home');
         }
-
+        if ($orders->status != 'confirmed') {
+            return redirect()->back()->with('error', 'Pemesanan anda belum dikonfirmasi!');
+        }
         // Check if payment already exists for this order
         $existingPayment = Payment::where('order_id', $orders->id)->first();
 
@@ -68,6 +74,9 @@ class PaymentController extends Controller
     public function qrisPayment($id)
     {
         $payment = Payment::with('order')->findOrFail($id);
+        if ($payment->order->customer_id != Auth::user()->id) {
+            return redirect()->route('home');
+        }
 
         return view('pembayaran.qris', compact('payment'));
     }
@@ -90,7 +99,7 @@ class PaymentController extends Controller
 
         if ($payment->order) {
             $payment->order->update([
-                'status' => 'completed',
+                'status' => 'in_progress',
             ]);
         }
 
