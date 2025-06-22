@@ -76,12 +76,6 @@ class OrderController extends Controller
             return redirect()->route('login')->with('error', 'Please login first.');
         }
 
-        // Optional: Check if user profile is complete (if needed)
-        // if (!$user->name || !$user->email || !$user->phone) {
-        //     Log::warning('User profile incomplete', ['user_id' => $user->id]);
-        //     return redirect()->route('profile.edit')->with('error', 'Please complete your profile first.');
-        // }
-
         // Check if vehicle exists and is available
         $vehicle = Vehicle::find($validated['vehicle_id']);
         if (!$vehicle) {

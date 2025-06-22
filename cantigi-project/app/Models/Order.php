@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Order extends Model
 {
@@ -21,13 +23,6 @@ class Order extends Model
         'status',
     ];
 
-    protected $casts = [
-        'start_booking_date' => 'date',
-        'end_booking_date' => 'date',
-        'start_booking_time' => 'datetime:H:i',
-        'end_booking_time' => 'datetime:H:i',
-    ];
-
     public function feedback() {
         return $this->hasMany(Feedback::class);
     }
@@ -37,10 +32,6 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    // Jika masih ingin menggunakan customer() method untuk backward compatibility
-    // public function customer() {
-    //     return $this->belongsTo(Customer::class, 'user_id', 'user_id');
-    // }
 
     public function vehicle() {
         return $this->belongsTo(Vehicle::class);
@@ -56,6 +47,118 @@ class Order extends Model
 
     public function return_log() {
         return $this->hasOne(ReturnLog::class);
+    }
+
+    public function getAdminFeeAttribute()
+    {
+        return 2500;
+    }
+
+    public function getTaxAttribute()
+    {
+        return $this->total_price * 0.11; // 11%
+    }
+
+    public function getFinalTotalAttribute()
+    {
+        return $this->total_price + $this->admin_fee + $this->tax;
+    }
+
+    // Format currency for display
+    public function getFormattedTotalPriceAttribute()
+    {
+        return number_format($this->total_price, 0, ',', '.');
+    }
+
+    public function getFormattedAdminFeeAttribute()
+    {
+        return number_format($this->admin_fee, 0, ',', '.');
+    }
+
+    public function getFormattedTaxAttribute()
+    {
+        return number_format($this->tax, 0, ',', '.');
+    }
+
+    public function getFormattedFinalTotalAttribute()
+    {
+        return number_format($this->final_total, 0, ',', '.');
+    }
+
+    public function getDurationAttribute()
+    {
+        if (!$this->start_booking_date || !$this->end_booking_date || 
+            !$this->start_booking_time || !$this->end_booking_time) {
+            return 'Data tidak lengkap';
+        }
+
+        try {
+            // Gabungkan date dan time dengan format yang benar
+            $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', 
+                $this->start_booking_date . ' ' . $this->start_booking_time);
+            $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', 
+                $this->end_booking_date . ' ' . $this->end_booking_time);
+            
+            $diffInHours = $startDateTime->diffInHours($endDateTime);
+            $diffInDays = $startDateTime->diffInDays($endDateTime);
+            
+            // Format output berdasarkan durasi
+            if ($diffInHours < 24) {
+                return $diffInHours . ' Jam';
+            } elseif ($diffInDays == 1) {
+                return '1 Hari (' . $diffInHours . ' Jam)';
+            } else {
+                return $diffInDays . ' Hari (' . $diffInHours . ' Jam)';
+            }
+        } catch (\Exception $e) {
+            // Debug: Log error untuk melihat data sebenarnya
+            Log::error('Duration calculation error: ' . $e->getMessage(), [
+                'start_booking_date' => $this->start_booking_date,
+                'end_booking_date' => $this->end_booking_date,
+                'start_booking_time' => $this->start_booking_time,
+                'end_booking_time' => $this->end_booking_time,
+                'concatenated_start' => $this->start_booking_date . ' ' . $this->start_booking_time,
+                'concatenated_end' => $this->end_booking_date . ' ' . $this->end_booking_time
+            ]);
+            
+            return 'Error menghitung durasi';
+        }
+    }
+
+    // Accessor untuk mendapatkan durasi dalam jam
+    public function getDurationInHoursAttribute()
+    {
+        if (!$this->start_booking_date || !$this->end_booking_date) {
+            return 0;
+        }
+
+        $startDateTime = Carbon::parse($this->start_booking_date . ' ' . $this->start_booking_time);
+        $endDateTime = Carbon::parse($this->end_booking_date . ' ' . $this->end_booking_time);
+        
+        return $startDateTime->diffInHours($endDateTime);
+    }
+
+    // Accessor untuk mendapatkan durasi dalam hari
+    public function getDurationInDaysAttribute()
+    {
+        if (!$this->start_booking_date || !$this->end_booking_date) {
+            return 0;
+        }
+
+        $startDateTime = Carbon::parse($this->start_booking_date . ' ' . $this->start_booking_time);
+        $endDateTime = Carbon::parse($this->end_booking_date . ' ' . $this->end_booking_time);
+        
+        return $startDateTime->diffInDays($endDateTime);
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        if (!$this->vehicle_id || !$this->duration_in_days) {
+            return 0;
+        }
+
+        $vehicle = Vehicle::find($this->vehicle_id);
+        return $vehicle->price_per_day * $this->duration_in_days;
     }
 
     // // Updated accessor untuk menggunakan user langsung

@@ -45,10 +45,6 @@ Route::get('/Detail-Pemesanan/{id}', function ($id) {
     return view('Detail-Pemesanan.main-page', compact('orders', 'vehicles'));
 })->name('detail-pemesanan');
 
-Route::get('/pembayaran', function () {
-    return view('pembayaran.main-page');
-})->name('pembayaran');
-
 Route::get('/hubungi-kami', function () {
     return view('footer.hubungi-kami');
 })->name('hubungi-kami');
@@ -85,11 +81,9 @@ Route::get('/order-history', function () {
 })->name('order-history');
 
 
-
 Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
 // Route untuk menyimpan feedback
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
-
 
 
 
@@ -110,16 +104,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
     Route::prefix('payment')->group(function () {
-        Route::get('/', [PaymentController::class, 'create'])->name('payment.create');
-        Route::get('/', [PaymentController::class, 'store'])->name('payment.store');
+        Route::get('/{id}', [PaymentController::class, 'create'])->name('payment.create');
+        Route::post('/', [PaymentController::class, 'store'])->name('payment.store');
         Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
-        Route::get('/qris', function () {
-            return view('pembayaran.qris');
-        })->name('qris');
-        Route::get('/payment/qris', [PaymentController::class, 'qrisPayment'])
-            ->name('payment.qris')
-            ->defaults('amount', 0); // Nilai default jika amount tidak diberikan
-        Route::post('/payment/qris/complete', [PaymentController::class, 'completeQrisPayment'])
+        Route::get('/qris/{id}', [PaymentController::class, 'qrisPayment'])
+            ->name('payment.qris');
+        Route::post('/qris/complete/{id}', [PaymentController::class, 'completeQrisPayment'])
             ->name('payment.qris.complete');
     });
 });

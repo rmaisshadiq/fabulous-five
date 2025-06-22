@@ -12,16 +12,10 @@ class Payment extends Model
     protected $fillable = [
         'order_id',
         'payment_date',
-        'amount',
-        'payment_method',
-        'status',
-        'card_number',
-        'card_holder_name',
         'transaction_id',
-        'cvv',
-        'expiry_date',
-        'save_card',
-        'bank'
+        'amount',
+        'status',
+        'completed_at'
     ];
 
     protected $casts = [
@@ -50,6 +44,14 @@ class Payment extends Model
         if (strlen($cardNumber) < 8) return $cardNumber;
         
         return substr($cardNumber, 0, 4) . str_repeat('*', strlen($cardNumber) - 8) . substr($cardNumber, -4);
+    }
+
+    public function getTransactionId()
+    {   
+        $order = Order::find($this->order_id);
+
+        $transaction_id = 'QRIS-' . time() . '-' . $order->id;
+        return $transaction_id;
     }
 
     // Scope untuk filter berdasarkan status

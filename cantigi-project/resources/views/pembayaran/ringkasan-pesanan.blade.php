@@ -5,20 +5,20 @@
                 <div class="space-y-4 mb-6">
                     <div class="flex justify-between items-center py-2">
                         <span class="text-gray-600">Subtotal</span>
-                        <span class="font-medium">Rp 150.000</span>
+                        <span class="font-medium">Rp{{ $orders->formatted_total_price }}</span>
                     </div>
                     <div class="flex justify-between items-center py-2">
                         <span class="text-gray-600">Biaya Admin</span>
-                        <span class="font-medium">Rp 2.500</span>
+                        <span class="font-medium">Rp{{ $orders->formatted_admin_fee }}</span>
                     </div>
                     <div class="flex justify-between items-center py-2">
                         <span class="text-gray-600">PPN (11%)</span>
-                        <span class="font-medium">Rp 16.500</span>
+                        <span class="font-medium">Rp{{ $orders->formatted_tax }}</span>
                     </div>
                     <hr class="my-4">
                     <div class="flex justify-between items-center py-2">
                         <span class="text-lg font-semibold text-gray-800">Total</span>
-                        <span class="text-xl font-bold text-blue-600">Rp 169.000</span>
+                        <span class="text-xl font-bold text-blue-600">Rp{{ $orders->formatted_final_total }}</span>
                     </div>
                 </div>
 
@@ -34,18 +34,12 @@
                 </div>
 
                 <!-- Tombol Bayar -->
-                <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
-                    <i class="fas fa-lock mr-2"></i>
-                    Bayar Sekarang
-                </button>
-
-                <!-- Metode Pembayaran Lain -->
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-600 mb-3">Atau bayar dengan</p>
-                    <div class="flex justify-center space-x-4">
-                        <div class="w-12 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded flex items-center justify-center">
-                            <span class="text-white text-xs font-bold"><a href="{{ route('qris') }}">QRIS</a></span>
-                        </div>
-                    </div>
-                </div>
+                <form action="{{ route('payment.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="order_id" value="{{ $orders->id }}">
+                    <input type="hidden" name="amount" value="{{ $orders->final_total }}">
+                    <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                        Bayar dengan QRIS
+                    </button>
+                </form>
             </div>

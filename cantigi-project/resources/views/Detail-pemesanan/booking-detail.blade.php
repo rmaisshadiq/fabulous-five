@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                                 <div class="flex items-center text-sm text-gray-600">
-                                    <span>Durasi: 1 Hari (24 Jam)</span>
+                                    <span>Durasi: {{ $orders->duration ?? 'Tidak dapat dihitung' }}</span>
                             </div>
                         </div>
                     </div>

@@ -45,7 +45,7 @@
                                                             </div>
                                                             <div>
                                                                 <p class="text-sm text-gray-500">Tanggal Booking</p>
-                                                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($order->start_booking_date)->format('d M Y') }}</p>
+                                                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y') }}</p>
                                                             </div>
                                                         </div>
                                                         <div class="flex items-center">
@@ -53,8 +53,8 @@
                                                                 <i class="fas fa-clock text-green-600 text-sm"></i>
                                                             </div>
                                                             <div>
-                                                                <p class="text-sm text-gray-500">Waktu</p>
-                                                                <p class="font-semibold text-gray-800">{{ $order->start_booking_time }} - {{ $order->end_booking_time }}</p>
+                                                                <p class="text-sm text-gray-500">Tanggal Rental</p>
+                                                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($order->start_booking_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($order->end_booking_date)->format('d M Y') }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -95,6 +95,21 @@
                                                                 <p class="font-medium text-gray-800 leading-relaxed">{{ $order->drop_address }}</p>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                @endif
+                                                @if($order->status == 'pending')
+                                                    <div class="mt-4 text-right">
+                                                        <a href="{{ route('detail-pemesanan', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200">
+                                                            Lanjutkan Pemesanan
+                                                            <i class="fas fa-arrow-right ml-2"></i>
+                                                        </a>
+                                                    </div>
+                                                @elseif($order->status == 'confirmed')
+                                                    <div class="mt-4 text-right">
+                                                        <a href="{{ route('payment.create', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200">
+                                                            Lanjutkan Pembayaran
+                                                            <i class="fas fa-arrow-right ml-2"></i>
+                                                        </a>
                                                     </div>
                                                 @endif
                                             </div>

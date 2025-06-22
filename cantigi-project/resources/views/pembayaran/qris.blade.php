@@ -8,11 +8,7 @@
         <div class="p-8">
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-bold text-gray-800">Pembayaran QRIS</h1>
-                @isset($amount)
-                <p class="mt-2 text-gray-600">Total Pembayaran: Rp {{ number_format($amount, 0, ',', '.') }}</p>
-                @else
-                <p class="mt-2 text-red-500">Jumlah pembayaran tidak tersedia</p>
-                @endisset
+                <p class="mt-2 text-gray-600">Total Pembayaran: Rp {{ number_format($payment->amount, 0, ',', '.') }}</p>
             </div>
             
             <div class="flex flex-col items-center">
@@ -34,10 +30,10 @@
                 </div>
                 
                 <!-- Payment Form -->
-                <form action="{{ route('payment.qris.complete') }}" method="POST" class="w-full">
+                <form action="{{ route('payment.qris.complete', $payment->id) }}" method="POST" class="w-full">
                     @csrf
-                    <input type="hidden" name="order_id" value="{{ $order_id ?? '' }}">
-                    <input type="hidden" name="amount" value="{{ $amount ?? '' }}">
+                    <input type="hidden" name="order_id" value="{{ $order->id ?? '' }}">
+                    <input type="hidden" name="amount" value="{{ $order->payment->amount ?? '' }}">
                     
                     <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
                         Selesai Pembayaran

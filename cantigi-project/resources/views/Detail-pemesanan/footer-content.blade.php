@@ -9,7 +9,7 @@
         <div class="flex gap-3">
             @if ($orders->status === 'confirmed')
                 <!-- Tombol Bayar -->
-                 <a href="{{ route('pembayaran') }}"
+                 <a href="{{ route('payment.create',  $orders->id) }}""
                  {{-- <a href="{{ route('pembayaran.show', $orders->id) }}" --}}
                    class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm">
                     <i class="fa fa-credit-card mr-2"></i>
