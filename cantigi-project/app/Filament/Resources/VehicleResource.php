@@ -16,12 +16,13 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Mask;
 
 class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
     public static function form(Form $form): Form
     {
@@ -32,7 +33,11 @@ class VehicleResource extends Resource
                     ->directory('vehicles')
                     ->required()
                     ->columnSpan(2),
-                TextInput::make('vehicle_name')
+                TextInput::make('brand')
+                    ->required(),
+                TextInput::make('car_type')
+                    ->required(),
+                TextInput::make('model')
                     ->required(),
                 TextInput::make('license_plate')
                     ->required(),
@@ -40,11 +45,21 @@ class VehicleResource extends Resource
                     ->format('Y/m/d'),
                 DatePicker::make('last_maintenance_date')
                     ->format('Y/m/d'),
+               TextInput::make('price_per_day')
+                    ->label('Harga per Hari')
+                    ->required()
+                    ->extraAttributes([
+                        'x-data' => '',
+                        'x-on:input' => 'formatRupiah($event)',
+                        'inputmode' => 'numeric',
+                    ])
+                    ->prefix('Rp '),
+
                 Select::make('status')
                     ->options([
                         'active' => 'Active',
                         'maintenance' => 'In Maintenance',
-                        'retired' => 'Retired',
+                        'rented' => 'Rented',
                     ])
             ]);
     }
@@ -53,11 +68,14 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('vehicle_image'),
-                Tables\Columns\TextColumn::make('vehicle_name'),
+                Tables\Columns\ImageColumn::make('vehicle_image')
+                    ->width(200)
+                    ->height(200),
+                Tables\Columns\TextColumn::make('brand'),
                 Tables\Columns\TextColumn::make('license_plate'),
                 Tables\Columns\TextColumn::make('purchase_date'),
                 Tables\Columns\TextColumn::make('last_maintenance_date'),
+                Tables\Columns\TextColumn::make('price_per_day'),
                 Tables\Columns\TextColumn::make('status')
 
             ])

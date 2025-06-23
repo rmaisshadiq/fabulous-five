@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
-use App\Filament\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -21,36 +20,46 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                FileUpload::make('portrait')
-                    ->image()
-                    ->directory('employees')
-                    ->required()
-                    ->columnSpan(2),
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('email')
-                    ->email()
-                    ->required(),
+                // FileUpload::make('portrait')
+                //     ->label('Foto Karyawan')
+                //     ->image()
+                //     ->directory('portraits') // Disimpan di storage/app/public/portraits
+                //     ->imageEditor()
+                //     ->required(), // Ubah ke ->nullable() jika portrait sudah nullable di DB
+
                 TextInput::make('position')
+                    ->label('Jabatan')
                     ->required(),
+
                 TextInput::make('phone')
+                    ->label('Nomor Telepon')
+                    ->tel()
                     ->required(),
+
                 DatePicker::make('hire_date')
+                    ->label('Tanggal Masuk')
                     ->format('Y/m/d')
                     ->required(),
+
                 Select::make('status')
+                    ->label('Status')
                     ->options([
                         'active' => 'Active',
-                        'retired' => 'Retired'
+                        'retired' => 'Retired',
                     ])
                     ->required(),
-                
+
+                Select::make('user_id')
+                    ->label('User')
+                    ->relationship('user', 'name')
+                    ->required()
+                    ->unique(ignoreRecord: true),
             ]);
     }
 
@@ -58,13 +67,29 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('portrait'),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('phone'),
-                Tables\Columns\TextColumn::make('position'),
-                Tables\Columns\TextColumn::make('hire_date'),
+                Tables\Columns\ImageColumn::make('user.profile_image')
+                    ->label('Foto Karyawan')
+                    ->width(80)
+                    ->height(80),
+
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Nama Karyawan'),
+
+                Tables\Columns\TextColumn::make('user.email')
+                    ->label('Email')
+                    ->icon('heroicon-o-envelope'),
+
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Telepon'),
+
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Jabatan'),
+
+                Tables\Columns\TextColumn::make('hire_date')
+                    ->label('Tanggal Masuk'),
+
                 Tables\Columns\TextColumn::make('status')
+                    ->label('Status'),
             ])
             ->filters([
                 //
