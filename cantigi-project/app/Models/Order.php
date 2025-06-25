@@ -12,7 +12,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id',        
+        'customer_id',
         'vehicle_id',
         'driver_id',
         'start_booking_date',
@@ -23,29 +23,35 @@ class Order extends Model
         'status',
     ];
 
-    public function feedback() {
+    public function feedback()
+    {
         return $this->hasMany(Feedback::class);
     }
 
     // Ganti relationship customer dengan user
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 
 
-    public function vehicle() {
+    public function vehicle()
+    {
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function driver() {
+    public function driver()
+    {
         return $this->belongsTo(Driver::class);
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->hasOne(Payment::class);
     }
 
-    public function return_log() {
+    public function return_log()
+    {
         return $this->hasOne(ReturnLog::class);
     }
 
@@ -87,21 +93,27 @@ class Order extends Model
 
     public function getDurationAttribute()
     {
-        if (!$this->start_booking_date || !$this->end_booking_date || 
-            !$this->start_booking_time || !$this->end_booking_time) {
+        if (
+            !$this->start_booking_date || !$this->end_booking_date ||
+            !$this->start_booking_time || !$this->end_booking_time
+        ) {
             return 'Data tidak lengkap';
         }
 
         try {
             // Gabungkan date dan time dengan format yang benar
-            $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', 
-                $this->start_booking_date . ' ' . $this->start_booking_time);
-            $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', 
-                $this->end_booking_date . ' ' . $this->end_booking_time);
-            
+            $startDateTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $this->start_booking_date . ' ' . $this->start_booking_time
+            );
+            $endDateTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $this->end_booking_date . ' ' . $this->end_booking_time
+            );
+
             $diffInHours = $startDateTime->diffInHours($endDateTime);
             $diffInDays = $startDateTime->diffInDays($endDateTime);
-            
+
             // Format output berdasarkan durasi
             if ($diffInHours < 24) {
                 return $diffInHours . ' Jam';
@@ -120,7 +132,7 @@ class Order extends Model
                 'concatenated_start' => $this->start_booking_date . ' ' . $this->start_booking_time,
                 'concatenated_end' => $this->end_booking_date . ' ' . $this->end_booking_time
             ]);
-            
+
             return 'Error menghitung durasi';
         }
     }
@@ -134,7 +146,7 @@ class Order extends Model
 
         $startDateTime = Carbon::parse($this->start_booking_date . ' ' . $this->start_booking_time);
         $endDateTime = Carbon::parse($this->end_booking_date . ' ' . $this->end_booking_time);
-        
+
         return $startDateTime->diffInHours($endDateTime);
     }
 
@@ -147,7 +159,7 @@ class Order extends Model
 
         $startDateTime = Carbon::parse($this->start_booking_date . ' ' . $this->start_booking_time);
         $endDateTime = Carbon::parse($this->end_booking_date . ' ' . $this->end_booking_time);
-        
+
         return $startDateTime->diffInDays($endDateTime);
     }
 
@@ -161,61 +173,187 @@ class Order extends Model
         return $vehicle->price_per_day * $this->duration_in_days;
     }
 
-    // // Updated accessor untuk menggunakan user langsung
-    // public function getCustomerNameAttribute()
-    // {
-    //     if (!$this->relationLoaded('users')) {
-    //         $this->load('users');
-    //     }
-        
-    //     return $this->user?->name ?? 'Unknown Customer';
-    // }
+    public function getRentalDurationLeftAttribute()
+    {
+        // Check if required fields are present
+        if (
+            !$this->start_booking_date || !$this->end_booking_date ||
+            !$this->start_booking_time || !$this->end_booking_time
+        ) {
+            return 'Data tidak lengkap';
+        }
 
-    // // Atau bisa rename jadi getUserNameAttribute untuk lebih konsisten
-    // public function getUserNameAttribute()
-    // {
-    //     if (!$this->relationLoaded('users')) {
-    //         $this->load('users');
-    //     }
-        
-    //     return $this->user?->name ?? 'Unknown User';
-    // }
+        try {
+            // Create start and end datetime objects
+            $startDateTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $this->start_booking_date . ' ' . $this->start_booking_time
+            );
+            $endDateTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $this->end_booking_date . ' ' . $this->end_booking_time
+            );
 
-    // public function getVehicleNameAttribute()
-    // {
-    //     if (!$this->relationLoaded('vehicles')) {
-    //         $this->load('vehicles');
-    //     }
-        
-    //     return $this->vehicle?->name ?? 'Unknown Vehicle';
-    // }
+            $now = Carbon::now();
 
-    // public function getDriverNameAttribute()
-    // {
-    //     if (!$this->relationLoaded('drivers')) {
-    //         $this->load('drivers.employees');
-    //     }
-        
-    //     return $this->driver?->user?->name ?? 'Not Assigned';
-    // }
+            // If rental hasn't started yet
+            if ($now->lt($startDateTime)) {
+                return 'Rental belum dimulai';
+            }
 
-    // // Scope untuk filter berdasarkan status
-    // public function scopeByStatus($query, $status)
-    // {
-    //     return $query->where('status', $status);
-    // }
+            // If rental has ended
+            if ($now->gte($endDateTime)) {
+                return 'Rental telah berakhir';
+            }
 
-    // // Scope untuk order yang aktif (tidak cancelled atau completed)
-    // public function scopeActive($query)
-    // {
-    //     return $query->whereNotIn('status', ['cancelled', 'completed']);
-    // }
+            // Calculate remaining time using Carbon's diff methods
+            $diff = $now->diff($endDateTime);
 
-    // // Scope untuk order berdasarkan user
-    // public function scopeByUser($query, $customerId)
-    // {
-    //     return $query->where('customer_id', $customerId);
-    // }
+            // Format as "D day and H hours"
+            if ($diff->days > 0) {
+                if ($diff->h > 0) {
+                    return $diff->days . ' hari dan ' . $diff->h . ' jam';
+                } else {
+                    return $diff->days . ' hari';
+                }
+            } else {
+                if ($diff->h > 0) {
+                    return $diff->h . ' jam';
+                } else {
+                    return 'Kurang dari 1 jam';
+                }
+            }
+        } catch (\Exception $e) {
+            // Log error for debugging
+            Log::error('Rental duration left calculation error: ' . $e->getMessage(), [
+                'start_booking_date' => $this->start_booking_date,
+                'end_booking_date' => $this->end_booking_date,
+                'start_booking_time' => $this->start_booking_time,
+                'end_booking_time' => $this->end_booking_time,
+                'current_time' => Carbon::now()->toDateTimeString()
+            ]);
 
-    
+            return 'Error menghitung sisa waktu';
+        }
+    }
+
+    // Alternative method that returns array with more detailed info
+    public function getRentalTimeInfo()
+    {
+        if (
+            !$this->start_booking_date || !$this->end_booking_date ||
+            !$this->start_booking_time || !$this->end_booking_time
+        ) {
+            return [
+                'status' => 'incomplete_data',
+                'message' => 'Data tidak lengkap',
+                'duration_left' => null
+            ];
+        }
+
+        try {
+            $startDateTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $this->start_booking_date . ' ' . $this->start_booking_time
+            );
+            $endDateTime = Carbon::createFromFormat(
+                'Y-m-d H:i:s',
+                $this->end_booking_date . ' ' . $this->end_booking_time
+            );
+
+            $now = Carbon::now();
+
+            if ($now->lt($startDateTime)) {
+                $diff = $now->diff($startDateTime);
+
+                $timeUntilStart = '';
+                if ($diff->days > 0) {
+                    if ($diff->h > 0) {
+                        $timeUntilStart = $diff->days . ' hari dan ' . $diff->h . ' jam';
+                    } else {
+                        $timeUntilStart = $diff->days . ' hari';
+                    }
+                } else {
+                    if ($diff->h > 0) {
+                        $timeUntilStart = $diff->h . ' jam';
+                    } else {
+                        $timeUntilStart = 'Kurang dari 1 jam';
+                    }
+                }
+
+                return [
+                    'status' => 'not_started',
+                    'message' => 'Rental belum dimulai',
+                    'time_until_start' => $timeUntilStart
+                ];
+            }
+
+            if ($now->gte($endDateTime)) {
+                $diff = $endDateTime->diff($now);
+
+                $overdueTime = '';
+                if ($diff->days > 0) {
+                    if ($diff->h > 0) {
+                        $overdueTime = $diff->days . ' hari dan ' . $diff->h . ' jam';
+                    } else {
+                        $overdueTime = $diff->days . ' hari';
+                    }
+                } else {
+                    if ($diff->h > 0) {
+                        $overdueTime = $diff->h . ' jam';
+                    } else {
+                        $overdueTime = 'Kurang dari 1 jam';
+                    }
+                }
+
+                return [
+                    'status' => 'ended',
+                    'message' => 'Rental telah berakhir',
+                    'overdue_time' => $overdueTime
+                ];
+            }
+
+            // Active rental - calculate remaining time
+            $diff = $now->diff($endDateTime);
+
+            $durationLeft = '';
+            if ($diff->days > 0) {
+                if ($diff->h > 0) {
+                    $durationLeft = $diff->days . ' hari dan ' . $diff->h . ' jam';
+                } else {
+                    $durationLeft = $diff->days . ' hari';
+                }
+            } else {
+                if ($diff->h > 0) {
+                    $durationLeft = $diff->h . ' jam';
+                } else {
+                    $durationLeft = 'Kurang dari 1 jam';
+                }
+            }
+
+            return [
+                'status' => 'active',
+                'message' => 'Rental sedang berlangsung',
+                'duration_left' => $durationLeft,
+                'days_left' => $diff->days,
+                'hours_left' => $diff->h,
+                'total_seconds_left' => $endDateTime->diffInSeconds($now)
+            ];
+        } catch (\Exception $e) {
+            Log::error('Rental time info calculation error: ' . $e->getMessage(), [
+                'order_id' => $this->id,
+                'start_booking_date' => $this->start_booking_date,
+                'end_booking_date' => $this->end_booking_date,
+                'start_booking_time' => $this->start_booking_time,
+                'end_booking_time' => $this->end_booking_time,
+                'current_time' => Carbon::now()->toDateTimeString()
+            ]);
+
+            return [
+                'status' => 'error',
+                'message' => 'Error menghitung sisa waktu',
+                'duration_left' => null
+            ];
+        }
+    }
 }
