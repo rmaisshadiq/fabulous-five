@@ -184,8 +184,28 @@ class OrderResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make()->color('warning'),
-                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
+                Tables\Actions\Action::make('verify')
+                    ->label('Confirm')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->visible(condition: fn($record) => $record->status === 'pending')
+                    ->requiresConfirmation()
+                    ->modalHeading('Confirm Order')
+                    ->modalDescription('Are you sure you want to confirm this order?')
+                    ->modalSubmitActionLabel('Yes, Confirm')
+                    ->action(function ($record) {
+                        // Update customer verification status
+                        $record->update([
+                            'status' => 'confirmed'
+                        ]);
+
+                        // Show success notification
+                        Notification::make()
+                            ->title('Order Confirmed Successfully')
+                            ->body('The order has been confirmed.')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
