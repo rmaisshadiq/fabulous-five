@@ -54,9 +54,9 @@
                 </div>
                 <div class="p-4 flex flex-col items-center">
                     <h2 class="font-semibold text-xl sm:text-2xl">BUS</h2>
-                    <button class="btn-sewa bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition mt-4 text-sm sm:text-base md:text-lg w-full sm:w-auto">
+                    <a href="{{ route('kendaraan') }}" class="btn-sewa bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition mt-4 text-sm sm:text-base md:text-lg w-full sm:w-auto">
                         Sewa Sekarang
-                    </button>
+                    </a>
                 </div>
             </div>
             
@@ -67,9 +67,9 @@
                 </div>
                 <div class="p-4 flex flex-col items-center">
                     <h2 class="font-semibold text-xl sm:text-2xl">MOBIL</h2>
-                    <button class="btn-sewa bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition mt-4 text-sm sm:text-base md:text-lg w-full sm:w-auto">
+                    <a href="{{ route('kendaraan') }}" class="btn-sewa bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition mt-4 text-sm sm:text-base md:text-lg w-full sm:w-auto">
                         Sewa Sekarang
-                    </button>
+                    </a>
                 </div>
             </div>
             
@@ -80,9 +80,9 @@
                 </div>
                 <div class="p-4 flex flex-col items-center">
                     <h2 class="font-semibold text-xl sm:text-2xl">MOTOR</h2>
-                    <button class="btn-sewa bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition mt-4 text-sm sm:text-base md:text-lg w-full sm:w-auto">
+                    <a href="{{ route('kendaraan') }}" class="btn-sewa bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition mt-4 text-sm sm:text-base md:text-lg w-full sm:w-auto">
                         Sewa Sekarang
-                    </button>
+                    </a>
                 </div>
             </div>
             

@@ -55,5 +55,18 @@
                 <span id="slideCounter">1</span> dari {{ $vehicleChunks->count() }}
             </div>
         </div>
+    @elseif($vehicles->count() == 0)
+        <div class="flex flex-col items-center justify-center py-16">
+            <div class="text-gray-400 text-8xl mb-4">
+                <i class="fas fa-car-side"></i>
+            </div>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Tidak Ada Kendaraan</h2>
+            <p class="text-gray-500 text-center max-w-md">
+                Maaf, saat ini tidak ada kendaraan yang tersedia. Silakan coba kembali beberapa saat lagi.
+            </p>
+            <a href="/" class="mt-6 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-200">
+                Kembali ke Beranda
+            </a>
+        </div>
     @endif
 </div>
