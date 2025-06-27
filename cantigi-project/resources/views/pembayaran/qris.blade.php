@@ -30,15 +30,9 @@
                 </div>
                 
                 <!-- Payment Form -->
-                <form action="{{ route('payment.qris.complete', $payment->id) }}" method="POST" class="w-full">
-                    @csrf
-                    <input type="hidden" name="order_id" value="{{ $order->id ?? '' }}">
-                    <input type="hidden" name="amount" value="{{ $order->payment->amount ?? '' }}">
-                    
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
-                        Selesai Pembayaran
-                    </button>
-                </form>
+                <button id="pay-button" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                    Selesaikan Pembayaran
+                </button>
                 
                 <div class="text-center text-sm text-gray-500 mt-4">
                     <p>Pembayaran akan diverifikasi secara otomatis</p>

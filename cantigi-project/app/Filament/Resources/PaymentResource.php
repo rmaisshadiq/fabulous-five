@@ -28,15 +28,11 @@ class PaymentResource extends Resource
             Tables\Columns\TextColumn::make('id')
                 ->sortable()
                 ->searchable(),
-            Tables\Columns\TextColumn::make('payment_date') // Perbaikan typo dari 'paryment_date'
-                ->date()
-                ->sortable()
-                ->searchable(),
             Tables\Columns\TextColumn::make('amount')
                 ->money('IDR') // Format sebagai mata uang
                 ->sortable()
                 ->searchable(),
-            Tables\Columns\TextColumn::make('payment_method')
+            Tables\Columns\TextColumn::make('payment_type')
                 ->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'qris' => 'success',
@@ -48,6 +44,14 @@ class PaymentResource extends Resource
                 })
                 ->sortable()
                 ->searchable(),
+            Tables\Columns\TextColumn::make('midtrans_transaction_id')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('midtrans_order_id')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('transaction_time') // Perbaikan typo dari 'paryment_date'
+                ->date()
+                ->sortable()
+                ->searchable(),
             Tables\Columns\TextColumn::make('status')
                 ->badge()
                 ->color(fn (string $state): string => match ($state) {
@@ -57,8 +61,6 @@ class PaymentResource extends Resource
                     default => 'gray',
                 })
                 ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('transaction_id')
                 ->searchable(),
         ])
         ->filters([

@@ -10,6 +10,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -90,7 +91,7 @@ Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('fee
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 Route::get('/error', function () {
-        return view('errors.general');
+    return view('errors.general');
 })->name('error.general');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -112,11 +113,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('payment')->group(function () {
         Route::get('/{id}', [PaymentController::class, 'create'])->name('payment.create');
         Route::post('/', [PaymentController::class, 'store'])->name('payment.store');
-        Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
-        Route::get('/qris/{id}', [PaymentController::class, 'qrisPayment'])
+        Route::get('/success/{orderId}', [PaymentController::class, 'success'])->name('payment.success');
+        Route::get('/qris', [PaymentController::class, 'qrisPayment'])
             ->name('payment.qris');
         Route::post('/qris/complete/{id}', [PaymentController::class, 'completeQrisPayment'])
             ->name('payment.qris.complete');
+        Route::post('/callback', [PaymentController::class, 'callback'])
+            ->name('payment.callback');
+        Route::post('/ajax-callback', [PaymentController::class, 'callback'])
+            ->withoutMiddleware([VerifyCsrfToken::class]) // atau exclude CSRF di VerifyCsrfToken
+            ->name('payment.ajax-callback');
+        Route::get('/history', [PaymentController::class, 'history'])
+            ->name('payment.history');
+        Route::get('/{orderId}', [PaymentController::class, 'detail'])
+            ->name('payment.detail');
     });
 });
 
