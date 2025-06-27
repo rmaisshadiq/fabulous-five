@@ -89,7 +89,9 @@ Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('fee
 // Route untuk menyimpan feedback
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
-
+Route::get('/error', function () {
+        return view('errors.general');
+})->name('error.general');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('profile')->group(function () {
@@ -117,5 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('payment.qris.complete');
     });
 });
+
+
 
 require __DIR__ . '/auth.php';
