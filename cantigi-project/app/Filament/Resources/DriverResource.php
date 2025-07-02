@@ -27,9 +27,11 @@ class DriverResource extends Resource
         return $form
             ->schema([
                 Select::make('employee_id')
-                ->relationship('employee.user', 'name')
-                ->required()
-                ->unique(ignoreRecord:true),
+                ->relationship('employee', 'id', fn (Builder $query) => 
+                    $query->whereHas('user')->whereDoesntHave('driver')
+                )
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
+                ->required(),
                 TextInput::make('license_number')
                 ->required(),
                 Select::make('available_status')
@@ -45,7 +47,7 @@ class DriverResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('employee.portrait')
+                Tables\Columns\ImageColumn::make('employee.user.profile_image')
                     ->label('Employee portrait')
                     ->width(150)
                     ->height(150),

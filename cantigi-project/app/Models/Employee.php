@@ -36,4 +36,9 @@ class Employee extends Model
     {
         return $this->hasMany(RentalRequirements::class, 'verified_by');
     }
+
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
 }
