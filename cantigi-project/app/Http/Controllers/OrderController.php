@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Vehicle;
 use App\Models\User; // Tambahkan import User
+use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Models\Customer; // Hapus atau comment jika tidak digunakan lagi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,6 @@ class OrderController extends Controller
 
         return view('orders.create', compact('vehicle'));
     }
-
     // Simpan order baru
     public function store(Request $request)
     {
@@ -181,5 +181,20 @@ class OrderController extends Controller
                 'trace' => $e->getTraceAsString()
             ], 500);
         }
+    }
+
+    public function downloadInvoicePDF(Order $order)
+    {   
+        // Data to pass to the view
+        $data = ['order' => $order];
+
+        // Load the view and pass in the data
+        $pdf = Pdf::loadView('invoices.pdf_template', $data);
+        
+        // Set paper size and orientation
+        $pdf->setPaper('a4', 'portrait');
+
+        // Stream the PDF to the browser for download
+        return $pdf->download('invoice-' . $order->id . '.pdf');
     }
 }

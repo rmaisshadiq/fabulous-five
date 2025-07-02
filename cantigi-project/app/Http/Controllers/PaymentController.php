@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -213,6 +214,8 @@ class PaymentController extends Controller
             'raw_response' => json_encode($request->all()), // Store the full response
             // Add other fields you deem necessary from the Midtrans payload
         ]);
+
+        Vehicle::where('id', $order->vehicle_id)->update(['status' => 'rented']);
 
         return response()->json(['message' => 'Payment processed successfully'], 200);
     }

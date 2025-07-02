@@ -40,16 +40,6 @@ Route::get('/artikel/{id}', function ($id) {
     return view('artikel.main-page', compact('article'));
 })->name('artikel.detail');
 
-
-Route::get('/Detail-Pemesanan/{id}', function ($id) {
-    $orders = Order::with('vehicle')->findOrFail($id);
-    $vehicles = $orders->vehicles; // ambil langsung dari relasi
-    if ($orders->customer_id != Auth::user()->id) {
-        return redirect()->route('home');
-    }
-    return view('Detail-Pemesanan.main-page', compact('orders', 'vehicles'));
-})->name('detail-pemesanan');
-
 Route::get('/hubungi-kami', function () {
     return view('footer.hubungi-kami');
 })->name('hubungi-kami');
@@ -102,6 +92,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/verify', [VerificationController::class, 'show'])->name('profile.verify');
         Route::post('/verify', [VerificationController::class, 'store'])->name('profile.verify.store');
     });
+
+    Route::get('/Detail-Pemesanan/{id}', function ($id) {
+        $orders = Order::with('vehicle')->findOrFail($id);
+        $vehicles = $orders->vehicles; // ambil langsung dari relasi
+        if ($orders->customer_id != Auth::user()->id) {
+            return redirect()->route('home');
+        }
+        return view('Detail-Pemesanan.main-page', compact('orders', 'vehicles'));
+    })->name('detail-pemesanan');
+
+    Route::get('/Detail-Pemesanan/{order}/download', [OrderController::class, 'downloadInvoicePdf'])->name('orders.invoice.download');
+
     Route::get('/form-pemesanan/main-page/{id}', function ($id) {
         $vehicles = Vehicle::findOrFail($id);
         return view('form-pemesanan.main-page', compact('vehicles'));

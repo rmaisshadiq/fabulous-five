@@ -211,6 +211,13 @@
                                         <i class="fas fa-arrow-right ml-2"></i>
                                     </a>
                                 </div>
+                            @elseif($order->status == 'completed')
+                                <div class="mt-4 text-right">
+                                    <a href="{{ route('detail-pemesanan', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200">
+                                        Lihat Pesanan
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                </div>
                             @endif
                         </div>
                     </div>

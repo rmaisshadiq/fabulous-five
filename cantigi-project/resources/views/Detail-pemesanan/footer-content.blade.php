@@ -19,13 +19,13 @@
                        Lanjut ke Pembayaran
                     </button>
                 </form>
-            @else
+            @elseif ($orders->status === 'completed')
                 <!-- Tombol Download PDF -->
-                <button class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
+                <a href="{{ route('orders.invoice.download', ['order' => $orders->id]) }}" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
                     <i class="fa fa-download mr-2"></i>
                     Unduh PDF
-                </button>
-
+                </a>
+            @else
                 <!-- Tombol WhatsApp -->
                 <a href="https://wa.me/6281234567890" target="_blank"
                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
