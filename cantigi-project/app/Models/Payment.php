@@ -11,16 +11,18 @@ class Payment extends Model
 
     protected $fillable = [
         'order_id',
-        'payment_date',
-        'transaction_id',
+        'transaction_time',
+        'midtrans_transaction_id',
+        'midtrans_order_id',
+        'payment_type',
+        'signature_key',
         'amount',
         'status',
-        'completed_at'
+        'raw_response',
     ];
 
     protected $casts = [
         'payment_date' => 'datetime',
-        'amount' => 'decimal:2'
     ];
 
     // Relationship dengan Order (jika ada tabel orders)

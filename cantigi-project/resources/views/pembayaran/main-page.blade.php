@@ -10,7 +10,6 @@
 
         <div class="max-w-4xl mx-auto md:grid-cols-2 flex justify-center items-center">
             <!-- Ringkasan Pesanan -->
-            @include('pembayaran.ringkasan-pesanan')
         </div>
         <!-- Footer Info -->
         @include('pembayaran.footer-info')

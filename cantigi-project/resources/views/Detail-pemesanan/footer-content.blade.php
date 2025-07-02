@@ -9,12 +9,16 @@
         <div class="flex gap-3">
             @if ($orders->status === 'confirmed')
                 <!-- Tombol Bayar -->
-                 <a href="{{ route('payment.create',  $orders->id) }}""
-                 {{-- <a href="{{ route('pembayaran.show', $orders->id) }}" --}}
-                   class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm">
-                    <i class="fa fa-credit-card mr-2"></i>
-                    Lanjut ke Pembayaran
-                </a>
+                <form action="{{ route('payment.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="order_id" id="order_id" value="{{ $orders->id }}">
+                    <input type="hidden" name="amount" id="amount" value="{{ $orders->final_total }}">
+                    
+                    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm">
+                       <i class="fa fa-credit-card mr-2"></i>
+                       Lanjut ke Pembayaran
+                    </button>
+                </form>
             @else
                 <!-- Tombol Download PDF -->
                 <button class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">

@@ -12,12 +12,16 @@
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm text-gray-600">Biaya Admin</span>
-                                    <span class="text-sm font-medium text-gray-900">Rp 0</span>
+                                    <span class="text-sm font-medium text-gray-900">Rp{{ $orders->formatted_admin_fee }}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">PPN (11%)</span>
+                                    <span class="text-sm font-medium text-gray-900">Rp{{ $orders->formatted_tax }}</span>
                                 </div>
                                 <div class="border-t border-blue-200 pt-3">
                                     <div class="flex justify-between items-center">
                                         <span class="text-base font-semibold text-gray-900">Total Pembayaran</span>
-                                        <span class="text-xl font-bold text-blue-600">Rp{{ number_format($orders->total_price, 0, ',', '.') }}</span>
+                                        <span class="text-xl font-bold text-blue-600">Rp{{ $orders->formatted_final_total }}</span>
                                     </div>
                                 </div>
                             </div>
