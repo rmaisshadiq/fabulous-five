@@ -44,6 +44,10 @@ class ReturnLogResource extends Resource
                 DateTimePicker::make('returned_at')
                     ->label('Dikembalikan pada:')
                     ->required(),
+                TextInput::make('fuel_level_on_rent')
+                    ->label('BBM pada saat disewa')
+                    ->required()
+                    ->suffix('Liter'),
                 TextInput::make('fuel_level_on_return')
                     ->label('BBM pada saat dikembalikan')
                     ->required()
@@ -74,8 +78,10 @@ class ReturnLogResource extends Resource
                     ->label('Tanggal Pengembalian')
                     ->sortable()
                     ->date('d-m-Y'),
+                 TextColumn::make('fuel_level_on_rent')
+                    ->label('Tingkat BBM sebelum disewa'),
                 TextColumn::make('fuel_level_on_return')
-                    ->label('Tingkat BBM'),
+                    ->label('Tingkat BBM setelah disewa'),
                 TextColumn::make('notes')
                     ->label('Catatan'),
                 TextColumn::make('status')
