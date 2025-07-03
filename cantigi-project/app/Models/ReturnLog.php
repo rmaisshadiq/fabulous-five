@@ -15,6 +15,7 @@ class ReturnLog extends Model
         'vehicle_id',
         'handler_id',
         'returned_at',
+        'fuel_level_on_rent',
         'fuel_level_on_return',
         'notes',
         'status'

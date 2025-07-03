@@ -17,78 +17,85 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationGroup = 'Laporan';
 
-    
+    protected static ?string $navigationLabel = 'Pembayaran';
+
+    protected static ?string $modelLabel = 'Pemesanan';
+
+    protected static ?string $pluralModelLabel = 'Pemesanan';
+
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('id')
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('amount')
-                ->money('IDR') // Format sebagai mata uang
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('payment_type')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'qris' => 'success',
-                    'bca' => 'primary',
-                    'mandiri' => 'blue',
-                    'bni' => 'warning',
-                    'bri' => 'danger',
-                    default => 'gray',
-                })
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('midtrans_transaction_id')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('midtrans_order_id')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('transaction_time') // Perbaikan typo dari 'paryment_date'
-                ->date()
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('status')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'paid' => 'success',
-                    'pending' => 'warning',
-                    'failed' => 'danger',
-                    default => 'gray',
-                })
-                ->sortable()
-                ->searchable(),
-        ])
-        ->filters([
-            Tables\Filters\SelectFilter::make('payment_method')
-                ->options([
-                    'qris' => 'QRIS',
-                    'bca' => 'BCA',
-                    'mandiri' => 'Mandiri',
-                    'bni' => 'BNI',
-                    'bri' => 'BRI',
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('order.customer.user.name')
+                    ->label('Nama Pelanggan')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Jumlah Pembayaran')
+                    ->money('IDR') // Format sebagai mata uang
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('payment_type')
+                    ->label('Metode Pembayaran')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'qris' => 'success',
+                        'bca' => 'primary',
+                        'mandiri' => 'blue',
+                        'bni' => 'warning',
+                        'bri' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('midtrans_transaction_id')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('midtrans_order_id')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('transaction_time')
+                    ->label('Tanggal Transaksi')
+                    ->date('d F Y')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'paid' => 'success',
+                        'pending' => 'warning',
+                        'failed' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable()
+                    ->searchable(),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('payment_method')
+                    ->options([
+                        'qris' => 'QRIS',
+                        'bca' => 'BCA',
+                        'mandiri' => 'Mandiri',
+                        'bni' => 'BNI',
+                        'bri' => 'BRI',
+                    ]),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'pending' => 'Pending',
+                        'failed' => 'Failed',
+                    ]),
+            ])
+            ->actions([])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            Tables\Filters\SelectFilter::make('status')
-                ->options([
-                    'paid' => 'Paid',
-                    'pending' => 'Pending',
-                    'failed' => 'Failed',
-                ]),
-        ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\ViewAction::make(),
-        ])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
-}
+            ]);
+    }
 
     public static function getRelations(): array
     {
