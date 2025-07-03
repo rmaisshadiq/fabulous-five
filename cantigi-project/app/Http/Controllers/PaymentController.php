@@ -170,7 +170,7 @@ class PaymentController extends Controller
                     $payment->status = 'success';
                     $payment->save();
                     // You might also want to update the order status here
-                    $order->status = 'completed'; // Or 'paid'
+                    $order->status = 'in_progress'; // Or 'paid'
                     $order->save();
                 }
             } elseif ($transactionStatus == 'pending') {
@@ -194,7 +194,7 @@ class PaymentController extends Controller
         $paymentStatus = 'pending'; // Default
         if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
             $paymentStatus = 'success';
-            $order->status = 'completed'; // Update order status
+            $order->status = 'in_progress'; // Update order status
             $order->save();
         } elseif ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
             $paymentStatus = 'failed';

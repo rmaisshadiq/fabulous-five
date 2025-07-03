@@ -41,4 +41,9 @@ class Employee extends Model
     {
         return $this->hasOne(Driver::class);
     }
+
+    public function return_log()
+    {
+        return $this->hasMany(ReturnLog::class);
+    }
 }

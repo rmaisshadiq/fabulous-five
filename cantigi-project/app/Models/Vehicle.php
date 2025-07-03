@@ -31,4 +31,8 @@ class Vehicle extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function return_log() {
+        return $this->hasMany(ReturnLog::class);
+    }
+
 }

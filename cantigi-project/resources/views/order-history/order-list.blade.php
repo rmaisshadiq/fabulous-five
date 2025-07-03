@@ -23,14 +23,14 @@
                                 @elseif($order->status == 'confirmed') bg-gradient-to-r from-blue-100 to-blue-50 text-blue-800 border border-blue-200
                                 @elseif($order->status == 'in_progress') bg-gradient-to-r from-purple-100 to-purple-50 text-purple-800 border border-purple-200
                                 @elseif($order->status == 'completed') bg-gradient-to-r from-green-100 to-green-50 text-green-800 border border-green-200
-                                @elseif($order->status == 'cancelled') bg-gradient-to-r from-red-100 to-red-50 text-red-800 border border-red-200
+                                @elseif($order->status == 'due') bg-gradient-to-r from-red-100 to-red-50 text-red-800 border border-red-200
                                 @endif">
                                 <i class="fas fa-circle text-xs mr-1
                                     @if($order->status == 'pending') text-yellow-500
                                     @elseif($order->status == 'confirmed') text-blue-500
                                     @elseif($order->status == 'in_progress') text-purple-500
                                     @elseif($order->status == 'completed') text-green-500
-                                    @elseif($order->status == 'cancelled') text-red-500
+                                    @elseif($order->status == 'due') text-red-500
                                     @endif"></i>
                                 {{ ucfirst($order->status) }}
                             </span>
@@ -116,11 +116,18 @@
                                 $timeInfo = $order->getRentalTimeInfo();
                             @endphp
                             
-                            @if(in_array($order->status, ['confirmed', 'in_progress', 'completed']))
+                            @if(in_array($order->status, ['confirmed', 'in_progress', 'completed', 'due']))
                                 <div class="mt-4 pt-4 border-t border-gray-100">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
-                                            @if($timeInfo['status'] === 'not_started')
+                                            @if($order->status === 'due')
+                                                <div class="bg-gray-100 rounded-full p-2 mr-3">
+                                                    <i class="fas fa-exclamation-triangle text-gray-600 text-sm"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm text-gray-500">Rental Berakhir</p>
+                                                </div>
+                                            @elseif($timeInfo['status'] === 'not_started')
                                                 <div class="bg-yellow-100 rounded-full p-2 mr-3">
                                                     <i class="fas fa-hourglass-start text-yellow-600 text-sm"></i>
                                                 </div>
@@ -168,7 +175,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @elseif($timeInfo['status'] === 'ended')
+                                        @elseif($timeInfo['status'] === 'ended' || $order->status === 'due')
                                             <div class="text-right">
                                                 <div class="bg-red-50 rounded-lg px-3 py-2">
                                                     <p class="text-xs text-red-600 font-medium">RENTAL BERAKHIR</p>
@@ -211,7 +218,7 @@
                                         <i class="fas fa-arrow-right ml-2"></i>
                                     </a>
                                 </div>
-                            @elseif($order->status == 'completed')
+                            @elseif($order->status == 'completed' || $order->status == 'in_progress')
                                 <div class="mt-4 text-right">
                                     <a href="{{ route('detail-pemesanan', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200">
                                         Lihat Pesanan

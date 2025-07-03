@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('vehicle_id')->constrained('vehicles');
-            $table->foreignId('handler_id')->constrained('users')->nullable(); // Assumes you have a users table for staff
+            $table->foreignId('handler_id')->constrained('employees')->nullable();
             $table->timestamp('returned_at');
             $table->decimal('fuel_level_on_return', 5, 2)->nullable();
             $table->text('notes')->nullable();

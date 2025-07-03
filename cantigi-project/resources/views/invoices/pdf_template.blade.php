@@ -122,12 +122,20 @@
                 </td>
             </tr>
             <tr class="heading">
-                <td>Rental Mobil</td>
+                <td>Item</td>
                 <td class="text-right">Harga</td>
             </tr>
             <tr class="item">
                 <td>{{ $order->vehicle->brand }} {{ $order->vehicle->model }}</td>
                 <td class="text-right">Rp{{ $order->formatted_total_price }}</td>
+            </tr>
+            <tr class="item">
+                <td>PPN (11%)</td>
+                <td class="text-right">Rp{{ $order->formatted_tax }}</td>
+            </tr>
+            <tr class="item">
+                <td>Biaya Admin</td>
+                <td class="text-right">Rp{{ $order->admin_fee }}</td>
             </tr>
             <tr class="total">
                 <td></td>

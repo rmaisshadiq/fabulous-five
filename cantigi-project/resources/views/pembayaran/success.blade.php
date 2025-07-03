@@ -24,10 +24,6 @@
        <span class="font-medium">Jumlah:</span>
        <span class="text-gray-700">Rp {{ number_format($order->amount, 0, ',', '.') }}</span>
      </div>
-     <div class="flex justify-between">
-       <span class="font-medium">Metode:</span>
-       <span class="text-gray-700">{{ $order->payment_method }}</span>
-     </div>
    </div>
 
 

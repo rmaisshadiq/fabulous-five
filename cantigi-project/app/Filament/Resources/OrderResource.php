@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
+use App\Models\ReturnLog;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -203,6 +204,38 @@ class OrderResource extends Resource
                         Notification::make()
                             ->title('Order Confirmed Successfully')
                             ->body('The order has been confirmed.')
+                            ->success()
+                            ->send();
+                    }),
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('complete')
+                    ->label('Complete')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->visible(condition: fn($record) => $record->status === 'in_progress')
+                    ->requiresConfirmation()
+                    ->modalHeading('Complete Order')
+                    ->modalDescription('Are you sure you want to complete this order?')
+                    ->modalSubmitActionLabel('Yes, Complete')
+                    ->action(function ($record) {
+                        // Update customer verification status
+                        $record->update([
+                            'status' => 'due'
+                        ]);
+
+                        ReturnLog::create([
+                            'order_id' => $record->id,
+                            'vehicle_id' => $record->vehicle_id,
+                            'handler_id' => null,
+                            'status' => 'pending',
+                        ]);
+
+                        // Show success notification
+                        Notification::make()
+                            ->title('Order Completed Successfully')
+                            ->body('The order has been completed.')
                             ->success()
                             ->send();
                     }),

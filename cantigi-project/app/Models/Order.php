@@ -50,8 +50,7 @@ class Order extends Model
         return $this->hasOne(Payment::class);
     }
 
-    public function return_log()
-    {
+    public function return_log() {
         return $this->hasOne(ReturnLog::class);
     }
 

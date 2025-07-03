@@ -19,7 +19,7 @@
                        Lanjut ke Pembayaran
                     </button>
                 </form>
-            @elseif ($orders->status === 'completed')
+            @elseif ($orders->status === 'completed' || $orders->status === 'in_progress')
                 <!-- Tombol Download PDF -->
                 <a href="{{ route('orders.invoice.download', ['order' => $orders->id]) }}" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
                     <i class="fa fa-download mr-2"></i>

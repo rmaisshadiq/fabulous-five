@@ -35,4 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //     // Redirect to general error page for web requests
         //     return redirect()->route('error.general')->with('error', 'Something went wrong. Please try again later.');
         // });
+    })
+    ->withSchedule(function ($schedule) {
+        $schedule->command('orders:update-status')->everyMinute();
     })->create();
