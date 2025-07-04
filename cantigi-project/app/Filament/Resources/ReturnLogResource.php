@@ -25,7 +25,11 @@ class ReturnLogResource extends Resource
 {
     protected static ?string $model = ReturnLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
+
+    protected static ?string $navigationGroup = 'Rental';
+
+    protected static ?string $navigationLabel = 'Pengembalian';
 
 
     protected static function mutateFormDataBeforeSave(array $data): array

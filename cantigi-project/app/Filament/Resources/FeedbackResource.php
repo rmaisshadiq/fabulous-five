@@ -17,7 +17,11 @@ class FeedbackResource extends Resource
 {
     protected static ?string $model = Feedback::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-star';
+
+    protected static ?string $navigationGroup = 'Halaman';
+
+    protected static ?string $navigationLabel = 'Feedback';
 
     public static function table(Table $table): Table
     {

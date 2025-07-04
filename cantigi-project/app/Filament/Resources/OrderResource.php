@@ -179,6 +179,12 @@ class OrderResource extends Resource
                     ->label('BBM setelah disewa')
                     ->suffix(' liter'),
 
+                TextColumn::make('amount')
+                    ->label('Total Biaya')
+                    ->state(function ($record) {
+                        return 'Rp' . $record->getFormattedFinalTotalAttribute();
+                    }),
+
                 BadgeColumn::make('status')
                     ->label('Keterangan')
                     ->colors([
@@ -198,11 +204,11 @@ class OrderResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('status')
-                ->options([
-                    'in_progress' => 'In Progress',
-                    'due' => 'Due',
-                    'completed' => 'Completed',
-                ])
+                    ->options([
+                        'in_progress' => 'In Progress',
+                        'due' => 'Due',
+                        'completed' => 'Completed',
+                    ])
             ])
             ->actions([
                 Tables\Actions\Action::make('verify')

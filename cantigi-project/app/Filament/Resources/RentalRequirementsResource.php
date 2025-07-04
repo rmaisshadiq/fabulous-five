@@ -23,7 +23,11 @@ class RentalRequirementsResource extends Resource
 {
     protected static ?string $model = RentalRequirements::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
+
+    protected static ?string $navigationGroup = 'Rental';
+
+    protected static ?string $navigationLabel = 'Persyaratan';
 
     public static function form(Form $form): Form
     {
