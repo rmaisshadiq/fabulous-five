@@ -23,30 +23,33 @@ class Maintenance extends Model
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
 
+    public function financial_report()
+    {
+        return $this->hasMany(FinancialReport::class, 'maintenance_id');
+    }
+
     protected static function booted()
 {
     // Saat maintenance dibuat
     static::created(function ($maintenance) {
         $vehicle = Vehicle::find($maintenance->vehicle_id);
+        $systemUserId = Employee::where('position', 'System')->first()->id;
         if ($vehicle) {
             $vehicle->status = 'maintenance';
             $vehicle->save();
         }
-    });
-
-    // Saat maintenance dihapus
-    static::deleted(function ($maintenance) {
-        $vehicle = Vehicle::find($maintenance->vehicle_id);
-        if ($vehicle) {
-            // Ambil maintenance terakhir yang masih ada
-            $lastMaintenance = Maintenance::where('vehicle_id', $vehicle->id)
-                ->orderBy('maintenance_date', 'desc')
-                ->first();
-
-            $vehicle->status = 'active';
-            $vehicle->last_maintenance_date = $lastMaintenance?->maintenance_date;
-            $vehicle->save();
-        }
+        
+        // Buat FinancialReport
+        FinancialReport::create([
+            'maintenance_id' => $maintenance->id,
+            'transaction_date' => $maintenance->maintenance_date,
+            'description' => $maintenance->description,
+            'amount' => $maintenance->cost,
+            'type' => 'expense',
+            'category' => 'maintenance',
+            'created_by' => $systemUserId,
+            'notes' => 'Dihasilkan otomatis oleh Sistem'
+        ]);
     });
 }
 }

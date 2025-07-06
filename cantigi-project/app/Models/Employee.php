@@ -46,4 +46,9 @@ class Employee extends Model
     {
         return $this->hasMany(ReturnLog::class);
     }
+
+    public function financial_report()
+    {
+        return $this->hasMany(FinancialReport::class);
+    }
 }

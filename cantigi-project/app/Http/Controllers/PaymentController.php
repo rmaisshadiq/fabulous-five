@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
+use App\Models\FinancialReport;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -202,7 +205,7 @@ class PaymentController extends Controller
             $order->save();
         }
         // 'pending' is the default if no match above
-
+        
         Payment::create([
             'order_id' => $internalOrderId,
             'midtrans_transaction_id' => $midtransTransactionId,
@@ -215,7 +218,27 @@ class PaymentController extends Controller
             // Add other fields you deem necessary from the Midtrans payload
         ]);
 
-        Vehicle::where('id', $order->vehicle_id)->update(['status' => 'rented']);
+        
+        if ($order) {
+            // Menyimpan user System ke dalam variabel
+            $systemUserId = Employee::where('position', 'System')->value('id');
+
+            // Menghasilkan laporan keuangan
+            FinancialReport::create([
+                'order_id' => $order->id,
+                'transaction_date' => $transactionTime,
+                'amount' => $grossAmount,
+                'description' => 'Pembayaran untuk pemesanan dengan ID = ' . $midtransOrderId,
+                'type' => 'income',
+                'category' => 'rental',
+                'created_by' => $systemUserId,
+                'notes' => 'Dihasilkan otomatis oleh Sistem'
+            ]);
+
+            // Mengubah status kendaraan menjadi 'rented'
+            Vehicle::where('id', $order->vehicle_id)->update(['status' => 'rented']);
+        }
+
 
         return response()->json(['message' => 'Payment processed successfully'], 200);
     }
