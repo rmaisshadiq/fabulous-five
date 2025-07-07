@@ -111,6 +111,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/form-pemesanan', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}/pending', [OrderController::class, 'showPending'])->name('orders.pending');
 
     Route::prefix('payment')->group(function () {
         Route::get('/{id}', [PaymentController::class, 'create'])->name('payment.create');

@@ -197,4 +197,9 @@ class OrderController extends Controller
         // Stream the PDF to the browser for download
         return $pdf->download('invoice-' . $order->id . '.pdf');
     }
+
+    public function showPending(Order $order)
+    {
+        return view('pembayaran.pending', ['order' => $order]);
+    }
 }

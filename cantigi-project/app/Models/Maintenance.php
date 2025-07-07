@@ -14,7 +14,8 @@ class Maintenance extends Model
         'vehicle_id',
         'maintenance_date',
         'description',
-        'cost'
+        'cost',
+        'status'
     ];
 
     // Perbaiki relasi, cukup satu kendaraan

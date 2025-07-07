@@ -120,12 +120,12 @@
                                 <div class="mt-4 pt-4 border-t border-gray-100">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
-                                            @if($order->status === 'due')
-                                                <div class="bg-gray-100 rounded-full p-2 mr-3">
-                                                    <i class="fas fa-exclamation-triangle text-gray-600 text-sm"></i>
+                                            @if($order->status === 'due' || $order->status === 'completed')
+                                                <div class="bg-green-100 rounded-full p-2 mr-3">
+                                                    <i class="fas fa-check text-green-600 text-sm"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm text-gray-500">Rental Berakhir</p>
+                                                    <p class="text-sm font-bold">Rental Berakhir</p>
                                                 </div>
                                             @elseif($timeInfo['status'] === 'not_started')
                                                 <div class="bg-yellow-100 rounded-full p-2 mr-3">
@@ -165,7 +165,7 @@
                                             @endif
                                         </div>
                                         
-                                        @if($timeInfo['status'] === 'active')
+                                        @if($timeInfo['status'] === 'active' && $order->status === 'in_progress')
                                             <div class="text-right">
                                                 <div class="bg-blue-50 rounded-lg px-3 py-2">
                                                     <p class="text-xs text-blue-600 font-medium">RENTAL AKTIF</p>

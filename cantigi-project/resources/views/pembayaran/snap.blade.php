@@ -47,11 +47,7 @@
             snap.pay('{{ $snapToken }}', {
                 onPending: function(result) {
                     alert('Transaksi pending: ' + result.status_message);
-                    // It's generally better to redirect to a 'pending' page or show a modal
-                    // rather than reloading, as reloading might create a confusing user experience
-                    // and could potentially trigger issues if not fully idempotent.
-                    // For now, keeping reload as per your original, but be aware.
-                    location.reload();
+                    window.location.href = `/orders/{{ $order->id }}/pending`;
                 },
                 onSuccess: function(result) {
                     // Prevent multiple calls if somehow the success callback fires more than once rapidly

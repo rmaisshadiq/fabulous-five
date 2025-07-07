@@ -8,6 +8,7 @@ use App\Models\Maintenance;
 use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 
 class MaintenanceResource extends Resource
 {
@@ -56,6 +58,9 @@ class MaintenanceResource extends Resource
                         'inputmode' => 'numeric',
                     ])
                     ->prefix('Rp '),
+
+                Hidden::make('status')
+                    ->default('in_progress'),
             ]);
     }
 
@@ -63,14 +68,15 @@ class MaintenanceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('vehicle.model')
+                Tables\Columns\TextColumn::make('vehicle.name')
                     ->label('Nama Kendaraan')
+                    ->state(fn ($record) => $record->vehicle->brand . ' ' . $record->vehicle->model)
                     ->searchable()
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('maintenance_date')
                     ->label('Tanggal Pemeliharaan')
-                    ->date('d/m/Y')
+                    ->date('d F Y')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
@@ -83,6 +89,10 @@ class MaintenanceResource extends Resource
                     ->money('IDR', true)
                     ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->sortable()
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('vehicle_id')
@@ -91,9 +101,32 @@ class MaintenanceResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('complete')
+                    ->label('Complete')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->visible(condition: fn($record) => $record->status === 'in_progress')
+                    ->requiresConfirmation()
+                    ->modalHeading('Complete Maintenance')
+                    ->modalDescription('Are you sure you want to complete this order?')
+                    ->modalSubmitActionLabel('Yes, Complete')
+                    ->action(function ($record) {
+                        // Update customer verification status
+                        $record->update([
+                            'status' => 'completed'
+                        ]);
+
+                        Vehicle::where('id', $record->vehicle_id)->update([
+                            'status' => 'active'
+                        ]);
+
+                        // Show success notification
+                        Notification::make()
+                            ->title('Pemeliharaan berhasil diselesaikan!')
+                            ->body('Kendaraan bisa digunakan kembali!')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

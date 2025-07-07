@@ -15,7 +15,6 @@ class Payment extends Model
         'midtrans_transaction_id',
         'midtrans_order_id',
         'payment_type',
-        'signature_key',
         'amount',
         'status',
         'raw_response',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentSuccessful;
 use App\Models\Employee;
 use App\Models\FinancialReport;
 use App\Models\Order;
@@ -10,7 +11,9 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -57,11 +60,18 @@ class PaymentController extends Controller
         $midtransOrderId = 'TXN-' . $order->id . '-' . time();
 
 
+        // $payment = Payment::create([
+        //     'order_id'              => $order->id, // Your internal foreign key
+        //     'midtrans_order_id'     => $midtransOrderId, // The ID you send to Midtrans
+        //     'status'                => 'pending',
+        //     'amount'                => $order->final_total,
+        // ]);
+
+        // Set Midtrans configuration
         Config::$serverKey    = config('services.midtrans.server_key');
         Config::$isProduction = config('services.midtrans.is_production');
         Config::$isSanitized  = config('services.midtrans.is_sanitized');
         Config::$is3ds        = config('services.midtrans.is_3ds');
-
 
 
         $params = [
@@ -77,6 +87,7 @@ class PaymentController extends Controller
 
 
         $snapToken = Snap::getSnapToken($params);
+        // $payment->save();
 
 
         return view('pembayaran.snap', compact('snapToken', 'order', 'midtransOrderId'));
@@ -91,156 +102,118 @@ class PaymentController extends Controller
         return view('pembayaran.success', compact('order'));
     }
 
-    // Tambahkan method baru di PaymentController
-    public function qrisPayment($id)
-    {
-        $payment = Payment::with('order')->findOrFail($id);
-        if ($payment->order->customer_id != Auth::user()->id) {
-            return redirect()->route('home');
-        }
-
-        return view('pembayaran.qris', compact('payment'));
-    }
-
-    public function completeQrisPayment($id)
-    {
-        $payment = Payment::findOrFail($id);
-
-        $payment->update([
-            'status' => 'paid',
-            'completed_at' => now(),
-            'transaction_id' => $payment->getTransactionId()
-        ]);
-
-        if ($payment->order && $payment->order->vehicle) {
-            $payment->order->vehicle->update([
-                'status' => 'rented',
-            ]);
-        }
-
-        if ($payment->order) {
-            $payment->order->update([
-                'status' => 'in_progress',
-            ]);
-        }
-
-        // return redirect()->route('payment.success', ['transaction_id' => $payment->transaction_id]);
-        return redirect()->route('order-history');
-    }
-
     public function callback(Request $request)
     {
+        // // ✅ 1. ENABLE SIGNATURE VALIDATION
         // $serverKey = config('services.midtrans.server_key');
         // $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         // if ($hashed != $request->signature_key) {
+        //     Log::warning('Invalid Midtrans signature key.', ['request' => $request->all()]);
         //     return response()->json(['message' => 'Invalid signature key'], 403);
         // }
 
+        // Extract data from the request
+        $midtransOrderId = $request->order_id;
+        $midtransTransactionId = $request->transaction_id;
         $transactionStatus = $request->transaction_status;
-        $midtransOrderId   = $request->order_id;    // This is your TXN-order_id-timestamp
-        $midtransTransactionId = $request->transaction_id; // Midtrans' unique payment ID
-        $paymentType       = $request->payment_type;
-        $grossAmount       = $request->gross_amount;
-        $transactionTime   = $request->transaction_time;
 
-        // Extract your internal order_id from the midtransOrderId
-        // Assuming your format is 'TXN-{internal_order_id}-{timestamp}'
-        preg_match('/TXN-(\d+)-(\d+)/', $midtransOrderId, $matches);
-        $internalOrderId = $matches[1] ?? null;
-
-        if (!$internalOrderId) {
-            return response()->json(['message' => 'Failed to parse internal order ID from Midtrans order_id'], 400);
-        }
-
-        // Find the associated order (optional, but good for validation/context)
-        $order = Order::find($internalOrderId);
-        if (!$order) {
-            // Log this error: Notification for non-existent order.
-            return response()->json(['message' => 'Order not found for notification'], 404);
-        }
-
-        // CRITICAL: Check if a payment record for this Midtrans transaction_id already exists
-        // This handles duplicate notifications from Midtrans (which can happen).
-        $payment = Payment::where('midtrans_transaction_id', $midtransTransactionId)->first();
-
-        if ($payment) {
-            // Payment record already exists. Update its status if it's a more final status.
-            // Example: If current status is 'pending' and new is 'settlement', update.
-            // Avoid overwriting a 'success' with a 'pending' from a delayed notification.
-            if ($transactionStatus == 'settlement' || $transactionStatus == 'capture') {
-                if ($payment->status !== 'success') { // Only update if not already successful
-                    $payment->status = 'success';
-                    $payment->save();
-                    // You might also want to update the order status here
-                    $order->status = 'in_progress'; // Or 'paid'
-                    $order->save();
-                }
-            } elseif ($transactionStatus == 'pending') {
-                if ($payment->status !== 'success' && $payment->status !== 'pending') {
-                    $payment->status = 'pending';
-                    $payment->save();
-                }
-            } elseif ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
-                if ($payment->status !== 'failed' && $payment->status !== 'success') { // Don't revert success
-                    $payment->status = 'failed';
-                    $payment->save();
-                    $order->status = 'cancelled'; // Or 'payment_failed'
-                    $order->save();
-                }
+        // Use a database transaction to ensure data integrity
+        DB::beginTransaction();
+        try {
+            // Find the associated order
+            preg_match('/TXN-(\d+)-(\d+)/', $midtransOrderId, $matches);
+            $internalOrderId = $matches[1] ?? null;
+            if (!$internalOrderId) {
+                throw new \Exception('Failed to parse internal order ID from: ' . $midtransOrderId);
             }
-            // Always return 200 OK to Midtrans to acknowledge receipt.
-            return response()->json(['message' => 'Payment record already exists and updated if necessary'], 200);
-        }
 
-        // If no existing payment record, create a new one
-        $paymentStatus = 'pending'; // Default
-        if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
-            $paymentStatus = 'success';
-            $order->status = 'in_progress'; // Update order status
-            $order->save();
-        } elseif ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
-            $paymentStatus = 'failed';
-            $order->status = 'cancelled'; // Update order status
-            $order->save();
-        }
-        // 'pending' is the default if no match above
-        
-        Payment::create([
-            'order_id' => $internalOrderId,
-            'midtrans_transaction_id' => $midtransTransactionId,
-            'midtrans_order_id' => $midtransOrderId, // Your generated TXN-ID
-            'amount' => $grossAmount,
-            'status' => $paymentStatus,
-            'payment_type' => $paymentType,
-            'transaction_time' => $transactionTime,
-            'raw_response' => json_encode($request->all()), // Store the full response
-            // Add other fields you deem necessary from the Midtrans payload
-        ]);
+            $order = Order::find($internalOrderId);
+            if (!$order) {
+                throw new \Exception('Order not found for Midtrans notification. Order ID: ' . $internalOrderId);
+            }
 
-        
-        if ($order) {
-            // Menyimpan user System ke dalam variabel
-            $systemUserId = Employee::where('position', 'System')->value('id');
+            // Check if payment already exists to handle duplicate notifications
+            $payment = Payment::where('midtrans_transaction_id', $midtransTransactionId)->first();
 
-            // Menghasilkan laporan keuangan
-            FinancialReport::create([
-                'order_id' => $order->id,
-                'transaction_date' => $transactionTime,
-                'amount' => $grossAmount,
-                'description' => 'Pembayaran untuk pemesanan dengan ID = ' . $midtransOrderId,
-                'type' => 'income',
-                'category' => 'rental',
-                'created_by' => $systemUserId,
-                'notes' => 'Dihasilkan otomatis oleh Sistem'
+            // Define a reusable function for successful payment logic
+            $handleSuccess = function ($order, $request) {
+                // Check if already processed to avoid duplicate financial reports/vehicle updates
+                if ($order->status !== 'in_progress') {
+                    $order->status = 'in_progress';
+                    $order->save();
+
+                    // ✅ 2. ONLY RUN BUSINESS LOGIC ON SUCCESS
+                    Vehicle::where('id', $order->vehicle_id)->update(['status' => 'rented']);
+
+                    $systemUserId = Employee::where('position', 'System')->value('id');
+                    FinancialReport::create([
+                        'order_id' => $order->id,
+                        'transaction_date' => $request->transaction_time,
+                        'amount' => $request->gross_amount,
+                        'description' => 'Pembayaran untuk pemesanan dengan ID = ' . $request->order_id,
+                        'type' => 'income',
+                        'category' => 'rental',
+                        'created_by' => $systemUserId,
+                        'notes' => 'Dihasilkan otomatis oleh Sistem'
+                    ]);
+                }
+            };
+
+            $isSuccess = ($transactionStatus == 'settlement' || $transactionStatus == 'capture');
+            $isFailed = ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel');
+            $isPending = ($transactionStatus == 'pending');
+
+            if ($payment) { // Payment record exists, update it
+                if ($isSuccess && $payment->status !== 'success') {
+                    $payment->status = 'success';
+                    $handleSuccess($order, $request); // ✅ 3. Handle success logic here too
+                } elseif ($isFailed && $payment->status !== 'success') {
+                    $payment->status = 'failed';
+                    $order->status = 'cancelled';
+                    $order->save();
+                } elseif ($isPending && $payment->status !== 'success' && $payment->status !== 'pending') {
+                    $payment->status = 'pending';
+                }
+                $payment->save();
+            } else { // No payment record, create a new one
+                $paymentStatus = 'pending';
+                if ($isSuccess) {
+                    $paymentStatus = 'success';
+                    $handleSuccess($order, $request);
+                } elseif ($isFailed) {
+                    $paymentStatus = 'failed';
+                    $order->status = 'cancelled';
+                    $order->save();
+                }
+
+                Payment::create([
+                    'order_id' => $internalOrderId,
+                    'midtrans_transaction_id' => $midtransTransactionId,
+                    'midtrans_order_id' => $midtransOrderId,
+                    'amount' => $request->gross_amount,
+                    'status' => $paymentStatus,
+                    'payment_type' => $request->payment_type,
+                    'transaction_time' => $request->transaction_time,
+                    'raw_response' => json_encode($request->all()),
+                ]);
+            }
+
+            // ✅ 4. Commit the transaction if everything is successful
+            DB::commit();
+            return response()->json(['message' => 'Payment notification processed successfully'], 200);
+        } catch (\Exception $e) {
+            // Rollback the transaction on error
+            DB::rollBack();
+
+            // Log the error for debugging
+            Log::error('Midtrans callback processing failed: ' . $e->getMessage(), [
+                'request' => $request->all()
             ]);
 
-            // Mengubah status kendaraan menjadi 'rented'
-            Vehicle::where('id', $order->vehicle_id)->update(['status' => 'rented']);
+            // Return an error response but not 200 OK, so Midtrans might retry
+            return response()->json(['message' => 'Internal Server Error'], 500);
         }
-
-
-        return response()->json(['message' => 'Payment processed successfully'], 200);
     }
     public function history()
     {
