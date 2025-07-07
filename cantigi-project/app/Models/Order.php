@@ -165,7 +165,7 @@ class Order extends Model
         $startDateTime = Carbon::parse($this->start_booking_date . ' ' . $this->start_booking_time);
         $endDateTime = Carbon::parse($this->end_booking_date . ' ' . $this->end_booking_time);
 
-        return $startDateTime->diffInDays($endDateTime);
+        return round($startDateTime->diffInDays($endDateTime));
     }
 
     public function getTotalPriceAttribute()

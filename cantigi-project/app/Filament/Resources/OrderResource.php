@@ -22,6 +22,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class OrderResource extends Resource
@@ -146,8 +147,7 @@ class OrderResource extends Resource
                     ->state(function ($record) {
                         return $record->start_booking_date;
                     })
-                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->locale('id')->isoFormat('dddd'))
-                    ->sortable(),
+                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->locale('id')->isoFormat('dddd')),
 
                 TextColumn::make('start_booking_date')
                     ->label('Tanggal Pemesanan')
@@ -208,7 +208,36 @@ class OrderResource extends Resource
                         'in_progress' => 'In Progress',
                         'due' => 'Due',
                         'completed' => 'Completed',
+                    ]),
+
+                SelectFilter::make('vehicle.brand')
+                    ->relationship('vehicle', 'brand')
+                    ->label('Jenis Mobil'),
+
+                SelectFilter::make('start_booking_date')
+                    ->label('Booking Month')
+                    ->options([
+                        '01' => 'January',
+                        '02' => 'February',
+                        '03' => 'March',
+                        '04' => 'April',
+                        '05' => 'May',
+                        '06' => 'June',
+                        '07' => 'July',
+                        '08' => 'August',
+                        '09' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December',
                     ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (isset($data['value'])) {
+                            return $query->whereMonth('start_booking_date', $data['value']);
+                        }
+                        return $query;
+                    }),
+
+
             ])
             ->actions([
                 Tables\Actions\Action::make('verify')
