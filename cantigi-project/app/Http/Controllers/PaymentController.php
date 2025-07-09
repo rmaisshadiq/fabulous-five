@@ -148,10 +148,11 @@ class PaymentController extends Controller
 
                     $systemUserId = Employee::where('position', 'System')->value('id');
                     FinancialReport::create([
+                        'vehicle_id' => $order->vehicle_id,
                         'order_id' => $order->id,
                         'transaction_date' => $request->transaction_time,
                         'amount' => $request->gross_amount,
-                        'description' => 'Pembayaran untuk pemesanan dengan ID = ' . $request->order_id,
+                        'description' => 'Pembayaran untuk pemesanan dengan ID: #' . $request->order_id,
                         'type' => 'income',
                         'category' => 'rental',
                         'created_by' => $systemUserId,

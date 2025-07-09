@@ -23,16 +23,24 @@ class Vehicle extends Model
         'status'
     ];
 
-    public function maintenance() {
+    public function maintenance() 
+    {
         return $this->hasMany(Maintenance::class, 'vehicle_id');
     }
 
-    public function order() {
+    public function order() 
+    {
         return $this->hasMany(Order::class);
     }
 
-    public function return_log() {
+    public function return_log() 
+    {
         return $this->hasMany(ReturnLog::class);
+    }
+
+    public function financial_report()
+    {
+        return $this->hasMany(FinancialReport::class, 'vehicle_id');
     }
 
 }

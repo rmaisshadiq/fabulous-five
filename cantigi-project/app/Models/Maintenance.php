@@ -42,6 +42,7 @@ class Maintenance extends Model
         
         // Buat FinancialReport
         FinancialReport::create([
+            'vehicle_id' => $maintenance->vehicle_id,
             'maintenance_id' => $maintenance->id,
             'transaction_date' => $maintenance->maintenance_date,
             'description' => $maintenance->description,
