@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
 use App\Models\ReturnLog;
+use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,7 +23,9 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Notifications\Notification;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class OrderResource extends Resource
@@ -53,7 +56,7 @@ class OrderResource extends Resource
                 Select::make('vehicle_id')
                     ->relationship('vehicle')
                     ->options(
-                        \App\Models\Vehicle::all()
+                        Vehicle::all()
                             ->mapWithKeys(function ($v) {
                                 return [
                                     $v->id => "{$v->brand} {$v->model} ({$v->license_plate})",
@@ -210,9 +213,60 @@ class OrderResource extends Resource
                         'completed' => 'Completed',
                     ]),
 
-                SelectFilter::make('vehicle.brand')
-                    ->relationship('vehicle', 'brand')
-                    ->label('Jenis Mobil'),
+                Filter::make('vehicle')
+                    ->form([
+                        // 1. Brand Selector (Triggers Model)
+                        Forms\Components\Select::make('brand')
+                            ->label('Brand')
+                            ->options(
+                                Vehicle::pluck('brand', 'brand')->unique()
+                            )
+                            ->live(), // Makes this field reactive
+
+                        // 2. Model Selector (Appears after Brand, Triggers License Plate)
+                        Forms\Components\Select::make('model')
+                            ->label('Model')
+                            ->hidden(fn(Forms\Get $get): bool => empty($get('brand'))) // Hidden until brand is selected
+                            ->options(function (Forms\Get $get): array {
+                                if (empty($get('brand'))) {
+                                    return [];
+                                }
+                                // Load models for the selected brand
+                                return Vehicle::where('brand', $get('brand'))->pluck('model', 'model')->unique()->toArray();
+                            })
+                            ->live(), // Makes this field reactive
+
+                        // 3. License Plate Selector (Appears after Model)
+                        Forms\Components\Select::make('license_plate')
+                            ->label('License Plate')
+                            // Hidden until both brand AND model are selected
+                            ->hidden(fn(Forms\Get $get): bool => empty($get('brand')) || empty($get('model')))
+                            ->options(function (Forms\Get $get): array {
+                                if (empty($get('model'))) {
+                                    return [];
+                                }
+                                // Load license plates for the selected brand and model
+                                return Vehicle::where('brand', $get('brand'))
+                                    ->where('model', $get('model'))
+                                    ->pluck('license_plate', 'license_plate')
+                                    ->toArray();
+                            }),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['brand'],
+                                fn(Builder $query, $brand): Builder => $query->whereHas('vehicle', fn($q) => $q->where('brand', 'like', "%{$brand}%"))
+                            )
+                            ->when(
+                                $data['model'],
+                                fn(Builder $query, $model): Builder => $query->whereHas('vehicle', fn($q) => $q->where('model', 'like', "%{$model}%"))
+                            )
+                            ->when(
+                                $data['license_plate'],
+                                fn(Builder $query, $plate): Builder => $query->whereHas('vehicle', fn($q) => $q->where('license_plate', 'like', "%{$plate}%"))
+                            );
+                    }),
 
                 SelectFilter::make('start_booking_date')
                     ->label('Booking Month')
@@ -233,6 +287,23 @@ class OrderResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         if (isset($data['value'])) {
                             return $query->whereMonth('start_booking_date', $data['value']);
+                        }
+                        return $query;
+                    }),
+
+                SelectFilter::make('year') // A unique name for the filter
+                    ->label('Booking Year')
+                    ->options(function () {
+                        // Dynamically get all unique years from your orders table
+                        return Order::select(DB::raw('YEAR(start_booking_date) as year'))
+                            ->distinct()
+                            ->orderBy('year', 'desc')
+                            ->pluck('year', 'year')
+                            ->toArray();
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (!empty($data['value'])) {
+                            return $query->whereYear('start_booking_date', $data['value']);
                         }
                         return $query;
                     }),

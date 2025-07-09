@@ -26,32 +26,37 @@ class ListOrders extends ListRecords
             Actions\Action::make('download_report')
                 ->label('Download Report')
                 ->action(function () {
-                    // 1. Check for the specific filters using data_get to safely access nested values.
-                    $vehicleFilterValue = data_get($this->tableFilters, 'vehicle.brand.value');
-                    $dateFilterValue = data_get($this->tableFilters, 'start_booking_date.value');
+                    // 1. Check if any vehicle filter (brand, model, or plate) is active.
+                    $brandValue = data_get($this->tableFilters, 'vehicle.brand');
+                    $modelValue = data_get($this->tableFilters, 'vehicle.model');
+                    $plateValue = data_get($this->tableFilters, 'vehicle.license_plate');
 
-                    // A filter is considered active if its value is not empty (i.e., not null and not an empty string).
-                    $isVehicleFiltered = !empty($vehicleFilterValue);
-                    $isDateFiltered = !empty($dateFilterValue);
+                    $isVehicleFiltered = !empty($brandValue) || !empty($modelValue) || !empty($plateValue);
 
-                    // 2. Set the view and filename based on the condition that BOTH filters are active.
+                    // 2. Check if any date filter (month or year) is active.
+                    $monthValue = data_get($this->tableFilters, 'start_booking_date.value');
+                    $yearValue = data_get($this->tableFilters, 'year.value');
+
+                    $isDateFiltered = !empty($monthValue) || !empty($yearValue);
+
+                    // 3. Set the view and filename based on the condition that BOTH a vehicle AND a date filter are active.
                     if ($isVehicleFiltered && $isDateFiltered) {
-                        // This block runs ONLY if both vehicle AND date are filtered.
+                        // This block runs ONLY if both a vehicle part AND a date part are filtered.
                         $viewName = 'pdf.filtered-order-report';
                         $filename = "filtered-order-report-" . now()->format('Y-m-d') . ".pdf";
                     } else {
-                        // This block runs if only one, or none, of the filters are used.
+                        // This block runs if only one category (vehicle or date), or neither, is used.
                         $viewName = 'pdf.order-report';
                         $filename = "all-orders-report-" . now()->format('Y-m-d') . ".pdf";
                     }
 
-                    // 3. Get the data (this query still correctly applies any active filters).
+                    // 4. Get the data (this query still correctly applies any active filters).
                     $orders = $this->getFilteredTableQuery()->with('customer', 'vehicle')->get();
 
-                    // 4. Load the dynamically selected view.
+                    // 5. Load the dynamically selected view.
                     $pdf = Pdf::loadView($viewName, ['orders' => $orders]);
 
-                    // 5. Return the download response.
+                    // 6. Return the download response.
                     return response()->streamDownload(
                         fn() => print($pdf->output()),
                         $filename
