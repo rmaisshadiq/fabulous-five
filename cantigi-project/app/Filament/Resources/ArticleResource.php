@@ -78,7 +78,7 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('publish_date')
                     ->date(),
-                Tables\Columns\TextColumn::make('employee.user.name')
+                Tables\Columns\TextColumn::make('employees.user.name')
                     ->label('Author'),
             ])
             ->filters([
