@@ -102,6 +102,8 @@ class FinancialReportResource extends Resource
                 Tables\Columns\TextColumn::make('vehicle.brand')
                     ->label("Nama Kendaraan")
                     ->formatStateUsing(fn ($state, $record) => $record->vehicle->brand . ' ' . $record->vehicle->model),
+                Tables\Columns\TextColumn::make('vehicle.license_plate')
+                    ->label('Plat Kendaraan'),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi'),
                 Tables\Columns\TextColumn::make('type')
