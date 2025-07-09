@@ -27,29 +27,19 @@ class FeedbackResource extends Resource
     {
         return $table
             ->columns([
-              Tables\Columns\TextColumn::make('order_id')
-                    ->label('Order ID')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('customer_id')
-                    ->label('Customer ID')
-                    ->sortable()
-                    ->searchable(),
-
                 Tables\Columns\TextColumn::make('rating')
                     ->label('Rating')
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('comment')
-                    ->label('Comment')
+                    ->label('Komentar')
                     ->limit(50)
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('feedback_date')
-                    ->label('Feedback Date')
+                    ->label('Tanggal Feedback')
                     ->date()
                     ->sortable(),  
             ])

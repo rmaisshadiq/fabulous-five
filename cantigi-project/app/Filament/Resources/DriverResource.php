@@ -31,19 +31,26 @@ class DriverResource extends Resource
         return $form
             ->schema([
                 Select::make('employee_id')
-                ->relationship('employee', 'id', fn (Builder $query) => 
-                    $query->whereHas('user')->whereDoesntHave('driver')
-                )
-                ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
-                ->required(),
+                    ->label('Nama Karyawan')
+                    ->relationship(
+                        'employee',
+                        'id',
+                        fn(Builder $query) =>
+                        $query->whereHas('user')->whereDoesntHave('driver')
+                    )
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->user->name)
+                    ->required(),
                 TextInput::make('license_number')
-                ->required(),
+                    ->label('Nomor SIM')
+                    ->maxLength(16)
+                    ->required(),
                 Select::make('available_status')
-                ->options([
-                    'available' => 'Available',
-                    'not available' => 'Not Available'
-                ])
-                ->required(),
+                    ->label("Status Ketersediaan")
+                    ->options([
+                        'available' => 'Tersedia',
+                        'not available' => 'Tidak Tersedia'
+                    ])
+                    ->required(),
             ]);
     }
 
@@ -52,13 +59,16 @@ class DriverResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('employee.user.profile_image')
-                    ->label('Employee portrait')
+                    ->label('Foto Karyawan')
                     ->width(150)
                     ->height(150),
                 Tables\Columns\TextColumn::make('employee.user.name')
-                    ->label('Employee name'),
-                Tables\Columns\TextColumn::make('license_number'),
+                    ->label('Nama Karyawan'),
+                Tables\Columns\TextColumn::make('license_number')
+                    ->label('Nomor SIM'),
                 Tables\Columns\TextColumn::make('available_status')
+                    ->label("Status Ketersediaan")
+                    ->formatStateUsing(fn ($state) => $state == 'available' ? 'Tersedia' : 'Tidak Tersedia'),
             ])
             ->filters([
                 //
