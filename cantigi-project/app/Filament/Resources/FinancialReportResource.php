@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\FinancialReportResource\Pages;
 use App\Filament\Resources\FinancialReportResource\RelationManagers;
 use App\Models\FinancialReport;
+use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -15,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,10 +30,24 @@ class FinancialReportResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-currency-dollar';
 
+    protected static ?string $modelLabel = 'Keuangan';
+
+    protected static ?string $pluralModelLabel = 'Keuangan';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Select::make('vehicle_id')
+                    ->label('Nama Kendaraan')
+                    ->options(
+                        // Ambil semua kendaraan dan ubah formatnya
+                        Vehicle::all()->mapWithKeys(function ($vehicle) {
+                            // Kembalikan array dengan format [id => 'Brand Model']
+                            return [$vehicle->id => "{$vehicle->brand} {$vehicle->model}"];
+                        })
+                    )
+                    ->required(),
                 DateTimePicker::make('transaction_date')
                     ->label('Tanggal Transaksi')
                     ->required(),
@@ -63,8 +79,8 @@ class FinancialReportResource extends Resource
                         $user = Auth::user();
                         return $user->employee?->id ?? $user->id;
                     }),
-                
-                
+
+
             ]);
     }
 
@@ -80,13 +96,9 @@ class FinancialReportResource extends Resource
                     ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->locale('id')->isoFormat('dddd, D MMMM Y'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('transaction_time')
-                    ->label('Jam Transaksi')
-                    ->state(function ($record) {
-                        return $record->transaction_date;
-                    })
-                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->locale('id')->isoFormat('HH:mm'))
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.brand')
+                    ->label("Nama Kendaraan")
+                    ->formatStateUsing(fn ($state, $record) => $record->vehicle->brand . ' ' . $record->vehicle->model),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi'),
                 Tables\Columns\TextColumn::make('type')
@@ -119,8 +131,7 @@ class FinancialReportResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-            ])
+            ->actions([])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

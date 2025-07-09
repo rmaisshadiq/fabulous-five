@@ -11,6 +11,7 @@ class FinancialReport extends Model
 
     protected $fillable = [
         'maintenance_id',
+        'vehicle_id',
         'order_id',
         'transaction_date',
         'description',
@@ -34,5 +35,10 @@ class FinancialReport extends Model
     public function maintenance()
     {
         return $this->belongsTo(Maintenance::class, 'maintenance_id');
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
 }
