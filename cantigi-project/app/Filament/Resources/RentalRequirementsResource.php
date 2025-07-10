@@ -23,7 +23,7 @@ class RentalRequirementsResource extends Resource
 {
     protected static ?string $model = RentalRequirements::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationGroup = 'Rental';
 

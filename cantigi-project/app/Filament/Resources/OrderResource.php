@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\ReturnLog;
 use App\Models\Vehicle;
@@ -14,6 +15,9 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
@@ -24,7 +28,9 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\Indicator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
@@ -45,78 +51,135 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('customer_id')
-                    ->relationship('customer.user', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload()
-                    ->disabled(fn($context) => $context === 'edit'),
+                Section::make('Detail Pemesanan')
+                    ->schema(components: [
+                        Select::make('customer_id')
+                            ->label('Nama Pelanggan')
+                            ->required()
+                            ->disabled(fn($context) => $context === 'edit')
+                            ->searchable() // Keep this for the UI, but the logic is in getSearchResultsUsing
 
+                            // Manually define the list of options from two sources
+                            ->options(function (): array {
+                                // 1. Get customers who have a name via the User relationship
+                                $customersFromUser = Customer::whereHas('user')->with('user')->get()->mapWithKeys(
+                                    fn($customer) =>
+                                    [$customer->id => $customer->user->name]
+                                );
 
-                Select::make('vehicle_id')
-                    ->relationship('vehicle')
-                    ->options(
-                        Vehicle::all()
-                            ->mapWithKeys(function ($v) {
-                                return [
-                                    $v->id => "{$v->brand} {$v->model} ({$v->license_plate})",
-                                ];
+                                // 2. Get customers who have their own 'name' and no user relationship
+                                $customersFromOwnName = Customer::whereDoesntHave('user')->whereNotNull('name')->get()->mapWithKeys(
+                                    fn($customer) =>
+                                    [$customer->id => $customer->name]
+                                );
+
+                                // 3. Combine the two lists
+                                return $customersFromUser->union($customersFromOwnName)->all();
                             })
-                            ->toArray()
-                    )
-                    ->required()
-                    ->searchable()
-                    ->preload()
-                    ->disabled(fn($context) => $context === 'edit'),
 
-                DatePicker::make('start_booking_date')
-                    ->required()
-                    ->disabled(fn($context) => $context === 'edit'),
+                            // Define the custom search logic
+                            ->getSearchResultsUsing(function (string $search): array {
+                                $customersFromUser = Customer::whereHas(
+                                    'user',
+                                    fn($query) =>
+                                    $query->where('name', 'like', "%{$search}%")
+                                )->with('user')->limit(50)->get()->mapWithKeys(
+                                    fn($customer) =>
+                                    [$customer->id => $customer->user->name]
+                                );
 
-                DatePicker::make('end_booking_date')
-                    ->required()
-                    ->disabled(fn($context) => $context === 'edit'),
+                                $customersFromOwnName = Customer::whereDoesntHave('user')
+                                    ->where('name', 'like', "%{$search}%")
+                                    ->limit(50)
+                                    ->get()->mapWithKeys(
+                                        fn($customer) =>
+                                        [$customer->id => $customer->name]
+                                    );
 
-                TimePicker::make('start_booking_time')
-                    ->required()
-                    ->disabled(fn($context) => $context === 'edit'),
+                                return $customersFromUser->union($customersFromOwnName)->all();
+                            })
 
-                TimePicker::make('end_booking_time')
-                    ->required()
-                    ->disabled(fn($context) => $context === 'edit'),
+                            // Define how to get the label for a pre-selected value (replaces preload)
+                            ->getOptionLabelUsing(function ($value): ?string {
+                                $customer = Customer::with('user')->find($value);
+                                // Return the user's name if it exists, otherwise return the customer's own name
+                                return $customer->user->name ?? $customer->name;
+                            }),
 
-                Textarea::make('drop_address')
-                    ->required()
-                    ->rows(3)
-                    ->disabled(fn($context) => $context === 'edit'),
 
-                Select::make('status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'confirmed' => 'Confirmed',
-                        'in_progress' => 'In Progress',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
-                    ])
-                    ->required()
-                    ->default('pending')
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, $record) {
-                        if ($record && $state === 'confirmed') {
-                            Notification::make()
-                                ->title('Order Confirmed')
-                                ->body('The order has been confirmed. You can now assign a driver.')
-                                ->success()
-                                ->send();
-                        }
-                    }),
+                        Select::make('vehicle_id')
+                            ->label('Nama Kendaraan')
+                            ->relationship('vehicle')
+                            ->options(
+                                Vehicle::all()
+                                    ->mapWithKeys(function ($v) {
+                                        return [
+                                            $v->id => "{$v->brand} {$v->model} ({$v->license_plate})",
+                                        ];
+                                    })
+                                    ->toArray()
+                            )
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->disabled(fn($context) => $context === 'edit'),
 
-                Select::make('driver_id')
-                    ->relationship('driver.employee.user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->nullable()
-                // ->visible(fn($get) => in_array($get('status'), ['confirmed', 'in_progress', 'completed'])),
+                        DatePicker::make('start_booking_date')
+                            ->label('Tanggal Pemesanan')
+                            ->required()
+                            ->disabled(fn($context) => $context === 'edit'),
+
+                        DatePicker::make('end_booking_date')
+                            ->label('Tanggal Pengembalian')
+                            ->required()
+                            ->disabled(fn($context) => $context === 'edit'),
+
+                        TimePicker::make('start_booking_time')
+                            ->label('Jam Pemesanan')
+                            ->required()
+                            ->disabled(fn($context) => $context === 'edit'),
+
+                        TimePicker::make('end_booking_time')
+                            ->label('Jam Pengembalian')
+                            ->required()
+                            ->disabled(fn($context) => $context === 'edit'),
+
+                        Select::make('status')
+                            ->options([
+                                'pending' => 'Pending',
+                                'confirmed' => 'Confirmed',
+                                'in_progress' => 'In Progress',
+                                'completed' => 'Completed',
+                                'cancelled' => 'Cancelled',
+                            ])
+                            ->required()
+                            ->default('pending')
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, $record) {
+                                if ($record && $state === 'confirmed') {
+                                    Notification::make()
+                                        ->title('Order Confirmed')
+                                        ->body('The order has been confirmed. You can now assign a driver.')
+                                        ->success()
+                                        ->send();
+                                }
+                            }),
+                    ]),
+
+                Section::make('Detail Pengembalian')
+                    ->schema(components: [
+                        DateTimePicker::make('returned_at')
+                            ->label('Dikembalikan pada:')
+                            ->dehydrated(false), // Don't save this to the 'orders' table
+
+                        TextInput::make('fuel_level_on_rent')
+                            ->label('Tingkat BBM saat disewa')
+                            ->dehydrated(false), // Don't save this to the 'orders' table
+
+                        TextInput::make('fuel_level_on_return')
+                            ->label('Tingkat BBM saat dikembalikan')
+                            ->dehydrated(false), // Don't save this to the 'orders' table
+                    ]),
             ]);
     }
 
@@ -124,15 +187,29 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('customer.user.name')
-                    ->label('Nama Penyema')
-                    ->searchable()
-                    ->sortable(),
+                TextColumn::make('customer_name') // Use a unique, virtual name for the column
+                    ->label('Nama Pelanggan')
+                    // 1. Custom Display Logic
+                    ->state(function (Model $record): ?string {
+                        // Prioritize the user's name, fall back to the customer's own name
+                        return $record->customer?->user?->name ?? $record->customer?->name;
+                    })
+                    // 2. Custom Search Logic
+                    ->searchable([
+                        'customer.user.name',
+                        'customer.name',
+                    ])
+                    // 3. Custom Sort Logic
+                    ->sortable([
+                        'customer.user.name',
+                        'customer.name',
+                    ]),
 
-                TextColumn::make('customer.user.email')
-                    ->label('Email Penyema')
+                TextColumn::make('customer.phone_number')
+                    ->label('Nomor HP')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->default('Tidak tersedia'),
 
                 TextColumn::make('vehicle.model')
                     ->label('Jenis Mobil')
@@ -221,31 +298,37 @@ class OrderResource extends Resource
                             ->options(
                                 Vehicle::pluck('brand', 'brand')->unique()
                             )
-                            ->live(), // Makes this field reactive
+                            ->live()
+                            ->afterStateUpdated(function (Forms\Set $set, $state) {
+                                // Reset dependent fields when brand changes
+                                $set('model', null);
+                                $set('license_plate', null);
+                            }),
 
                         // 2. Model Selector (Appears after Brand, Triggers License Plate)
                         Forms\Components\Select::make('model')
                             ->label('Model')
-                            ->hidden(fn(Forms\Get $get): bool => empty($get('brand'))) // Hidden until brand is selected
+                            ->hidden(fn(Forms\Get $get): bool => empty($get('brand')))
                             ->options(function (Forms\Get $get): array {
                                 if (empty($get('brand'))) {
                                     return [];
                                 }
-                                // Load models for the selected brand
                                 return Vehicle::where('brand', $get('brand'))->pluck('model', 'model')->unique()->toArray();
                             })
-                            ->live(), // Makes this field reactive
+                            ->live()
+                            ->afterStateUpdated(function (Forms\Set $set, $state) {
+                                // Reset license plate when model changes
+                                $set('license_plate', null);
+                            }),
 
                         // 3. License Plate Selector (Appears after Model)
                         Forms\Components\Select::make('license_plate')
                             ->label('License Plate')
-                            // Hidden until both brand AND model are selected
                             ->hidden(fn(Forms\Get $get): bool => empty($get('brand')) || empty($get('model')))
                             ->options(function (Forms\Get $get): array {
-                                if (empty($get('model'))) {
+                                if (empty($get('model')) || empty($get('brand'))) {
                                     return [];
                                 }
-                                // Load license plates for the selected brand and model
                                 return Vehicle::where('brand', $get('brand'))
                                     ->where('model', $get('model'))
                                     ->pluck('license_plate', 'license_plate')
@@ -255,17 +338,40 @@ class OrderResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
-                                $data['brand'],
-                                fn(Builder $query, $brand): Builder => $query->whereHas('vehicle', fn($q) => $q->where('brand', 'like', "%{$brand}%"))
+                                !empty($data['brand']),
+                                fn(Builder $query): Builder => $query->whereHas('vehicle', fn($q) => $q->where('brand', $data['brand']))
                             )
                             ->when(
-                                $data['model'],
-                                fn(Builder $query, $model): Builder => $query->whereHas('vehicle', fn($q) => $q->where('model', 'like', "%{$model}%"))
+                                !empty($data['model']) && !empty($data['brand']),
+                                fn(Builder $query): Builder => $query->whereHas('vehicle', fn($q) => $q->where('brand', $data['brand'])->where('model', $data['model']))
                             )
                             ->when(
-                                $data['license_plate'],
-                                fn(Builder $query, $plate): Builder => $query->whereHas('vehicle', fn($q) => $q->where('license_plate', 'like', "%{$plate}%"))
+                                !empty($data['license_plate']) && !empty($data['model']) && !empty($data['brand']),
+                                fn(Builder $query): Builder => $query->whereHas(
+                                    'vehicle',
+                                    fn($q) =>
+                                    $q->where('brand', $data['brand'])
+                                        ->where('model', $data['model'])
+                                        ->where('license_plate', $data['license_plate'])
+                                )
                             );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if (!empty($data['brand'])) {
+                            $indicators[] = Indicator::make('Brand: ' . $data['brand']);
+                        }
+
+                        if (!empty($data['model'])) {
+                            $indicators[] = Indicator::make('Model: ' . $data['model']);
+                        }
+
+                        if (!empty($data['license_plate'])) {
+                            $indicators[] = Indicator::make('License Plate: ' . $data['license_plate']);
+                        }
+
+                        return $indicators;
                     }),
 
                 SelectFilter::make('start_booking_date')
