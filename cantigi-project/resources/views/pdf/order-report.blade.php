@@ -77,7 +77,7 @@
         <thead>
             <tr>
                 <th rowspan="2">Nama Penyewa</th>
-                <th rowspan="2">Email Penyewa</th>
+                <th rowspan="2">Nomor HP</th>
                 <th rowspan="2">Jenis Mobil</th>
                 <th rowspan="2">Plat Nomor</th>
                 <th colspan="4" style="text-align: center;">Pemesanan</th>
@@ -99,8 +99,8 @@
         <tbody>
             @forelse ($orders as $order)
                 <tr>
-                    <td>{{ $order->customer->user->name }}</td>
-                    <td>{{ $order->customer->user->email }}</td>
+                    <td>{{ $order->customer->user->name ?? $order->customer->name }}</td>
+                    <td>{{ $order->customer->phone_number ?? 'Belum tersedia' }}</td>
                     <td>{{ $order->vehicle->brand ?? 'N/A' }} {{ $order->vehicle->model ?? '' }}</td>
                     <td>{{ $order->vehicle->license_plate }}</td>
                     <td>{{ \Carbon\Carbon::parse($order->start_booking_date)->locale('id')->isoFormat('dddd') }}</td>

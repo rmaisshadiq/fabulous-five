@@ -137,7 +137,7 @@
                         <td>{{ $day }}</td>
 
                         {{-- Column 2: Renter Name (if order exists) --}}
-                        <td>{{ $order ? $order->customer->user->name : '' }}</td>
+                        <td>{{ $order ? $order->customer->user->name ?? $order->customer->name : '' }}</td>
 
                         {{-- Column 3: Duration (if order exists) --}}
                         <td>{{ $order ? ($order->duration_in_days ?? 'N/A') : '' }}</td>
@@ -151,10 +151,9 @@
                 @endfor
 
                 {{-- This is the TOTAL row, it remains unchanged --}}
-                <tr style="font-weight: bold; border-top: 2px solid #333;">
+                <tr">
                     <td colspan="3" style="text-align: center;"><b>TOTAL</b></td>
-                    <td>Rp{{ number_format($orders->sum('final_total'), 0, ',', '.') }}</td>
-                    <td></td>
+                    <td colspan="2"><b>Rp{{ number_format($orders->sum('final_total'), 0, ',', '.') }}</b></td>
                 </tr>
 
             @else
