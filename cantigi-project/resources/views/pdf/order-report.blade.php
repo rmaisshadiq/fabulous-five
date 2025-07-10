@@ -111,7 +111,7 @@
                     <td>{{ $order->return_log->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('D MMMM Y') : 'Belum tersedia' }}</td>
                     <td>{{ $order->return_log->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('HH:mm') : 'Belum tersedia' }}</td>
                     <td>{{ $order->return_log->fuel_level_on_return ?? 'Belum tersedia' }}</td>
-                    <td>Rp{{ $order->formatted_final_total ?? 'Belum tersedia' }}</td>
+                    <td>Rp{{ $order->financial_report->formatted_amount ?? $order->formatted_final_total }}</td>
                     <td>{{ ucfirst(str_replace('_', ' ', $order->status)) }}</td>
                 </tr>
             @empty

@@ -143,7 +143,7 @@
                         <td>{{ $order ? ($order->duration_in_days ?? 'N/A') : '' }}</td>
 
                         {{-- Column 4: Price (if order exists) --}}
-                        <td>{{ $order ? 'Rp' . $order->formatted_final_total : '' }}</td>
+                        <td>{{ $order ? 'Rp' . ($order->financial_report->formatted_amount ?? $order->formatted_final_total) : '' }}</td>
 
                         {{-- Column 5: Status (if order exists) --}}
                         <td>{{ $order ? ucfirst(str_replace('_', ' ', $order->status)) : '' }}</td>
