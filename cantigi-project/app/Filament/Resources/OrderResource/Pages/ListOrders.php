@@ -17,14 +17,14 @@ class ListOrders extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExportAction::make()
-                ->exports([
-                    ExcelExport::make('table')->fromTable()
-                ]),
+            Actions\CreateAction::make()
+                ->label('Buat Laporan Baru'),
 
 
             Actions\Action::make('download_report')
                 ->label('Download Report')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('gray')
                 ->action(function () {
                     // 1. Check if any vehicle filter (brand, model, or plate) is active.
                     $brandValue = data_get($this->tableFilters, 'vehicle.brand');

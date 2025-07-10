@@ -18,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,7 @@ class ReturnLogResource extends Resource
 {
     protected static ?string $model = ReturnLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-left';
 
     protected static ?string $navigationGroup = 'Rental';
 
@@ -67,13 +68,30 @@ class ReturnLogResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('order_id')
-                    ->label('Order ID')
-                    ->sortable(),
+                TextColumn::make('customer_name') // Use a unique, virtual name for the column
+                    ->label('Nama Pelanggan')
+                    // 1. Custom Display Logic
+                    ->state(function (Model $record): ?string {
+                        // Prioritize the user's name, fall back to the customer's own name
+                        return $record->order->customer?->user?->name ?? $record->order->customer?->name;
+                    })
+                    // 2. Custom Search Logic
+                    ->searchable([
+                        'order.customer.user.name',
+                        'order.customer.name',
+                    ])
+                    // 3. Custom Sort Logic
+                    ->sortable([
+                        'order.customer.user.name',
+                        'order.customer.name',
+                    ]),
                 TextColumn::make('vehicle_id')
                     ->label('Nama Kendaraan')
                     ->formatStateUsing(fn ($record) => $record->vehicle->brand . ' ' . $record->vehicle->model)
                     ->sortable(),
+                TextColumn::make('vehicle.license_plate')
+                    ->label('Plat Kendaraan')
+                    ->searchable(),
                 TextColumn::make('employee.user.name')
                     ->label('Karyawan yang Bertanggungjawab')
                     ->searchable()
