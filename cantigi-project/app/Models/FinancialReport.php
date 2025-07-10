@@ -41,4 +41,9 @@ class FinancialReport extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
+
+    public function getFormattedAmountAttribute()
+    {
+        return number_format($this->amount, 0, ',', '.');
+    }
 }
