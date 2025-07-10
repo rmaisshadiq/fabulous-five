@@ -164,6 +164,21 @@ class OrderResource extends Resource
                                         ->send();
                                 }
                             }),
+
+                        TextInput::make('amount')
+                            ->label('Total Harga')
+                            ->dehydrated(false)
+                            ->required(),
+
+                        Select::make('payment_type')
+                            ->label('Opsi Pembayaran')
+                            ->options([
+                                'cash' => 'Tunai',
+                                'bank_transfer' => 'Transfer Bank',
+                                'qris' => 'QRIS'
+                            ])
+                            ->dehydrated(false)
+                            ->required(),
                     ]),
 
                 Section::make('Detail Pengembalian')
@@ -261,8 +276,17 @@ class OrderResource extends Resource
 
                 TextColumn::make('amount')
                     ->label('Total Biaya')
-                    ->state(function ($record) {
-                        return 'Rp' . $record->getFormattedFinalTotalAttribute();
+                    ->state(function (Model $record): ?string {
+                        // 1. Ambil nilai numeriknya terlebih dahulu
+                        $amount = $record->financial_report?->amount ?? $record->getFinalTotalAttribute(); // Pastikan ini mengembalikan angka
+
+                        // 2. Jika nilainya ada, format ke Rupiah. Jika tidak, tampilkan '-' atau null.
+                        if (is_null($amount)) {
+                            return null; // atau return '-';
+                        }
+
+                        // 3. Format dengan 'Rp ', pemisah ribuan '.', dan 0 desimal
+                        return 'Rp' . number_format($amount, 0, ',', '.');
                     }),
 
                 BadgeColumn::make('status')

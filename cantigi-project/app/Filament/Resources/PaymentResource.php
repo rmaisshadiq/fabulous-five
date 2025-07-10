@@ -9,8 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PaymentResource extends Resource
@@ -31,13 +33,28 @@ class PaymentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order.customer.user.name')
+                TextColumn::make('customer_name') // Use a unique, virtual name for the column
                     ->label('Nama Pelanggan')
-                    ->sortable()
-                    ->searchable(),
+                    // 1. Custom Display Logic
+                    ->state(function (Model $record): ?string {
+                        // Prioritize the user's name, fall back to the customer's own name
+                        return $record->order->customer?->user?->name ?? $record->order->customer?->name;
+                    })
+                    // 2. Custom Search Logic
+                    ->searchable([
+                        'order.customer.user.name',
+                        'order.customer.name',
+                    ])
+                    // 3. Custom Sort Logic
+                    ->sortable([
+                        'order.customer.user.name',
+                        'order.customer.name',
+                    ]),
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Jumlah Pembayaran')
-                    ->money('IDR') // Format sebagai mata uang
+                    ->state(function ($record) {
+                        return 'Rp' . number_format($record->amount, 0, ',', '.');
+                    })
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('payment_type')
@@ -52,10 +69,6 @@ class PaymentResource extends Resource
                         default => 'gray',
                     })
                     ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('midtrans_transaction_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('midtrans_order_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('transaction_time')
                     ->label('Tanggal Transaksi')
@@ -74,13 +87,10 @@ class PaymentResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('payment_method')
+                Tables\Filters\SelectFilter::make('payment_type')
                     ->options([
                         'qris' => 'QRIS',
-                        'bca' => 'BCA',
-                        'mandiri' => 'Mandiri',
-                        'bni' => 'BNI',
-                        'bri' => 'BRI',
+                        'bank_transfer' => 'Transfer Bank'
                     ]),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
