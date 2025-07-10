@@ -32,6 +32,10 @@ class ReturnLogResource extends Resource
 
     protected static ?string $navigationLabel = 'Pengembalian';
 
+    protected static ?string $modelLabel = 'Pengembalian';
+
+    protected static ?string $pluralModelLabel = 'Pengembalian';
+
 
     protected static function mutateFormDataBeforeSave(array $data): array
     {

@@ -28,6 +28,10 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = 'Pengguna';
 
+    protected static ?string $modelLabel = 'Pengguna';
+
+    protected static ?string $pluralModelLabel = 'Pengguna';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -56,14 +60,19 @@ class UserResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('profile_image')
+                    ->label('Foto Profil')
                     ->width(150)
                     ->height(150),
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->label('Nama Pengguna'),
                 TextColumn::make('email')
+                    ->label('Email')
                     ->icon('heroicon-o-envelope'),
                 TextColumn::make('created_at')
+                    ->label('Dibuat pada')
                     ->date(),
                 TextColumn::make('updated_at')
+                    ->label('Diperbarui pada')
                     ->date(),
             ])
             ->filters([

@@ -19,7 +19,7 @@ class ListCustomers extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Buat Pelanggan Baru'),
+                ->label('Tambah Pelanggan'),
             ExportAction::make()
                 ->label("Export ke Excel")
                 ->exports([

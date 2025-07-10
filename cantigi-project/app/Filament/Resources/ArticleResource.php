@@ -29,21 +29,29 @@ class ArticleResource extends Resource
 
     protected static ?string $navigationLabel = 'Artikel';
 
+    protected static ?string $modelLabel = 'Artikel';
+
+    protected static ?string $pluralModelLabel = 'Artikel';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 FileUpload::make('image')
+                    ->label('Gambar Artikel')
                     ->image()
                     ->directory('articles')
                     ->required()
                     ->visibility('public')
                     ->columnSpan(2),
                 TextInput::make('title')
+                    ->label('Judul')
                     ->required(),
                 RichEditor::make('content')
+                    ->label('Isi Artikel')
                     ->required(),
                 DatePicker::make('publish_date')
+                    ->label('Tanggal Publikasi')
                     ->format('Y/m/d')
                     ->default(now()->format('Y-m-d'))
                     ->hidden()
@@ -73,13 +81,16 @@ class ArticleResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
+                    ->label('Gambar Artikel')
                     ->width(150)
                     ->height(150),
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Judul Artikel'),
                 Tables\Columns\TextColumn::make('publish_date')
+                    ->label("Tanggal Publikasi")
                     ->date(),
                 Tables\Columns\TextColumn::make('employees.user.name')
-                    ->label('Author'),
+                    ->label('Penulis'),
             ])
             ->filters([
                 //

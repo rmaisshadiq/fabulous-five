@@ -94,13 +94,23 @@ class VehicleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('vehicle_image')
+                    ->label('Foto Kendaraan')
                     ->width(200)
                     ->height(200),
-                Tables\Columns\TextColumn::make('brand'),
-                Tables\Columns\TextColumn::make('license_plate'),
-                Tables\Columns\TextColumn::make('purchase_date'),
-                Tables\Columns\TextColumn::make('last_maintenance_date'),
-                Tables\Columns\TextColumn::make('price_per_day'),
+                Tables\Columns\TextColumn::make('brand')
+                    ->label('Merk Kendaraan')
+                    ->state(function ($record) {
+                        return $record->brand . ' ' . $record->model;
+                    }),
+                Tables\Columns\TextColumn::make('license_plate')
+                    ->label('Plat Kendaraan'),
+                Tables\Columns\TextColumn::make('last_maintenance_date')
+                    ->label('Tanggal Perbaikan Terakhir'),
+                Tables\Columns\TextColumn::make('price_per_day')
+                    ->label('Harga per Hari')
+                    ->state(function ($record) {
+                        return 'Rp' . number_format($record->price_per_day, 0, ',', '.');
+                    }),
                 Tables\Columns\TextColumn::make('status')
 
             ])

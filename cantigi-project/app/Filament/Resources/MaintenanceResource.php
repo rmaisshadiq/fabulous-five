@@ -29,6 +29,10 @@ class MaintenanceResource extends Resource
 
     protected static ?string $navigationLabel = 'Pemeliharaan';
 
+    protected static ?string $modelLabel = 'Pemeliharaan';
+
+    protected static ?string $pluralModelLabel = 'Pemeliharaan';
+
     public static function form(Form $form): Form
     {
         return $form

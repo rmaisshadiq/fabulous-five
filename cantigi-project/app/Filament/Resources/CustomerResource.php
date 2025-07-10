@@ -86,7 +86,8 @@ class CustomerResource extends Resource
                 TextColumn::make('phone_number')
                     ->label('Nomor HP')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->default('Tidak tersedia'),
             ])
             ->filters([
                 //

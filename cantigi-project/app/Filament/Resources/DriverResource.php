@@ -26,6 +26,10 @@ class DriverResource extends Resource
 
     protected static ?string $navigationLabel = 'Supir';
 
+    protected static ?string $modelLabel = 'Supir';
+
+    protected static ?string $pluralModelLabel = 'Supir';
+
     public static function form(Form $form): Form
     {
         return $form

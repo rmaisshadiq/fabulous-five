@@ -24,9 +24,9 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationLabel = 'Pembayaran';
 
-    protected static ?string $modelLabel = 'Pemesanan';
+    protected static ?string $modelLabel = 'Pembayaran';
 
-    protected static ?string $pluralModelLabel = 'Pemesanan';
+    protected static ?string $pluralModelLabel = 'Pembayaran';
 
 
     public static function table(Table $table): Table

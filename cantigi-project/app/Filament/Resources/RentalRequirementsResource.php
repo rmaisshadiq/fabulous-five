@@ -29,6 +29,10 @@ class RentalRequirementsResource extends Resource
 
     protected static ?string $navigationLabel = 'Persyaratan';
 
+    protected static ?string $modelLabel = 'Persyaratan';
+
+    protected static ?string $pluralModelLabel = 'Persyaratan';
+
     public static function form(Form $form): Form
     {
         return $form
