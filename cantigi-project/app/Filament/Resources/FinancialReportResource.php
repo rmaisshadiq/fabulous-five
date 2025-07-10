@@ -47,7 +47,7 @@ class FinancialReportResource extends Resource
                         // Ambil semua kendaraan dan ubah formatnya
                         Vehicle::all()->mapWithKeys(function ($vehicle) {
                             // Kembalikan array dengan format [id => 'Brand Model']
-                            return [$vehicle->id => "{$vehicle->brand} {$vehicle->model}"];
+                            return [$vehicle->id => "{$vehicle->brand} {$vehicle->model}: {$vehicle->license_plate}"];
                         })
                     )
                     ->required(),
@@ -134,6 +134,19 @@ class FinancialReportResource extends Resource
                     ->searchable(),
             ])
             ->filters([
+                SelectFilter::make('type')
+                    ->label('Tipe')
+                    ->options([
+                        'income' => 'Pemasukan',
+                        'expense' => 'Pengeluaran'
+                    ]),
+                SelectFilter::make('category')
+                    ->label('Kategori')
+                    ->options([
+                        'rental' => 'Penyewaan',
+                        'maintenance' => 'Pemeliharaan',
+                        'other' => 'lainnya'
+                    ]),
                 Filter::make('vehicle')
                     ->form([
                         // 1. Brand Selector (Triggers Model)
