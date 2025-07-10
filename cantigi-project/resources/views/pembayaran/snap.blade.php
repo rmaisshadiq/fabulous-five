@@ -47,7 +47,6 @@
             snap.pay('{{ $snapToken }}', {
                 onPending: function(result) {
                     alert('Transaksi pending: ' + result.status_message);
-                    window.location.href = `/orders/{{ $order->id }}/pending`;
                 },
                 onSuccess: function(result) {
                     // Prevent multiple calls if somehow the success callback fires more than once rapidly
@@ -64,13 +63,6 @@
                         })
                         .then(res => res.json())
                         .then(() => {
-                            // The result.order_id here is the 'transactionRef' you sent to Midtrans,
-                            // not necessarily your internal `order->id`.
-                            // You might need to parse it if your success route expects your internal order_id.
-                            // Assuming your success route can handle the Midtrans order_id (transactionRef) for lookup
-                            // or that your callback sends back your internal order_id in its JSON response.
-                            // If not, you'll need to pass the actual $order->id from Laravel here.
-                            // For simplicity, I'm using result.order_id assuming it's adequate or can be parsed.
                             window.location.href = "{{ route('payment.success', ['orderId' => $order->id]) }}";
                         })
                         .catch(error => {
