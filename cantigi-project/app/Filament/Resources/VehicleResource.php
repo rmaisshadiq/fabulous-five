@@ -17,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Mask;
+use Filament\Forms\Get;
 
 class VehicleResource extends Resource
 {
@@ -39,18 +40,37 @@ class VehicleResource extends Resource
                     ->required()
                     ->columnSpan(2),
                 TextInput::make('brand')
-                    ->required(),
+                    ->required()
+                    ->live() // Makes the field reactive to update the model suggestions
+                    ->datalist(
+                        // Provides suggestions from all unique brands in the database
+                        Vehicle::pluck('brand')->unique()->toArray()
+                    ),
                 TextInput::make('car_type')
                     ->required(),
                 TextInput::make('model')
-                    ->required(),
+                    ->required()
+                    ->datalist(function (Get $get) {
+                        $brand = $get('brand');
+
+                        // If a brand has been entered, show models for that brand
+                        if ($brand) {
+                            return Vehicle::where('brand', $brand)
+                                ->pluck('model')
+                                ->unique()
+                                ->toArray();
+                        }
+
+                        // Otherwise, show all unique models as a fallback
+                        return Vehicle::pluck('model')->unique()->toArray();
+                    }),
                 TextInput::make('license_plate')
                     ->required(),
                 DatePicker::make('purchase_date')
                     ->format('Y/m/d'),
                 DatePicker::make('last_maintenance_date')
                     ->format('Y/m/d'),
-               TextInput::make('price_per_day')
+                TextInput::make('price_per_day')
                     ->label('Harga per Hari')
                     ->required()
                     ->extraAttributes([
