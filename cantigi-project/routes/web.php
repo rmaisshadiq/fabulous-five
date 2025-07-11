@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 Route::get('/car', function () {
     $vehicles = Vehicle::where('status', 'active')->get(); // ambil kendaraan yang aktif
+    $orders = Order::all();
     return view('kendaraan.car.mainPageMobil', compact('vehicles'));
 })->name('kendaraan');
 
@@ -93,16 +94,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/verify', [VerificationController::class, 'store'])->name('profile.verify.store');
     });
 
-    Route::get('/Detail-Pemesanan/{id}', function ($id) {
-        $orders = Order::with('vehicle')->findOrFail($id);
-        $vehicles = $orders->vehicles; // ambil langsung dari relasi
-        if ($orders->customer_id != Auth::user()->id) {
-            return redirect()->route('home');
-        }
-        return view('Detail-Pemesanan.main-page', compact('orders', 'vehicles'));
-    })->name('detail-pemesanan');
+    Route::get('/pemesanan/{id}', [OrderController::class, 'show'])
+        ->name('detail-pemesanan');
 
-    Route::get('/Detail-Pemesanan/{order}/download', [OrderController::class, 'downloadInvoicePdf'])->name('orders.invoice.download');
+    Route::get('/pemesanan/{order}/download', [OrderController::class, 'downloadInvoicePdf'])->name('orders.invoice.download');
 
     Route::get('/form-pemesanan/main-page/{id}', function ($id) {
         $vehicles = Vehicle::findOrFail($id);
