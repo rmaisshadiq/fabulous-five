@@ -143,9 +143,6 @@ class PaymentController extends Controller
                     $order->status = 'in_progress';
                     $order->save();
 
-                    // ✅ 2. ONLY RUN BUSINESS LOGIC ON SUCCESS
-                    Vehicle::where('id', $order->vehicle_id)->update(['status' => 'rented']);
-
                     $systemUserId = Employee::where('position', 'System')->value('id');
                     FinancialReport::create([
                         'vehicle_id' => $order->vehicle_id,
