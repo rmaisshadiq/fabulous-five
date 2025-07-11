@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class OrderController extends Controller
 {
@@ -40,131 +42,148 @@ class OrderController extends Controller
     // Simpan order baru
     public function store(Request $request)
     {
-        // Debug log incoming request
-        Log::info('Order store attempt', [
-            'customer_id' => Auth::id(),
-            'request_data' => $request->all(),
-            'request_method' => $request->method(),
-            'request_url' => $request->url()
-        ]);
-
-        // Validate input
         try {
-            $validated = $request->validate([
+            // Validate the request
+            $validatedData = $request->validate([
                 'vehicle_id' => 'required|exists:vehicles,id',
                 'start_booking_date' => 'required|date|after_or_equal:today',
                 'end_booking_date' => 'required|date|after_or_equal:start_booking_date',
-                'start_booking_time' => 'required',
-                'end_booking_time' => 'required',
-                'drop_address' => 'required|string|min:10',
+                'start_booking_time' => 'required|string',
+                'end_booking_time' => 'required|string',
             ]);
 
-            Log::info('Validation passed', ['validated_data' => $validated]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Validation failed', [
-                'errors' => $e->errors(),
-                'request_data' => $request->all()
-            ]);
-            return back()->withErrors($e->errors())->withInput();
-        }
+            // Check if vehicle is available
+            $vehicle = Vehicle::findOrFail($validatedData['vehicle_id']);
 
-        // Get current authenticated user
-        $user = Auth::user();
-        
-        if (!$user) {
-            Log::warning('User not authenticated');
-            return redirect()->route('login')->with('error', 'Please login first.');
-        }
+            if ($vehicle->status !== 'active') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kendaraan tidak tersedia untuk dibooking'
+                ], 400);
+            }
 
-        // Check if vehicle exists and is available
-        $vehicle = Vehicle::find($validated['vehicle_id']);
-        if (!$vehicle) {
-            Log::error('Vehicle not found', ['vehicle_id' => $validated['vehicle_id']]);
-            return back()->with('error', 'Selected vehicle not found.')->withInput();
-        }
+            // Check for overlapping bookings
+            $existingBooking = Order::where('vehicle_id', $validatedData['vehicle_id'])
+                ->where('status', 'in_progress')
+                ->where(function ($query) use ($validatedData) {
+                    $query->whereBetween('start_booking_date', [
+                        $validatedData['start_booking_date'],
+                        $validatedData['end_booking_date']
+                    ])
+                        ->orWhereBetween('end_booking_date', [
+                            $validatedData['start_booking_date'],
+                            $validatedData['end_booking_date']
+                        ])
+                        ->orWhere(function ($q) use ($validatedData) {
+                            $q->where('start_booking_date', '<=', $validatedData['start_booking_date'])
+                                ->where('end_booking_date', '>=', $validatedData['end_booking_date']);
+                        });
+                })
+                ->exists();
 
-        // Check vehicle availability
-        $conflictingOrder = Order::where('vehicle_id', $validated['vehicle_id'])
-            ->where(function ($query) use ($validated) {
-                $query->where(function ($q) use ($validated) {
-                    $q->where('start_booking_date', '<=', $validated['end_booking_date'])
-                      ->where('end_booking_date', '>=', $validated['start_booking_date']);
-                });
-            })
-            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
-            ->exists();
+            if ($existingBooking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tanggal yang dipilih tidak tersedia'
+                ], 400);
+            }
 
-        if ($conflictingOrder) {
-            Log::warning('Vehicle conflict found', [
-                'vehicle_id' => $validated['vehicle_id'],
-                'dates' => $validated['start_booking_date'] . ' to ' . $validated['end_booking_date']
-            ]);
-            
-            return back()
-                ->withErrors(['vehicle_id' => 'Vehicle is not available for the selected dates.'])
-                ->withInput();
-        }
-
-        try {
-            // Use database transaction for safety
+            // Create the order
             DB::beginTransaction();
 
-            // Create order - langsung menggunakan user_id dari Auth
             $order = Order::create([
-                'customer_id' => $user->id, // Langsung menggunakan ID dari user yang login
-                'vehicle_id' => $validated['vehicle_id'],
-                'driver_id' => null, // Will be assigned later by admin
-                'start_booking_date' => $validated['start_booking_date'],
-                'end_booking_date' => $validated['end_booking_date'],
-                'start_booking_time' => $validated['start_booking_time'],
-                'end_booking_time' => $validated['end_booking_time'],
-                'drop_address' => $validated['drop_address'],
-                'status' => 'pending',
-            ]);
-
-            Log::info('Order created successfully', [
-                'order_id' => $order->id,
-                'customer_id' => $user->id,
-                'order_data' => $order->toArray()
+                'customer_id' => Auth::id(), // Make sure user is authenticated
+                'vehicle_id' => $validatedData['vehicle_id'],
+                'start_booking_date' => $validatedData['start_booking_date'],
+                'end_booking_date' => $validatedData['end_booking_date'],
+                'start_booking_time' => $validatedData['start_booking_time'],
+                'end_booking_time' => $validatedData['end_booking_time'],
+                'status' => 'confirmed', // or 'pending' based on your business logic
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             DB::commit();
 
-            return redirect()->route('detail-pemesanan', ['id'=> $order->id])->with('success', 'Order submitted successfully! Please wait for admin confirmation.');
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            Log::error('Failed to create order', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'validated_data' => $validated,
-                'user_id' => $user->id ?? null
+
+            $redirectUrl = route('detail-pemesanan', [
+                'id' => $order->id,
             ]);
 
-            return back()
-                ->with('error', 'Failed to create order. Please try again.')
-                ->withInput();
+            // Flash the success message to the session
+            session()->flash('success', 'Order telah berhasil dikirim! Silahkan lanjut ke pembayaran.');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking berhasil dibuat',
+                'redirect_url' => $redirectUrl
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Log the error
+            Log::error('Order creation failed: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses booking'
+            ], 500);
         }
     }
 
+    public function show(Request $request, $id)
+    {
+        $orders = Order::where('id', $id)->firstOrFail();
+        // Create unique transaction reference for Midtrans
+        $midtransOrderId = 'TXN-' . $orders->id . '-' . time();
+
+        // Set Midtrans configuration
+        Config::$serverKey    = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
+        Config::$isSanitized  = config('services.midtrans.is_sanitized');
+        Config::$is3ds        = config('services.midtrans.is_3ds');
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $midtransOrderId,
+                'gross_amount' => $orders->getFinalTotalAttribute(),
+            ],
+            'customer_details' => [
+                'first_name' => $orders->customer->user->name,
+                'email'      => $orders->customer->user->email,
+            ],
+        ];
+
+
+        $snapToken = Snap::getSnapToken($params);
+        // Generate the URL for the detail page
+
+        return view('Detail-pemesanan.main-page', compact('orders', 'snapToken', 'midtransOrderId'));
+    }
     // Method untuk debug database
     public function testDatabase()
     {
         try {
             // Test basic connection
             DB::select('SELECT 1 as test');
-            
+
             // Test orders table structure
             $columns = DB::select('DESCRIBE orders');
-            
+
             // Test orders count
             $orderCount = Order::count();
-            
+
             // Test user and vehicle relationships
             $userCount = Customer::count(); // Menggunakan User instead of Customer
             $vehicleCount = Vehicle::count();
-            
+
             return response()->json([
                 'status' => 'OK',
                 'orders_table_columns' => $columns,
@@ -173,7 +192,6 @@ class OrderController extends Controller
                 'vehicles_count' => $vehicleCount,
                 'current_user' => Auth::user() // Langsung menggunakan Auth::user()
             ]);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'ERROR',
@@ -184,13 +202,13 @@ class OrderController extends Controller
     }
 
     public function downloadInvoicePDF(Order $order)
-    {   
+    {
         // Data to pass to the view
         $data = ['order' => $order];
 
         // Load the view and pass in the data
         $pdf = Pdf::loadView('invoices.pdf_template', $data);
-        
+
         // Set paper size and orientation
         $pdf->setPaper('a4', 'portrait');
 
