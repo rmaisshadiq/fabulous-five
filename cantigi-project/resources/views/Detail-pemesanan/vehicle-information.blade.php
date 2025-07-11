@@ -17,10 +17,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex justify-between items-start">
-                                <span class="text-sm font-medium text-gray-600">Lokasi Ambil Kendaraan</span>
-                                <span class="text-sm font-semibold text-gray-900 text-right max-w-[200px] break-words">{{ $orders->drop_address }}</span>
-                            </div>
                         </div>
                     </div>
                 </div>

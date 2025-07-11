@@ -7,7 +7,7 @@
                         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100">
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Sewa Kendaraan ({{ $orders->duration_in_hours }} jam)</span>
+                                    <span class="text-sm text-gray-600">Sewa Kendaraan ({{ $orders->duration_in_days }} hari)</span>
                                     <span class="text-sm font-medium text-gray-900">Rp{{ number_format($orders->total_price, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
