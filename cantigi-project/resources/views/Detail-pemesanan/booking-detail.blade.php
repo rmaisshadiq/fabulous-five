@@ -20,9 +20,5 @@
                                         <p class="text-sm text-gray-600">{{ $orders->end_booking_time }}</p>
                                     </div>
                                 </div>
-                            </div>
-                                <div class="flex items-center text-sm text-gray-600">
-                                    <span>Durasi: {{ $orders->duration ?? 'Tidak dapat dihitung' }}</span>
-                            </div>
                         </div>
                     </div>
