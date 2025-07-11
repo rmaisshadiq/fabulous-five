@@ -9,6 +9,7 @@ use App\Models\ReturnLog;
 use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,6 +21,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Set;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -55,57 +57,13 @@ class OrderResource extends Resource
                     ->schema(components: [
                         Select::make('customer_id')
                             ->label('Nama Pelanggan')
-                            ->required()
-                            ->disabled(fn($context) => $context === 'edit')
-                            ->searchable() // Keep this for the UI, but the logic is in getSearchResultsUsing
-
-                            // Manually define the list of options from two sources
-                            ->options(function (): array {
-                                // 1. Get customers who have a name via the User relationship
-                                $customersFromUser = Customer::whereHas('user')->with('user')->get()->mapWithKeys(
-                                    fn($customer) =>
-                                    [$customer->id => $customer->user->name]
-                                );
-
-                                // 2. Get customers who have their own 'name' and no user relationship
-                                $customersFromOwnName = Customer::whereDoesntHave('user')->whereNotNull('name')->get()->mapWithKeys(
-                                    fn($customer) =>
-                                    [$customer->id => $customer->name]
-                                );
-
-                                // 3. Combine the two lists
-                                return $customersFromUser->union($customersFromOwnName)->all();
-                            })
-
-                            // Define the custom search logic
-                            ->getSearchResultsUsing(function (string $search): array {
-                                $customersFromUser = Customer::whereHas(
-                                    'user',
-                                    fn($query) =>
-                                    $query->where('name', 'like', "%{$search}%")
-                                )->with('user')->limit(50)->get()->mapWithKeys(
-                                    fn($customer) =>
-                                    [$customer->id => $customer->user->name]
-                                );
-
-                                $customersFromOwnName = Customer::whereDoesntHave('user')
-                                    ->where('name', 'like', "%{$search}%")
-                                    ->limit(50)
-                                    ->get()->mapWithKeys(
-                                        fn($customer) =>
-                                        [$customer->id => $customer->name]
-                                    );
-
-                                return $customersFromUser->union($customersFromOwnName)->all();
-                            })
-
-                            // Define how to get the label for a pre-selected value (replaces preload)
-                            ->getOptionLabelUsing(function ($value): ?string {
-                                $customer = Customer::with('user')->find($value);
-                                // Return the user's name if it exists, otherwise return the customer's own name
-                                return $customer->user->name ?? $customer->name;
-                            }),
-
+                            ->relationship('customer', 'name') // Asumsi ada relasi 'customer' di model Order
+                            ->searchable()
+                            ->createOptionForm([ // Form untuk membuat customer baru jika tidak ada
+                                TextInput::make('name')->required(),
+                                TextInput::make('phone_number')->required()->unique(),
+                            ])
+                            ->required(),
 
                         Select::make('vehicle_id')
                             ->label('Nama Kendaraan')
@@ -153,7 +111,7 @@ class OrderResource extends Resource
                                 'cancelled' => 'Cancelled',
                             ])
                             ->required()
-                            ->default('pending')
+                            ->default('completed')
                             ->reactive()
                             ->afterStateUpdated(function ($state, $record) {
                                 if ($record && $state === 'confirmed') {
@@ -167,6 +125,7 @@ class OrderResource extends Resource
 
                         TextInput::make('amount')
                             ->label('Total Harga')
+                            ->prefix('Rp')
                             ->dehydrated(false)
                             ->required(),
 
