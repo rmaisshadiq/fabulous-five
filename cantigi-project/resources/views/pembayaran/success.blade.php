@@ -27,10 +27,18 @@
    </div>
 
 
-   <a href="{{ route('home') }}"
-      class="mt-8 inline-block bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition">
-     Kembali ke Beranda
-   </a>
+   <div class="mt-8">
+     <a href="{{ route('home') }}"
+        class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition">
+       Kembali ke Beranda
+     </a>
+   </div>
+   <div class="mt-4">
+     <a href="{{ route('detail-pemesanan', ['id' => $order->order->id]) }}"
+        class="inline-block bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-6 py-3 rounded-lg shadow transition">
+       Lihat Pesanan
+     </a>
+   </div>
  </div>
 </div>
 @endsection
