@@ -59,29 +59,6 @@
                                 </p>
                             </div>
 
-                            <!-- Deposit Amount -->
-                            <div>
-                                <x-input-label for="deposit_amount" :value="__('Deposit Amount')" />
-                                <div class="mt-2 relative rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <span class="text-gray-500 sm:text-sm">$</span>
-                                    </div>
-                                    <x-text-input id="deposit_amount" 
-                                                  name="deposit_amount" 
-                                                  type="number" 
-                                                  step="0.01" 
-                                                  min="0"
-                                                  class="pl-7" 
-                                                  :value="old('deposit_amount')" 
-                                                  required 
-                                                  placeholder="0.00" />
-                                </div>
-                                <x-input-error class="mt-2" :messages="$errors->get('deposit_amount')" />
-                                <p class="mt-1 text-sm text-gray-500">
-                                    {{ __('Enter the deposit amount you wish to make.') }}
-                                </p>
-                            </div>
-
                             <!-- Social Media Link -->
                             <div>
                                 <x-input-label for="social_media_link" :value="__('Social Media Link')" />
