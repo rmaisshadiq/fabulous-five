@@ -90,6 +90,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/verify', [VerificationController::class, 'store'])->name('profile.verify.store');
     });
 
+    Route::get('/order-history', function () {
+        $orders = Order::where('customer_id', Auth::user()->id)->with(['driver', 'vehicle'])->get();
+        return view('order-history.main-page', compact('orders'));
+    })->name('order-history');
+
     Route::get('/pemesanan/{id}', [OrderController::class, 'show'])
         ->name('detail-pemesanan');
 

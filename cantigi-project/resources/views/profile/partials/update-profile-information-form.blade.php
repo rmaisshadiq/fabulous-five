@@ -2,8 +2,8 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Page Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Profile Settings</h1>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Manage your account settings and preferences</p>
+            <h1 class="text-3xl font-bold text-gray-900">Pengaturan Profil</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Kelola pengaturan akun dan preferensi Anda</p>
         </div>
 
         @if (session('status') === 'verification-successful')
@@ -43,10 +43,10 @@
                         <svg class="w-5 h-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                         </svg>
-                        {{ __('Account Verification') }}
+                        {{ __('Verifikasi Akun') }}
                     </h2>
                     <p class="mt-1 text-gray-100">
-                        {{ __('Your account requires verification to access all features. Please complete the verification process.') }}
+                        {{ __('Akun Anda memerlukan verifikasi untuk mengakses semua fitur. Silakan lengkapi proses verifikasi.') }}
                     </p>
                 </div>
 
@@ -54,15 +54,15 @@
                     <div class="flex items-start space-x-3">
                         <div class="flex-1">
                             <h3 class="text-lg font-medium text-gray-900">
-                                {{ __('Verification Required') }}
+                                {{ __('Verifikasi Diperlukan!') }}
                             </h3>
                             <p class="mt-2 text-gray-600">
-                                {{ __('To continue using our services, please verify your account by providing the required documents and information.') }}
+                                {{ __('Untuk melanjutkan menggunakan layanan kami, silakan verifikasi akun Anda dengan menyediakan dokumen dan informasi yang diperlukan.') }}
                             </p>
                             <div class="mt-4">
                                 <a href="{{ route('profile.verify') }}" 
                                    class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-sm font-medium transition-colors duration-200">
-                                    {{ __('Start Verification') }}
+                                    {{ __('Mulai Verifikasi') }}
                                 </a>
                             </div>
                         </div>
@@ -76,10 +76,10 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        {{ __('Verification Pending') }}
+                        {{ __('Verifikasi Dalam Pemrosesan') }}
                     </h2>
                     <p class="mt-1 text-gray-100">
-                        {{ __('Your verification documents have been submitted and are currently under review.') }}
+                        {{ __('Dokumen verifikasi Anda telah dikirim dan saat ini sedang dalam proses peninjauan.') }}
                     </p>
                 </div>
 
@@ -94,10 +94,10 @@
                         </div>
                         <div class="flex-1">
                             <h3 class="text-lg font-medium text-gray-900">
-                                {{ __('Under Review') }}
+                                {{ __('Dalam Peninjauan') }}
                             </h3>
                             <p class="mt-2 text-gray-600">
-                                {{ __('Thank you for submitting your verification documents. Our team is currently reviewing your information. You will be notified via email once the verification process is complete.') }}
+                                {{ __('Terima kasih telah mengirimkan dokumen verifikasi Anda. Tim kami saat ini sedang meninjau informasi Anda. Anda akan diberitahu melalui email setelah proses verifikasi selesai.') }}
                             </p>
                             <div class="mt-4 p-4 bg-blue-50 rounded-lg">
                                 <div class="flex items-center">
@@ -105,7 +105,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                     <p class="text-sm text-blue-800 font-medium">
-                                        {{ __('Estimated review time: 1-3 business days') }}
+                                        {{ __('Perkiraan waktu peninjauan: 1-3 hari kerja.') }}
                                     </p>
                                 </div>
                             </div>
@@ -121,16 +121,16 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        {{ __('Profile Information - Verified') }}
+                        {{ __('Informasi Profil - Terverifikasi') }}
                         @else
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
-                        {{ __('Profile Information') }}
+                        {{ __('Informasi Profil') }}
                         @endif
                     </h2>
                     <p class="mt-1 text-gray-100">
-                        {{ __("Update your account's profile information and email address.") }}
+                        {{ __("Perbarui informasi profil akun dan alamat email Anda.") }}
                     </p>
 
                 </div>
@@ -162,7 +162,7 @@
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                 </svg>
-                                                {{ __('Change Photo') }}
+                                                {{ __('Ubah Foto') }}
                                             </span>
                                             <input 
                                                 id="profile_image" 
@@ -188,7 +188,7 @@
                                         @endif
                                     </div>
                                     <p class="mt-2 text-xs text-gray-500">
-                                        {{ __('JPG, PNG or GIF. Max size 2MB.') }}
+                                        {{ __('JPG, PNG or GIF. Ukuran maksimal 2MB.') }}
                                     </p>
                                     <x-input-error class="text-red-500 text-sm mt-1" :messages="$errors->get('profile_image')" />
                                 </div>
@@ -248,13 +248,13 @@
                                             </svg>
                                             <div>
                                                 <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                                                    {{ __('Your email address is unverified.') }}
+                                                    {{ __('Email anda belum diverifikasi.') }}
                                                 </p>
                                                 <button 
                                                     form="send-verification" 
                                                     class="mt-2 inline-flex items-center text-sm text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 font-medium underline transition-colors duration-200"
                                                 >
-                                                    {{ __('Click here to re-send the verification email.') }}
+                                                    {{ __('Klik disini untuk mengirimkan ulang email verifikasi.') }}
                                                 </button>
                                             </div>
                                         </div>
@@ -265,7 +265,7 @@
                                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                     </svg>
-                                                    {{ __('A new verification link has been sent to your email address.') }}
+                                                    {{ __('Link verifikasi baru telah dikirim ke email anda.') }}
                                                 </p>
                                             </div>
                                         @endif
@@ -274,7 +274,7 @@
                             </div>
 
                             <div class="space-y-2 pt-6 border-t border-gray-200">
-                                <x-input-label for="phone_number" :value="__('Phone Number')" class="text-sm font-medium" />
+                                <x-input-label for="phone_number" :value="__('Nomor HP')" class="text-sm font-medium" />
                                 <div class="relative">
                                     <x-text-input 
                                         id="phone_number" 
@@ -297,7 +297,7 @@
                         <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
                             <div class="flex items-center space-x-4">
                                 <x-primary-button class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-00 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800">
-                                    {{ __('Save Changes') }}
+                                    {{ __('Simpan Perubahan') }}
                                 </x-primary-button>
 
                                 @if (session('status') === 'profile-updated')
@@ -316,7 +316,7 @@
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        {{ __('Saved.') }}
+                                        {{ __('Disimpan.') }}
                                     </p>
                                 @endif
                             </div>

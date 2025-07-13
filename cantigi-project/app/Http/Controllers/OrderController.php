@@ -167,39 +167,6 @@ class OrderController extends Controller
 
         return view('Detail-pemesanan.main-page', compact('orders', 'snapToken', 'midtransOrderId'));
     }
-    // Method untuk debug database
-    public function testDatabase()
-    {
-        try {
-            // Test basic connection
-            DB::select('SELECT 1 as test');
-
-            // Test orders table structure
-            $columns = DB::select('DESCRIBE orders');
-
-            // Test orders count
-            $orderCount = Order::count();
-
-            // Test user and vehicle relationships
-            $userCount = Customer::count(); // Menggunakan User instead of Customer
-            $vehicleCount = Vehicle::count();
-
-            return response()->json([
-                'status' => 'OK',
-                'orders_table_columns' => $columns,
-                'orders_count' => $orderCount,
-                'users_count' => $userCount,
-                'vehicles_count' => $vehicleCount,
-                'current_user' => Auth::user() // Langsung menggunakan Auth::user()
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'ERROR',
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ], 500);
-        }
-    }
 
     public function downloadInvoicePDF(Order $order)
     {

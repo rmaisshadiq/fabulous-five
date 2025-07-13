@@ -154,7 +154,6 @@
       @endif
 
           <!-- Order history -->
-          @if (auth()->user()->hasRole('super_admin'))
         <x-dropdown-link :href="route('order-history')"
         class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-green-700 transition-colors duration-150">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
@@ -167,7 +166,6 @@
 
         <!-- Divider -->
         <div class="border-t border-gray-100 my-1"></div>
-      @endif
 
           <!-- Authentication -->
           <form method="POST" action="{{ route('logout') }}">
