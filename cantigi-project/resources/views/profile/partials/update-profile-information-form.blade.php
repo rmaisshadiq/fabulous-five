@@ -6,6 +6,35 @@
             <p class="mt-2 text-gray-600 dark:text-gray-400">Manage your account settings and preferences</p>
         </div>
 
+        @if (session('status') === 'verification-successful')
+            <div
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-90"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-300"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-90"
+                x-init="setTimeout(() => show = false, 5000)"
+                class="mb-6 p-4 rounded-md bg-green-50 border border-green-200"
+                role="alert"
+            >
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                         <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-green-800">
+                            {{ __('Email telah berhasil diverifikasi! Selamat datang.') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="space-y-8">
             @if($customer->needsVerification())
             <section class="bg-white rounded-xl shadow-sm overflow-hidden border">
@@ -242,6 +271,26 @@
                                         @endif
                                     </div>
                                 @endif
+                            </div>
+
+                            <div class="space-y-2 pt-6 border-t border-gray-200">
+                                <x-input-label for="phone_number" :value="__('Phone Number')" class="text-sm font-medium" />
+                                <div class="relative">
+                                    <x-text-input 
+                                        id="phone_number" 
+                                        name="phone_number" 
+                                        type="tel" 
+                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" 
+                                        :value="old('phone_number', $user->phone_number)" 
+                                        autocomplete="tel" 
+                                    />
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.5A11.5 11.5 0 013.5 6.5v-1.5A1.5 1.5 0 015 3.5h-.5a1.5 1.5 0 01-1.5-1.5z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <x-input-error class="text-red-500 text-sm" :messages="$errors->get('phone_number')" />
                             </div>
                         </div>
 
