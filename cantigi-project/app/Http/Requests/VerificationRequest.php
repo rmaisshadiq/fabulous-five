@@ -16,7 +16,6 @@ class VerificationRequest extends FormRequest
         return [
             'resident_id_card' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'work_or_student_id_card' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            'deposit_amount' => ['required', 'numeric', 'min:0', 'max:999999.99'],
             'social_media_link' => ['required', 'url', 'max:255'],
         ];
     }
@@ -33,10 +32,6 @@ class VerificationRequest extends FormRequest
             'work_or_student_id_card.image' => 'Work or Student ID card must be an image.',
             'work_or_student_id_card.mimes' => 'Work or Student ID card must be a JPEG, PNG, or JPG file.',
             'work_or_student_id_card.max' => 'Work or Student ID card image must not exceed 2MB.',
-            
-            'deposit_amount.required' => 'Deposit amount is required.',
-            'deposit_amount.numeric' => 'Deposit amount must be a valid number.',
-            'deposit_amount.min' => 'Deposit amount cannot be negative.',
             
             'social_media_link.required' => 'Social media link is required.',
             'social_media_link.url' => 'Social media link must be a valid URL.',
