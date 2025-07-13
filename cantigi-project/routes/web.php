@@ -61,10 +61,6 @@ Route::get('/syarat-ketentuan', function () {
     return view('footer.syarat-ketentuan');
 })->name('syarat-ketentuan');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::get('/feedback', function () {
     $orders = Order::all();
     $customers = Customer::all();
