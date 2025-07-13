@@ -12,6 +12,11 @@ class ListUsers extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [];
+        return [
+            Actions\Action::make('updateRoles')
+                ->label('Perbarui Role')
+                ->color('warning') // Optional: for styling
+                ->url(UserResource::getUrl('update-roles')),
+        ];
     }
 }
