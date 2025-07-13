@@ -101,6 +101,7 @@
             <tr>
                 <th>No</th>
                 <th>Nama Penyewa</th>
+                <th>Nomor HP</th>
                 <th>Jumlah Hari</th>
                 <th>Harga</th>
                 <th>Keterangan</th>
@@ -139,20 +140,23 @@
                         {{-- Column 2: Renter Name (if order exists) --}}
                         <td>{{ $order ? $order->customer->user->name ?? $order->customer->name : '' }}</td>
 
-                        {{-- Column 3: Duration (if order exists) --}}
+                        {{-- Column 3: Phone Number (if order exists) --}}
+                        <td>{{ $order ? $order->customer->user->phone_number ?? 'Belum tersedia' : '' }}</td>
+
+                        {{-- Column 4: Duration (if order exists) --}}
                         <td>{{ $order ? ($order->duration_in_days ?? 'N/A') : '' }}</td>
 
-                        {{-- Column 4: Price (if order exists) --}}
+                        {{-- Column 5: Price (if order exists) --}}
                         <td>{{ $order ? 'Rp' . ($order->financial_report->formatted_amount ?? $order->formatted_final_total) : '' }}</td>
 
-                        {{-- Column 5: Status (if order exists) --}}
+                        {{-- Column 6: Status (if order exists) --}}
                         <td>{{ $order ? ucfirst(str_replace('_', ' ', $order->status)) : '' }}</td>
                     </tr>
                 @endfor
 
                 {{-- This is the TOTAL row, it remains unchanged --}}
                 <tr">
-                    <td colspan="3" style="text-align: center;"><b>TOTAL</b></td>
+                    <td colspan="4" style="text-align: center;"><b>TOTAL</b></td>
                     <td colspan="2"><b>Rp{{ number_format($orders->sum('final_total'), 0, ',', '.') }}</b></td>
                 </tr>
 

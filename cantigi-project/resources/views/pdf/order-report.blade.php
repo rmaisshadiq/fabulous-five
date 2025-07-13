@@ -100,7 +100,7 @@
             @forelse ($orders as $order)
                 <tr>
                     <td>{{ $order->customer->user->name ?? $order->customer->name }}</td>
-                    <td>{{ $order->customer->phone_number ?? 'Belum tersedia' }}</td>
+                    <td>{{ $order->customer->user->phone_number ?? 'Belum tersedia' }}</td>
                     <td>{{ $order->vehicle->brand ?? 'N/A' }} {{ $order->vehicle->model ?? '' }}</td>
                     <td>{{ $order->vehicle->license_plate }}</td>
                     <td>{{ \Carbon\Carbon::parse($order->start_booking_date)->locale('id')->isoFormat('dddd') }}</td>
