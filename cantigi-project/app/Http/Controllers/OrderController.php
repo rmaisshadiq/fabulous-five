@@ -92,7 +92,7 @@ class OrderController extends Controller
             DB::beginTransaction();
 
             $order = Order::create([
-                'customer_id' => Auth::id(), // Make sure user is authenticated
+                'customer_id' => Auth::user()->customer->id,
                 'vehicle_id' => $validatedData['vehicle_id'],
                 'start_booking_date' => $validatedData['start_booking_date'],
                 'end_booking_date' => $validatedData['end_booking_date'],
