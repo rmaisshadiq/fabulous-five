@@ -9,6 +9,43 @@ let currentDate = new Date();
 let selectionMode = "start";
 let bookedDates = [];
 
+// --- Functions for Email Verification Modal ---
+function openVerificationModal() {
+    const modal = document.getElementById("verificationModal");
+    const modalContent = document.getElementById("verificationModalContent");
+    modal.classList.remove("hidden");
+    setTimeout(() => {
+        modal.classList.remove("opacity-0");
+        modalContent.classList.remove("scale-95");
+    }, 10);
+}
+
+function closeVerificationModal() {
+    const modal = document.getElementById("verificationModal");
+    const modalContent = document.getElementById("verificationModalContent");
+    modal.classList.add("opacity-0");
+    modalContent.classList.add("scale-95");
+    setTimeout(() => modal.classList.add("hidden"), 300);
+}
+
+function openCustomerVerificationModal() {
+    const modal = document.getElementById("customerVerificationModal");
+    const modalContent = document.getElementById("customerVerificationModalContent");
+    modal.classList.remove("hidden");
+    setTimeout(() => {
+        modal.classList.remove("opacity-0");
+        modalContent.classList.remove("scale-95");
+    }, 10);
+}
+
+function closeCustomerVerificationModal() {
+    const modal = document.getElementById("customerVerificationModal");
+    const modalContent = document.getElementById("customerVerificationModalContent");
+    modal.classList.add("opacity-0");
+    modalContent.classList.add("scale-95");
+    setTimeout(() => modal.classList.add("hidden"), 300);
+}
+// --- END NEW ---
 function openAuthModal() {
     const modal = document.getElementById("authModal");
     const modalContent = document.getElementById("authModalContent");
@@ -29,39 +66,45 @@ function closeAuthModal() {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".booking-btn").forEach((button) => {
-        button.addEventListener("click", function () {
-            if (event.target.matches(".booking-btn")) {
-                const button = event.target;
-                if (window.App.isUserLoggedIn) {
-                    const vehicleId = button.dataset.vehicleId;
-                    const vehicleName = button.dataset.vehicleName;
-                    const vehicleImage = button.dataset.vehicleImage;
-                    const vehiclePrice = parseInt(
-                        button.dataset.vehiclePrice,
-                        10
-                    );
-                    bookingUrl = button.dataset.bookingUrl; // ✨ Get the URL from the button
+        button.addEventListener("click", function (event) {
+            // --- UPDATED LOGIC WITH 3-STEP VERIFICATION ---
+            if (window.App.isUserLoggedIn) {
+                if (window.App.isUserVerified) {
+                    if (window.App.isCustomerVerified) {
+                        // All checks passed, proceed to booking
+                        const vehicleId = button.dataset.vehicleId;
+                        const vehicleName = button.dataset.vehicleName;
+                        const vehicleImage = button.dataset.vehicleImage;
+                        const vehiclePrice = parseInt(button.dataset.vehiclePrice, 10);
+                        bookingUrl = button.dataset.bookingUrl;
 
-                    let existingBookings = [];
-                    try {
-                        existingBookings = JSON.parse(
-                            button.dataset.existingBookings || "[]"
+                        let existingBookings = [];
+                        try {
+                            existingBookings = JSON.parse(button.dataset.existingBookings || "[]");
+                        } catch (e) {
+                            console.error("Error parsing existing bookings:", e);
+                        }
+
+                        openBookingModal(
+                            vehicleId,
+                            vehicleName,
+                            vehicleImage,
+                            vehiclePrice,
+                            existingBookings
                         );
-                    } catch (e) {
-                        console.error("Error parsing existing bookings:", e);
+                    } else {
+                        // User's identity is not verified
+                        openCustomerVerificationModal();
                     }
-
-                    openBookingModal(
-                        vehicleId,
-                        vehicleName,
-                        vehicleImage,
-                        vehiclePrice,
-                        existingBookings
-                    );
                 } else {
-                    openAuthModal();
+                    // User's email is not verified
+                    openVerificationModal();
                 }
+            } else {
+                // User is not logged in
+                openAuthModal();
             }
+            // --- END UPDATED LOGIC ---
         });
     });
 });
