@@ -20,6 +20,14 @@ class ProfileUpdateRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'remove_image' => ['nullable', 'in:0,1'],
+            'phone_number' => [
+                'nullable', // Makes the field optional
+                'string',
+                'min:10',
+                'max:15',
+                'regex:/^08[0-9]{8,13}$/',
+                Rule::unique(User::class)->ignore($this->user()->id), // Check for uniqueness, ignoring the current user
+            ],
         ];
     }
 }
