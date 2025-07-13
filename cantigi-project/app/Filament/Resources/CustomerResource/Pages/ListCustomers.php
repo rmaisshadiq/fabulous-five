@@ -6,6 +6,7 @@ use App\Filament\Imports\CustomerImporter;
 use App\Filament\Resources\CustomerResource;
 use App\Models\Customer;
 use Filament\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ListRecords;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Actions\Pages\ExportAction;
@@ -18,8 +19,6 @@ class ListCustomers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->label('Tambah Pelanggan'),
             ExportAction::make()
                 ->label("Export ke Excel")
                 ->exports([
@@ -32,10 +31,6 @@ class ListCustomers extends ListRecords
                             ->getStateUsing(fn($record) => $record->phone_number ?? "Belum tersedia"),
                     ])
                 ]),
-            Actions\ImportAction::make()
-                ->importer(CustomerImporter::class)
-                ->label('Import dari Excel')
-                ->csvDelimiter(';'),
         ];
     }
 }
