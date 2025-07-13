@@ -27,7 +27,7 @@ class FinancialReportResource extends Resource
 {
     protected static ?string $model = FinancialReport::class;
 
-    protected static ?string $navigationLabel = 'Keuangan';
+    protected static ?string $navigationLabel = 'Laporan Keuangan';
 
     protected static ?string $navigationGroup = 'Laporan';
 

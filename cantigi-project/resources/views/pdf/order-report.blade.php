@@ -107,10 +107,10 @@
                     <td>{{ $order->start_booking_date ? \Carbon\Carbon::parse($order->start_booking_date)->locale('id')->isoFormat('D MMMM Y') : 'Belum tersedia' }}</td>
                     <td>{{ $order->start_booking_time ? \Carbon\Carbon::parse($order->start_booking_time)->locale('id')->isoFormat('HH:mm') : 'Belum tersedia' }}</td>
                     <td>{{ $order->return_log->fuel_level_on_rent ?? 'Belum tersedia' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('dddd') }}</td>
-                    <td>{{ $order->return_log->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('D MMMM Y') : 'Belum tersedia' }}</td>
-                    <td>{{ $order->return_log->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('HH:mm') : 'Belum tersedia' }}</td>
-                    <td>{{ $order->return_log->fuel_level_on_return ?? 'Belum tersedia' }}</td>
+                    <td>{{ $order->return_log?->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('dddd') : 'Belum tersedia' }}</td>
+                    <td>{{ $order->return_log?->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('D MMMM Y') : 'Belum tersedia' }}</td>
+                    <td>{{ $order->return_log?->returned_at ? \Carbon\Carbon::parse($order->return_log->returned_at)->locale('id')->isoFormat('HH:mm') : 'Belum tersedia' }}</td>
+                    <td>{{ $order->return_log?->fuel_level_on_return ?? 'Belum tersedia' }}</td>
                     <td>Rp{{ $order->financial_report->formatted_amount ?? $order->formatted_final_total }}</td>
                     <td>{{ ucfirst(str_replace('_', ' ', $order->status)) }}</td>
                 </tr>

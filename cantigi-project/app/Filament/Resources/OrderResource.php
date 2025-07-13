@@ -40,8 +40,8 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationGroup = 'Laporan';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationGroup = 'Rental';
 
     protected static ?string $navigationLabel = 'Pemesanan';
 
@@ -212,26 +212,21 @@ class OrderResource extends Resource
                     ->label('Jam Pemesanan')
                     ->time('H:i'),
 
-                TextColumn::make('return_log.fuel_level_on_rent')
-                    ->label('BBM sebelum disewa')
-                    ->suffix(' liter'),
+                TextColumn::make('end_booking_date_day')
+                    ->label('Hari Berakhir Rental')
+                    ->state(function ($record) {
+                        return $record->end_booking_date;
+                    })
+                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->locale('id')->isoFormat('dddd')),
 
-                TextColumn::make('return_log.returned_at')
-                    ->label('Tanggal Pengembalian')
+                TextColumn::make('end_booking_date')
+                    ->label('Tanggal Berakhir Rental')
                     ->date('d M Y')
                     ->sortable(),
 
-                TextColumn::make('return_log.returned_at_time')
-                    ->label('Jam Pengembalian')
-                    ->state(function ($record) {
-                        return $record->return_log?->returned_at;
-                    })
-                    ->time('H:i')
-                    ->sortable(),
-
-                TextColumn::make('return_log.fuel_level_on_return')
-                    ->label('BBM setelah disewa')
-                    ->suffix(' liter'),
+                TextColumn::make('end_booking_time')
+                    ->label('Jam Berakhir Rental')
+                    ->time('H:i'),
 
                 TextColumn::make('amount')
                     ->label('Total Biaya')
@@ -475,11 +470,6 @@ class OrderResource extends Resource
             'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::where('status', 'pending')->count();
     }
 
     public static function getNavigationBadgeColor(): ?string
