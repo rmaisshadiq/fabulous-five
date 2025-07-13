@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title','Registrasi')
+@section('title', 'Registrasi')
 
 @section('content')
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -45,6 +45,19 @@
                                 placeholder="Masukan Alamat Email kamu" />
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-1 text-sm text-red-600" />
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="space-y-2">
+                        <label for="phone_number" class="block text-sm font-medium text-gray-700">Nomor HP</label>
+                        <div class="relative">
+                            <x-text-input id="phone_number"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
+                                {{-- Corrected attributes below --}} type="tel" name="phone_number"
+                                :value="old('phone_number')" required autocomplete="tel"
+                                placeholder="Masukan Nomor HP kamu" />
+                        </div>
+                        <x-input-error :messages="$errors->get('phone_number')" class="mt-1 text-sm text-red-600" />
                     </div>
 
                     <!-- Password -->
