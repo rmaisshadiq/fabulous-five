@@ -68,8 +68,6 @@ class RentalRequirementsResource extends Resource
                     ->label('KTM atau NPWP')
                     ->height(54)
                     ->width(86),
-                TextColumn::make('deposit_amount')
-                    ->label('Deposit awal'),
                 TextColumn::make('social_media_link')
                     ->label('Akun Sosmed'),
                 TextColumn::make('verifiedBy.user.name')
