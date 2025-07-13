@@ -83,9 +83,16 @@ class CustomerResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->getStateUsing(fn(Customer $record): string => $record->user?->name ?? $record->name),
-                TextColumn::make('phone_number')
-                    ->label('Nomor HP')
-                    ->searchable()
+                TextColumn::make('user.phone_number')
+                    ->label('Telepon')
+                    ->state(function ($record) {
+                        if (!$record->phone_number && !$record->user->phone_number) {
+                            return 'Belum tersedia';
+                        }
+                        return $record->user?->phone_number ?? $record->phone_number;
+                    }),
+                TextColumn::make('verification_status')
+                    ->label('Status Verifikasi')
                     ->sortable()
                     ->default('Tidak tersedia'),
             ])
@@ -93,8 +100,6 @@ class CustomerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

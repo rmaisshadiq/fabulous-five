@@ -65,6 +65,9 @@ class UserResource extends Resource
                     ->height(150),
                 TextColumn::make('name')
                     ->label('Nama Pengguna'),
+                TextColumn::make('phone_number')
+                    ->label('Nomor HP')
+                    ->default('Belum tersedia'),
                 TextColumn::make('email')
                     ->label('Email')
                     ->icon('heroicon-o-envelope'),
@@ -79,7 +82,6 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -101,6 +103,7 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
+            'update-roles' => Pages\UpdateRoles::route('/update-roles'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }

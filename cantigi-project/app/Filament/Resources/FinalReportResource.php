@@ -180,11 +180,11 @@ class FinalReportResource extends Resource
                         'customer.name',
                     ]),
 
-                TextColumn::make('customer.phone_number')
+                TextColumn::make('customer.user.phone_number')
                     ->label('Nomor HP')
                     ->searchable()
                     ->sortable()
-                    ->default('Tidak tersedia'),
+                    ->default('Belum tersedia'),
 
                 TextColumn::make('vehicle.model')
                     ->label('Jenis Mobil')
