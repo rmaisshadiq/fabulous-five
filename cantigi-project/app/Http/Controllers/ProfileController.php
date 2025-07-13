@@ -32,95 +32,36 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Debug logging
-        Log::info('Profile update started', [
-            'user_id' => $user->id,
-            'has_file' => $request->hasFile('profile_image'),
-            'remove_image' => $request->input('remove_image'),
-        ]);
+        // 1. Fill the user model with validated text data (name, email, phone_number)
+        $user->fill($request->validated());
 
-        // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-
-            // Debug file information
-            Log::info('File upload details', [
-                'original_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize(),
-                'temp_path' => $file->getPathname(),
-                'is_valid' => $file->isValid(),
-            ]);
-
-            // Check if file is valid
-            if (!$file->isValid()) {
-                return Redirect::route('profile.edit')
-                    ->with('error', 'Invalid file upload. Please try again.');
-            }
-
-            try {
-                // Delete old image if exists
-                if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
-                    Storage::disk('public')->delete($user->profile_image);
-                    Log::info('Old profile image deleted', ['path' => $user->profile_image]);
-                }
-
-                // Generate unique filename
-                $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
-
-                // Store new image using putFileAs for more control
-                $imagePath = Storage::disk('public')->putFileAs(
-                    'images/user_profiles',
-                    $file,
-                    $filename
-                );
-
-                // Verify file was stored
-                if (!$imagePath || !Storage::disk('public')->exists($imagePath)) {
-                    Log::error('File storage failed', ['attempted_path' => $imagePath]);
-                    return Redirect::route('profile.edit')
-                        ->with('error', 'Failed to save profile image. Please try again.');
-                }
-
-                Log::info('Profile image stored successfully', [
-                    'path' => $imagePath,
-                    'full_path' => Storage::disk('public')->path($imagePath),
-                ]);
-
-                // Set the profile image path on the user object
-                $user->profile_image = $imagePath;
-            } catch (\Exception $e) {
-                Log::error('Profile image upload failed', [
-                    'error' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                ]);
-
-                return Redirect::route('profile.edit')
-                    ->with('error', 'Failed to upload profile image: ' . $e->getMessage());
-            }
-        }
-
-        // Handle image removal
-        if ($request->input('remove_image') == '1') {
-            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
-                Storage::disk('public')->delete($user->profile_image);
-                Log::info('Profile image removed', ['path' => $user->profile_image]);
-            }
-            $user->profile_image = null;
-        }
-
-        // Update other profile fields using the same $user object
-        $validatedData = $request->validated();
-        unset($validatedData['profile_image'], $validatedData['remove_image']);
-        $user->fill($validatedData);
-
-        // Handle email verification reset
+        // 2. If the email was changed, mark it as unverified
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // Save the user with all updates
+        // 3. Handle profile image removal
+        if ($request->input('remove_image') === '1') {
+            // Delete old image from storage
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+            // Set profile_image field to null
+            $user->profile_image = null;
+        }
+
+        // 4. Handle new profile image upload (this will override removal if both are present)
+        if ($request->hasFile('profile_image')) {
+            // Delete old image if it exists
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+            // Store the new image and update the user model
+            $path = $request->file('profile_image')->store('images/user_profiles', 'public');
+            $user->profile_image = $path;
+        }
+
+        // 5. Save all changes (text fields and image path) to the database
         $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
