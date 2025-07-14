@@ -84,6 +84,12 @@ Link storage
 php artisan storage:link
 ```
 
+Generate policy untuk Role
+
+```
+php artisan shield:generate --all
+```
+
 Jalankan server backend
 
 ```
@@ -99,18 +105,29 @@ php artisan serve
 
 ## 🎈 Usage <a name="usage"></a>
 
-Add notes about how to use the system.
+Buat akun
 
-## 🚀 Deployment <a name = "deployment"></a>
+```
+php artisan make:filament-user
+```
 
-Add additional notes about how to deploy this on a live system.
+Menjadikan akun tersebut sebagai SUPER_ADMIN
+
+```
+php artisan shield:super-admin
+```
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [PostgresSql](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [NextJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Laravel](https://vuejs.org/) - Web Framework
+- [TailwindCSS](https://tailwindcss.com) - UI/UX Component
+- [Nodejs](https://nodejs.org/en) - Backend Framework
+- [Filamentphp](https://vuejs.org/) - Admin Panel Library
+- [Midtrans](https://midtrans.com/en) - Payment Gateway API
+- [Filament-Shield](https://midtrans.com/en) - Role Management
+- [Filament-ExcelExport](https://filamentphp.com/plugins/pxlrbt-excel) - Excel Export Function
+- [Laravel-Breeze](https://github.com/laravel/breeze) - Authentication
+- [Dompdf](https://github.com/dompdf/dompdf) - HTML to PDF Converter
 
 ## ✍️ Contributors <a name = "authors">Tim Fabulous Five</a>
 
@@ -125,4 +142,7 @@ Add additional notes about how to deploy this on a live system.
 
 - Hat tip to anyone whose code was used
 - Inspiration
+https://www.traveloka.com
 - References
+https://filamentphp.com
+https://docs.midtrans.com
