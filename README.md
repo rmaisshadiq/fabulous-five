@@ -38,7 +38,7 @@ Proyek ini berfokus pada kebutuhan bisnis rental mobil untuk beradaptasi dengan 
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
-Petunjuk ini akan membuat Anda mendapatkan salinan proyek dan menjalankannya di mesin lokal Anda untuk tujuan pengembangan dan pengujian. Lihat [deployment](#deployment) untuk catatan tentang cara menyebarkan proyek pada sistem live.
+Petunjuk ini akan membuat Anda mendapatkan salinan proyek dan menjalankannya di mesin lokal Anda untuk tujuan pengembangan dan pengujian.
 
 ### Installing
 
