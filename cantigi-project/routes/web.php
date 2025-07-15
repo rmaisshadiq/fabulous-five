@@ -91,7 +91,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/order-history', function () {
-        $orders = Order::where('customer_id', Auth::user()->id)->with(['driver', 'vehicle'])->get();
+        $customerId = Auth::user()?->customer?->id;
+
+        $orders = Order::where('customer_id', $customerId)->with(['driver', 'vehicle'])->get();
         return view('order-history.main-page', compact('orders'));
     })->name('order-history');
 
