@@ -408,59 +408,7 @@ class FinalReportResource extends Resource
 
 
             ])
-            ->actions([
-                Tables\Actions\Action::make('verify')
-                    ->label('Confirm')
-                    ->icon('heroicon-o-check-badge')
-                    ->color('success')
-                    ->visible(condition: fn($record) => $record->status === 'pending')
-                    ->requiresConfirmation()
-                    ->modalHeading('Confirm Order')
-                    ->modalDescription('Are you sure you want to confirm this order?')
-                    ->modalSubmitActionLabel('Yes, Confirm')
-                    ->action(function ($record) {
-                        // Update customer verification status
-                        $record->update([
-                            'status' => 'confirmed'
-                        ]);
-
-                        // Show success notification
-                        Notification::make()
-                            ->title('Order Confirmed Successfully')
-                            ->body('The order has been confirmed.')
-                            ->success()
-                            ->send();
-                    }),
-                Tables\Actions\Action::make('complete')
-                    ->label('Complete')
-                    ->icon('heroicon-o-check-badge')
-                    ->color('success')
-                    ->visible(condition: fn($record) => $record->status === 'in_progress')
-                    ->requiresConfirmation()
-                    ->modalHeading('Complete Order')
-                    ->modalDescription('Are you sure you want to complete this order?')
-                    ->modalSubmitActionLabel('Yes, Complete')
-                    ->action(function ($record) {
-                        // Update customer verification status
-                        $record->update([
-                            'status' => 'due'
-                        ]);
-
-                        ReturnLog::create([
-                            'order_id' => $record->id,
-                            'vehicle_id' => $record->vehicle_id,
-                            'handler_id' => null,
-                            'status' => 'pending',
-                        ]);
-
-                        // Show success notification
-                        Notification::make()
-                            ->title('Order Completed Successfully')
-                            ->body('The order has been completed.')
-                            ->success()
-                            ->send();
-                    }),
-            ])
+            ->actions([])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ExportBulkAction::make(),
