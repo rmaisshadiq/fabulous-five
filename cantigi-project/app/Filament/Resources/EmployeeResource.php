@@ -40,34 +40,6 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Detail Karyawan')
-                    ->schema([
-                        TextInput::make('position')
-                            ->label('Jabatan')
-                            ->required(),
-
-                        DatePicker::make('hire_date')
-                            ->label('Tanggal Masuk')
-                            ->format('Y/m/d')
-                            ->required()
-                            ->default(now()),
-
-                        Select::make('roles')
-                            ->label('Peran')
-                            ->options(Role::pluck('name', 'name'))
-                            ->preload()
-                            ->searchable(),
-
-                        Select::make('status')
-                            ->label('Status')
-                            ->options([
-                                'active' => 'Aktif',
-                                'retired' => 'Pensiun',
-                            ])
-                            ->required()
-                            ->default('active'),
-                    ]),
-
                 Section::make('Detail Akun')
                     ->schema([
                         Select::make('user_id')
@@ -108,7 +80,33 @@ class EmployeeResource extends Resource
 
                             // 3. Define how to get the label for a pre-selected user
                             ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->name),
-                    ])
+                    ]),
+
+                Section::make('Detail Karyawan')
+                    ->schema([
+                        DatePicker::make('hire_date')
+                            ->label('Tanggal Masuk')
+                            ->format('Y/m/d')
+                            ->required()
+                            ->default(now()),
+
+                        Select::make('roles')
+                            ->label('Peran')
+                            ->options(Role::pluck('name', 'name'))
+                            ->preload()
+                            ->searchable(),
+
+                        Select::make('status')
+                            ->label('Status')
+                            ->options([
+                                'active' => 'Aktif',
+                                'retired' => 'Pensiun',
+                            ])
+                            ->required()
+                            ->default('active'),
+                    ]),
+
+
             ]);
     }
 
@@ -134,8 +132,8 @@ class EmployeeResource extends Resource
                         return $record->user?->phone_number ?? $record->phone;
                     }),
 
-                TextColumn::make('position')
-                    ->label('Jabatan'),
+                TextColumn::make('user.roles.name')
+                    ->label('Peran'),
 
                 TextColumn::make('hire_date')
                     ->label('Tanggal Masuk'),

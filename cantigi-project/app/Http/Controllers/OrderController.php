@@ -140,7 +140,12 @@ class OrderController extends Controller
 
     public function show(Request $request, $id)
     {
-        $orders = Order::where('id', $id)->firstOrFail();
+        $orders = Order::find($id);
+        
+        // Jika order bukan milik user yang sedang login dan order tidak ada
+        if (!$orders || $orders->customer_id !== Auth::user()->customer->id) {
+            return redirect()->route('home');
+        }
         // Create unique transaction reference for Midtrans
         $midtransOrderId = 'TXN-' . $orders->id . '-' . time();
 

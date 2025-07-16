@@ -28,12 +28,12 @@ return Application::configure(basePath: dirname(__DIR__))
         //     // Don't redirect for API requests - return JSON instead
         //     if ($request->expectsJson()) {
         //         return response()->json([
-        //             'error' => 'Something went wrong. Please try again later.'
+        //             'error' => $e->getMessage(),
         //         ], 500);
         //     }
             
         //     // Redirect to general error page for web requests
-        //     return redirect()->route('error.general')->with('error', 'Something went wrong. Please try again later.');
+        //     return redirect()->route('error.general')->with('error', $e->getMessage());
         // });
     })
     ->withSchedule(function ($schedule) {
