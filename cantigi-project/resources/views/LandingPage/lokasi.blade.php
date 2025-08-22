@@ -71,7 +71,7 @@
             <div class="xl:col-span-2">
                 <div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-6 lg:p-8">
                     <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center sm:text-left">
-                        📍 Temukan Kami di Peta
+                         Temukan Kami di Peta
                     </h3>
                     <div class="map-container">
                         <iframe
@@ -81,18 +81,6 @@
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
-
-                    <!-- Map Info -->
-                    <div class="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-clock text-[#138A40]"></i>
-                            <span>Buka 24 Jam</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-car text-[#138A40]"></i>
-                            <span>Parkir Tersedia</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -100,7 +88,7 @@
             <div class="xl:col-span-1">
                 <div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-6 lg:p-8 h-fit sticky top-6">
                     <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center">
-                        💬 Hubungi Kami
+                        Hubungi Kami
                     </h3>
 
                     <div class="space-y-4">
@@ -171,10 +159,6 @@
                             <div class="flex justify-between">
                                 <span>Sabtu - Minggu</span>
                                 <span class="font-medium">09:00 - 16:00</span>
-                            </div>
-                            <div class="flex justify-between text-[#138A40] font-medium">
-                                <span>Emergency</span>
-                                <span>24 Jam</span>
                             </div>
                         </div>
                     </div>

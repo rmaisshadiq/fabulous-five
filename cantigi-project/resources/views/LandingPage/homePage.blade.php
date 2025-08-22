@@ -4,7 +4,6 @@
 
 @section('content')
     @include('landingpage.heroImage')
-    @include('landingpage.pilihKendaraan')
     @include('landingpage.artikel')
     @include('landingpage.unggulan')
     @include('landingpage.syaratKetentuan')
