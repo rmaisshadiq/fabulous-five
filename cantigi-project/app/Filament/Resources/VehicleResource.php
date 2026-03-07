@@ -66,10 +66,6 @@ class VehicleResource extends Resource
                     }),
                 TextInput::make('license_plate')
                     ->required(),
-                DatePicker::make('purchase_date')
-                    ->format('Y/m/d'),
-                DatePicker::make('last_maintenance_date')
-                    ->format('Y/m/d'),
                 TextInput::make('price_per_day')
                     ->label('Harga per Hari')
                     ->required()
@@ -104,8 +100,6 @@ class VehicleResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('license_plate')
                     ->label('Plat Kendaraan'),
-                Tables\Columns\TextColumn::make('last_maintenance_date')
-                    ->label('Tanggal Perbaikan Terakhir'),
                 Tables\Columns\TextColumn::make('price_per_day')
                     ->label('Harga per Hari')
                     ->state(function ($record) {

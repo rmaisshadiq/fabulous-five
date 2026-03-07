@@ -12,9 +12,11 @@
         
         {{-- Include slider container (yang sudah include vehicle-card di dalamnya) --}}
         @include('kendaraan.car.vehicle-slider-container')
+
         
         {{-- Include JavaScript --}}
         @include('kendaraan.car.vehicle-slider')
+
     </div>
     <script>
         

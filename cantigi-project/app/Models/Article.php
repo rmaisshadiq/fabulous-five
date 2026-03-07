@@ -18,8 +18,9 @@ class Article extends Model
         'author_id'
     ];
 
-    public function employees() {
-        return $this->belongsTo(Employee::class, 'author_id');
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     

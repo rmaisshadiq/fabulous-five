@@ -1,4 +1,3 @@
-
 let currentVehicleId = null;
 let currentVehiclePrice = 0;
 let selectedStartDate = null;
@@ -7,104 +6,22 @@ let selectedStartTime = null;
 let selectedEndTime = null;
 let currentDate = new Date();
 let selectionMode = "start";
-let bookedDates = [];
-
-// --- Functions for Email Verification Modal ---
-function openVerificationModal() {
-    const modal = document.getElementById("verificationModal");
-    const modalContent = document.getElementById("verificationModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modalContent.classList.remove("scale-95");
-    }, 10);
-}
-
-function closeVerificationModal() {
-    const modal = document.getElementById("verificationModal");
-    const modalContent = document.getElementById("verificationModalContent");
-    modal.classList.add("opacity-0");
-    modalContent.classList.add("scale-95");
-    setTimeout(() => modal.classList.add("hidden"), 300);
-}
-
-function openCustomerVerificationModal() {
-    const modal = document.getElementById("customerVerificationModal");
-    const modalContent = document.getElementById("customerVerificationModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modalContent.classList.remove("scale-95");
-    }, 10);
-}
-
-function closeCustomerVerificationModal() {
-    const modal = document.getElementById("customerVerificationModal");
-    const modalContent = document.getElementById("customerVerificationModalContent");
-    modal.classList.add("opacity-0");
-    modalContent.classList.add("scale-95");
-    setTimeout(() => modal.classList.add("hidden"), 300);
-}
-// --- END NEW ---
-function openAuthModal() {
-    const modal = document.getElementById("authModal");
-    const modalContent = document.getElementById("authModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modalContent.classList.remove("scale-95");
-    }, 10);
-}
-
-function closeAuthModal() {
-    const modal = document.getElementById("authModal");
-    const modalContent = document.getElementById("authModalContent");
-    modal.classList.add("opacity-0");
-    modalContent.classList.add("scale-95");
-    setTimeout(() => modal.classList.add("hidden"), 300);
-}
 
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".booking-btn").forEach((button) => {
         button.addEventListener("click", function (event) {
-            // --- UPDATED LOGIC WITH 3-STEP VERIFICATION ---
-            if (window.App.isUserLoggedIn) {
-                if (window.App.isUserVerified) {
-                    if (window.App.isCustomerVerified) {
-                        // All checks passed, proceed to booking
-                        const vehicleId = button.dataset.vehicleId;
-                        const vehicleName = button.dataset.vehicleName;
-                        const vehicleImage = button.dataset.vehicleImage;
-                        const vehiclePrice = parseInt(button.dataset.vehiclePrice, 10);
-                        bookingUrl = button.dataset.bookingUrl;
+            const vehicleId = button.dataset.vehicleId;
+            const vehicleName = button.dataset.vehicleName;
+            const vehicleImage = button.dataset.vehicleImage;
+            const vehiclePrice = parseInt(button.dataset.vehiclePrice, 10);
+            bookingUrl = button.dataset.bookingUrl;
 
-                        let existingBookings = [];
-                        try {
-                            existingBookings = JSON.parse(button.dataset.existingBookings || "[]");
-                        } catch (e) {
-                            console.error("Error parsing existing bookings:", e);
-                        }
-
-                        openBookingModal(
-                            vehicleId,
-                            vehicleName,
-                            vehicleImage,
-                            vehiclePrice,
-                            existingBookings
-                        );
-                    } else {
-                        // User's identity is not verified
-                        openCustomerVerificationModal();
-                    }
-                } else {
-                    // User's email is not verified
-                    openVerificationModal();
-                }
-            } else {
-                // User is not logged in
-                openAuthModal();
-            }
-            // --- END UPDATED LOGIC ---
+            openBookingModal(
+                vehicleId,
+                vehicleName,
+                vehicleImage,
+                vehiclePrice
+            );
         });
     });
 });
@@ -216,16 +133,9 @@ function minutesToTime(minutes) {
         .padStart(2, "0")}`;
 }
 
-function openBookingModal(
-    vehicleId,
-    vehicleName,
-    vehicleImage,
-    pricePerDay,
-    existingBookings
-) {
+function openBookingModal(vehicleId, vehicleName, vehicleImage, pricePerDay) {
     currentVehicleId = vehicleId;
     currentVehiclePrice = pricePerDay;
-    bookedDates = existingBookings || [];
 
     // Set vehicle info
     document.getElementById("modalVehicleName").textContent = vehicleName;
@@ -321,24 +231,16 @@ function generateCalendar() {
         const cellDate = new Date(year, month, day);
 
         // Create a date for the PREVIOUS day to check its booking status
-        const previousDay = new Date(year, month, day - 1);
 
         const isPast = cellDate < today;
-        const isBooked = isDateBooked(cellDate);
         // Check if the day before the current one is booked
-        const isPreviousDayBooked = isDateBooked(previousDay);
         const isSelected = isDateSelected(cellDate);
         const isInRange = isDateInRange(cellDate);
 
         dayCell.className = `p-2 text-center cursor-pointer rounded-lg transition-all`;
 
         // If the current day OR the previous day is booked, disable it
-        if (isBooked || isPreviousDayBooked) {
-            dayCell.className += " bg-red-500 text-white cursor-not-allowed";
-            dayCell.title = isBooked
-                ? "Tanggal sudah dibooking"
-                : "Tidak tersedia";
-        } else if (isPast) {
+        if (isPast) {
             dayCell.className += " text-gray-300 cursor-not-allowed";
         } else if (isSelected) {
             dayCell.className += " bg-blue-500 text-white";
@@ -352,27 +254,12 @@ function generateCalendar() {
 
         // Add the click event listener only if the date is not in the past,
         // not booked, AND the previous day is not booked.
-        if (!isPast && !isBooked && !isPreviousDayBooked) {
+        if (!isPast) {
             dayCell.addEventListener("click", () => selectDate(cellDate));
         }
 
         calendarGrid.appendChild(dayCell);
     }
-}
-
-function isDateBooked(date) {
-    const checkDate = new Date(date);
-    checkDate.setHours(0, 0, 0, 0);
-
-    return bookedDates.some((booking) => {
-        const startDate = new Date(booking.start_date);
-        const endDate = new Date(booking.end_date);
-
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(0, 0, 0, 0);
-
-        return checkDate >= startDate && checkDate <= endDate;
-    });
 }
 
 function isDateSelected(date) {
@@ -408,36 +295,14 @@ function selectDate(date) {
         } else {
             selectedEndDate = date;
         }
-
-        if (checkDateOverlap(selectedStartDate, selectedEndDate)) {
-            showError(
-                "Tanggal yang dipilih tidak tersedia karena bertabrakan dengan booking yang sudah ada. Silakan pilih tanggal lain."
-            );
-            selectedStartDate = null;
-            selectedEndDate = null;
-            selectionMode = "start";
-            document.getElementById("startDate").value = "";
-            document.getElementById("endDate").value = "";
-        } else {
-            selectionMode = "start";
-            document.getElementById("startDate").value =
-                formatDate(selectedStartDate);
-            document.getElementById("endDate").value =
-                formatDate(selectedEndDate);
-            calculateTotal();
-        }
+        selectionMode = "start";
+        document.getElementById("startDate").value =
+            formatDate(selectedStartDate);
+        document.getElementById("endDate").value = formatDate(selectedEndDate);
+        calculateTotal();
     }
 
     generateCalendar();
-}
-
-function checkDateOverlap(startDate, endDate) {
-    return bookedDates.some((booking) => {
-        const bookedStart = new Date(booking.start_date);
-        const bookedEnd = new Date(booking.end_date);
-
-        return startDate <= bookedEnd && endDate >= bookedStart;
-    });
 }
 
 function formatDate(date) {
@@ -515,83 +380,46 @@ function submitBooking() {
         return;
     }
 
-    // --- VALIDATION ADDED HERE ---
-
-    // 1. Prevent booking on the same day as today
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time for accurate date comparison
-
-    if (selectedStartDate.getTime() === today.getTime()) {
-        showError(
-            "Pemesanan tidak bisa dimulai pada hari ini. Silakan pilih tanggal lain."
-        );
-        return;
-    }
-
-    // 2. Prevent same-day booking (minimum 1 day rental)
-    if (selectedEndDate.getTime() === selectedStartDate.getTime()) {
-        showError(
-            "Minimal durasi pemesanan adalah 1 hari. Tanggal selesai tidak boleh sama dengan tanggal mulai."
-        );
-        return;
-    }
-
     // --- END OF VALIDATION ---
 
-    // Show loading state
-    const submitButton = document.querySelector(
-        'button[onclick="submitBooking()"]'
-    );
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = "Memproses...";
+    // 1. Definisikan nomor WhatsApp Anda (ganti dengan nomor yang benar)
+    const phoneNumber = "6283180200916"; // Format internasional tanpa '+' atau spasi
 
-    const formData = new FormData();
-    formData.append("vehicle_id", currentVehicleId);
-    formData.append(
-        "start_booking_date",
-        selectedStartDate.toISOString().split("T")[0]
-    );
-    formData.append(
-        "end_booking_date",
-        selectedEndDate.toISOString().split("T")[0]
-    );
-    formData.append("start_booking_time", startTime);
-    formData.append("end_booking_time", endTime);
-    formData.append('_token', window.App.csrfToken);
+    // 2. Kumpulkan semua detail pemesanan dari elemen yang ada
+    const vehicleName = document.getElementById("modalVehicleName").textContent;
+    const startDateFormatted = selectedStartDate.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+    const endDateFormatted = selectedEndDate.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
 
-    // Option 1: Using the exact route URL
-    fetch(bookingUrl, {
-        method: "POST",
-        body: formData,
-        headers: {
-            "X-Requested-With": "XMLHttpRequest", // Important for Laravel to detect AJAX
-            Accept: "application/json", // Ensure JSON response
-        },
-    })
-        .then((response) => {
-            // Check if response is ok
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.success && data.redirect_url) {
-                window.location.href = data.redirect_url;
-            } else {
-                showError(data.message || "An unknown error occurred.");
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-            alert("Terjadi kesalahan saat memproses booking: " + error.message);
-        })
-        .finally(() => {
-            // Reset button state
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
-        });
+    // 3. Buat pesan yang akan dikirim
+    const message = `Halo, saya ingin memesan kendaraan berikut:
+
+        Kendaraan: *${vehicleName}*
+        Tanggal Mulai: *${startDateFormatted} (Jam ${startTime})*
+        Tanggal Selesai: *${endDateFormatted} (Jam ${endTime})*
+
+    Mohon konfirmasi ketersediaannya. Terima kasih!`;
+
+    // 4. Encode pesan agar aman untuk URL
+    const encodedMessage = encodeURIComponent(message);
+
+    // 5. Buat URL WhatsApp
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // 6. Arahkan pengguna ke WhatsApp di tab baru
+    window.open(whatsappURL, "_blank");
+
+    // Optional: Tutup modal setelah submit
+    // closeBookingModal();
 }
 
 // Event listeners for time selection

@@ -81,30 +81,4 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         // Untuk semua user lain (misalnya super-admin, admin, dll), izinkan akses.
         return true;
     }
-
-    public function customer()
-    {
-        return $this->hasOne(Customer::class);
-    }
-
-    public function employee()
-    {
-        return $this->hasOne(Employee::class);
-    }
-
-    public function order()
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    protected static function booted()
-    {
-        parent::boot();
-
-        static::created(function ($user) {
-            Customer::create([
-                'user_id' => $user->id
-            ]);
-        });
-    }
 }

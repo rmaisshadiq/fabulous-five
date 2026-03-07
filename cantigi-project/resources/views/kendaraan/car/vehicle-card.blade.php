@@ -52,10 +52,7 @@
             class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 booking-btn"
             data-vehicle-id="{{ $vehicle->id }}" data-vehicle-name="{{ $vehicle->brand }} {{ $vehicle->model }}"
             data-vehicle-image="{{ $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : '/api/placeholder/300x200' }}"
-            data-vehicle-price="{{ $vehicle->price_per_day }}"
-            data-booking-url="{{ route('orders.store') }}"
-            data-existing-bookings="{{ $vehicle->order && $vehicle->order->count() > 0 ? $vehicle->order->where('status', 'in_progress')->map(function ($order) {
-    return ['start_date' => $order->start_booking_date, 'end_date' => $order->end_booking_date]; })->values()->toJson() : '[]' }}">
+            data-vehicle-price="{{ $vehicle->price_per_day }}">
             <i class="fa fa-calendar"></i>
             Pesan Sekarang
         </button>
@@ -177,10 +174,6 @@
                         <span class="text-gray-700">Waktu:</span>
                         <span id="totalTime" class="font-semibold">-</span>
                     </div>
-                    <div class="flex justify-between items-center border-t pt-2">
-                        <span class="text-gray-700">Total Harga:</span>
-                        <span id="totalPrice" class="font-bold text-green-600 text-lg">Rp0</span>
-                    </div>
                 </div>
             </div>
 
@@ -198,107 +191,5 @@
         </div>
     </div>
 </div>
-
-<!-- Auth Modal -->
-<div id="authModal"
-    class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0"
-    style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-    <div id="authModalContent"
-        class="bg-white rounded-2xl max-w-md w-full shadow-2xl transform scale-95 transition-all duration-300 p-8 text-center"
-        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);">
-
-        <div class="space-y-4">
-            <div class="text-yellow-500 text-5xl">
-                <i class="fa fa-warning"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-800">Login Diperlukan</h3>
-            <p class="text-gray-600">
-                Kamu harus login terlebih dahulu sebelum memesan!
-            </p>
-        </div>
-
-        <div class="flex gap-4 mt-8">
-            <button onclick="closeAuthModal()"
-                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 rounded-xl font-semibold transition-colors">
-                Batal
-            </button>
-            <button onclick="window.location.href='{{ route('login') }}'"
-                class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 rounded-xl font-semibold transition-all">
-                Oke, Login
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Verification Modal -->
-<div id="verificationModal"
-    class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0"
-    style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-    <div id="verificationModalContent"
-        class="bg-white rounded-2xl max-w-md w-full shadow-2xl transform scale-95 transition-all duration-300 p-8 text-center"
-        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);">
-
-        <div class="space-y-4">
-            <div class="text-blue-500 text-5xl">
-                <i class="fa fa-envelope"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-800">Verifikasi Email Diperlukan</h3>
-            <p class="text-gray-600">
-                Akun Anda harus diverifikasi terlebih dahulu sebelum dapat melakukan pemesanan.
-            </p>
-        </div>
-
-        <div class="flex gap-4 mt-8">
-            <button onclick="closeVerificationModal()"
-                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 rounded-xl font-semibold transition-colors">
-                Batal
-            </button>
-            <button onclick="window.location.href='{{ route('profile.edit') }}'"
-                class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-semibold transition-all">
-                Verifikasi Sekarang
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Customer Identity Verification Modal -->
-<div id="customerVerificationModal"
-    class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0"
-    style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-    <div id="customerVerificationModalContent"
-        class="bg-white rounded-2xl max-w-md w-full shadow-2xl transform scale-95 transition-all duration-300 p-8 text-center"
-        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);">
-
-        <div class="space-y-4">
-            <div class="text-yellow-500 text-5xl">
-                <i class="fa fa-id-card"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-800">Verifikasi Identitas</h3>
-            <p class="text-gray-600">
-                Untuk melanjutkan pemesanan, Anda harus melengkapi verifikasi identitas di halaman profil Anda.
-            </p>
-        </div>
-
-        <div class="flex gap-4 mt-8">
-            <button onclick="closeCustomerVerificationModal()"
-                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 rounded-xl font-semibold transition-colors">
-                Nanti Saja
-            </button>
-            <button onclick="window.location.href='{{ route('profile.edit') }}'"
-                class="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-3 rounded-xl font-semibold transition-all">
-                Lengkapi Profil
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-    window.App = {
-        isUserLoggedIn: @auth true @else false @endauth,
-        isUserVerified: @auth @if(Auth::user()->hasVerifiedEmail()) true @else false @endif @else false @endauth,
-        isCustomerVerified: @auth @if(Auth::user()->customer?->verification_status === 'verified') true @else false @endif @else false @endauth,
-        csrfToken: '{{ csrf_token() }}'
-    };
-</script>
 
 <script src="{{ asset('js/booking/booking.js') }}" defer></script>
