@@ -124,44 +124,7 @@
                 </div>
             </div>
 
-            <!-- Time Selection -->
-            <div class="mb-6">
-                <h5 class="text-lg font-semibold text-gray-800 mb-3">Pilih Waktu Pemesanan</h5>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Waktu Mulai</label>
-                        <select id="startTime"
-                            class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                            <option value="">Pilih waktu mulai</option>
-                            <!-- Time options will be populated by JavaScript -->
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Waktu Selesai</label>
-                        <select id="endTime"
-                            class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                            <option value="">Pilih waktu selesai</option>
-                            <!-- Time options will be populated by JavaScript -->
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Time Notes -->
-                <div class="mt-3 p-3 bg-blue-50 rounded-lg">
-                    <div class="flex items-start">
-                        <i class="fa fa-info-circle text-blue-500 mr-2 mt-1"></i>
-                        <div class="text-sm text-blue-700">
-                            <p class="font-semibold mb-1">Catatan Waktu:</p>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li>Jam operasional: 08:00 - 16:00</li>
-                                <li>Minimal booking 2 jam</li>
-                                <li>Untuk booking multi-hari, waktu mulai berlaku di hari pertama dan waktu selesai di
-                                    hari terakhir</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
 
             <!-- Total Calculation -->
             <div id="totalSection" class="mb-6 p-4 bg-green-50 rounded-xl hidden">
@@ -173,6 +136,12 @@
                     <div class="flex justify-between items-center">
                         <span class="text-gray-700">Waktu:</span>
                         <span id="totalTime" class="font-semibold">-</span>
+                    </div>
+                    <hr class="my-2 border-gray-300">
+    
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-gray-800">Total Harga:</span>
+                        <span id="totalPrice" class="font-bold text-xl text-blue-600">-</span>
                     </div>
                 </div>
             </div>
