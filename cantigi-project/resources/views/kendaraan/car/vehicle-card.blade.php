@@ -1,164 +1,62 @@
 {{-- resources/views/kendaraan/car/vehicle-card.blade.php --}}
 {{-- Template untuk single vehicle card, akan dipanggil di dalam loop --}}
 
-<div
-    class="vehicle-card bg-white rounded-3xl p-6 shadow-2xl border border-gray-100 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-1 space-y-6">
-    <!-- Header -->
+<div class="vehicle-card bg-white rounded-3xl p-6 shadow-2xl border border-gray-100 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-1 space-y-6" data-car-type="{{ $vehicle->car_type }}" data-is-best-deal="{{ $vehicle->is_best_deal ? 'true' : 'false' }}" data-name="{{ strtolower($vehicle->brand . ' ' . $vehicle->model) }}">
     <div class="flex justify-between items-start">
-        <div class="px-4 py-2 rounded-full shadow text-white text-sm font-semibold
-            @if($vehicle->status == 'active')
-                bg-gradient-to-r from-green-400 to-green-500
-            @elseif($vehicle->status == 'maintenance')
-                bg-gradient-to-r from-red-400 to-red-500
-            @else
-                bg-gradient-to-r from-yellow-400 to-yellow-500
-            @endif
-        ">
-            @if($vehicle->status == 'active')
-                <i class="fa fa-check-circle mr-2"></i> Active
-            @elseif($vehicle->status == 'maintenance')
-                <i class="fa fa-times-circle mr-2"></i> Maintenance
-            @else
-                <i class="fa fa-clock-o mr-2"></i> {{ ucfirst(str_replace('_', ' ', $vehicle->status)) }}
+        <div class="flex flex-col gap-2">
+            <div class="px-4 py-2 rounded-full shadow text-white text-sm font-semibold inline-block text-center
+                @if($vehicle->status == 'active') bg-gradient-to-r from-green-400 to-green-500
+                @elseif($vehicle->status == 'maintenance') bg-gradient-to-r from-red-400 to-red-500
+                @else bg-gradient-to-r from-yellow-400 to-yellow-500 @endif">
+                @if($vehicle->status == 'active') <i class="fa fa-check-circle mr-2"></i> Active
+                @elseif($vehicle->status == 'maintenance') <i class="fa fa-times-circle mr-2"></i> Maintenance
+                @else <i class="fa fa-clock-o mr-2"></i> {{ ucfirst(str_replace('_', ' ', $vehicle->status)) }} @endif
+            </div>
+
+            @if($vehicle->is_best_deal)
+            <div class="px-4 py-2 rounded-full shadow bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold flex items-center justify-center shadow-lg animate-pulse">
+                <i class="fa fa-fire mr-1"></i> BEST OFFER
+            </div>
             @endif
         </div>
 
         <div class="text-right flex-1 ml-4">
             <h2 class="text-xl font-bold text-gray-800">{{ $vehicle->brand }} {{ $vehicle->model }}</h2>
-            <p class="text-sm text-gray-500">{{ $vehicle->car_type }}</p>
-            @if($vehicle->license_plate)
-                <p class="text-xs text-gray-400">{{ $vehicle->license_plate }}</p>
-            @endif
+            <p class="text-sm text-gray-500">{{ str_replace('_', ' ', strtoupper($vehicle->car_type)) }}</p>
         </div>
     </div>
 
-    <!-- Gambar -->
-    <div class="flex justify-center">
-        <img src="{{ $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : '/api/placeholder/300x200' }}"
+    <div class="flex justify-center w-full">
+        <img src="{{ $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : 'https://placehold.co/600x400/eeeeee/999999?text=No+Image+Available' }}"
             alt="{{ $vehicle->brand }} {{ $vehicle->model }}"
-            class="w-[300px] h-[200px] object-cover rounded-xl border border-white {{ $vehicle->status == 'tidak_tersedia' ? 'opacity-60' : '' }}"
+            class="w-full h-[200px] object-cover rounded-xl border border-white {{ $vehicle->status == 'tidak_tersedia' ? 'opacity-60' : '' }}"
             loading="lazy" />
     </div>
 
-    <!-- Harga dan Tombol -->
     <div class="flex justify-between items-center">
         <div class="bg-gradient-to-r from-green-50 to-green-100 border-green-200 rounded-xl px-4 py-3 border">
-            <span
-                class="text-xl font-bold text-green-700">Rp{{ number_format($vehicle->price_per_day, 0, ',', '.') }}</span>
-            <span class="text-sm text-gray-500">/hari</span>
+            @if(in_array($vehicle->car_type, ['hiace_elf', 'medium', 'of', 'oh']))
+                <span class="text-md font-bold text-green-700">Tarif Sesuai Rute</span>
+            @else
+                <span class="text-xl font-bold text-green-700">Rp{{ number_format($vehicle->price_per_day, 0, ',', '.') }}</span>
+                <span class="text-sm text-gray-500">/hari</span>
+            @endif
         </div>
 
         <button
             class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 booking-btn"
-            data-vehicle-id="{{ $vehicle->id }}" data-vehicle-name="{{ $vehicle->brand }} {{ $vehicle->model }}"
-            data-vehicle-image="{{ $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : '/api/placeholder/300x200' }}"
-            data-vehicle-price="{{ $vehicle->price_per_day }}">
+            data-vehicle-id="{{ $vehicle->id }}" 
+            data-vehicle-name="{{ $vehicle->brand }} {{ $vehicle->model }}"
+            data-vehicle-image="{{ $vehicle->vehicle_image ? asset('storage/' . $vehicle->vehicle_image) : 'https://placehold.co/600x400/eeeeee/999999?text=No+Image+Available' }}"
+            data-vehicle-price="{{ $vehicle->price_per_day }}"
+            data-is-best-deal="{{ $vehicle->is_best_deal ? 'true' : 'false' }}"
+            data-car-type="{{ $vehicle->car_type }}"
+            data-harga-drop="{{ $vehicle->harga_drop_bandara ?? 0 }}"
+            data-harga-city="{{ $vehicle->harga_city_tour ?? 0 }}"
+            data-harga-full="{{ $vehicle->harga_full_day ?? 0 }}"
+            data-harga-luar-kota="{{ $vehicle->harga_luar_kota ?? 0 }}">
             <i class="fa fa-calendar"></i>
-            Pesan Sekarang
+            Pesan
         </button>
     </div>
 </div>
-
-<!-- Booking Modal -->
-<div id="bookingModal"
-    class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0"
-    style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-    <div id="modalContent"
-        class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform scale-95 transition-all duration-300"
-        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);">
-        <div class="p-6">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">Booking Kendaraan</h3>
-                <button onclick="closeBookingModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
-                    <i class="fa fa-times"></i>
-                </button>
-            </div>
-
-            <!-- Vehicle Info -->
-            <div class="flex items-center mb-6 p-4 bg-gray-50 rounded-xl">
-                <img id="modalVehicleImage" src="" alt="" class="w-20 h-16 object-cover rounded-lg mr-4">
-                <div>
-                    <h4 id="modalVehicleName" class="text-lg font-semibold text-gray-800"></h4>
-                    <p id="modalVehiclePrice" class="text-green-600 font-bold"></p>
-                </div>
-            </div>
-
-            <!-- Error Message -->
-            <div id="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl hidden">
-                <div class="flex items-center">
-                    <i class="fa fa-exclamation-triangle mr-2"></i>
-                    <span id="errorText"></span>
-                </div>
-            </div>
-
-            <!-- Date Selection -->
-            <div class="mb-6">
-                <h5 class="text-lg font-semibold text-gray-800 mb-3">Pilih Tanggal Pemesanan</h5>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-                        <input type="text" id="startDate"
-                            class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50" readonly
-                            placeholder="Pilih tanggal mulai">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
-                        <input type="text" id="endDate" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50"
-                            readonly placeholder="Pilih tanggal selesai">
-                    </div>
-                </div>
-
-                <!-- Calendar -->
-                <div id="calendar" class="bg-white border border-gray-200 rounded-xl p-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <button id="prevMonth" class="p-2 hover:bg-gray-100 rounded-lg">
-                            <i class="fa fa-chevron-left text-gray-600"></i>
-                        </button>
-                        <h6 id="currentMonth" class="text-lg font-semibold text-gray-800"></h6>
-                        <button id="nextMonth" class="p-2 hover:bg-gray-100 rounded-lg">
-                            <i class="fa fa-chevron-right text-gray-600"></i>
-                        </button>
-                    </div>
-                    <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
-                </div>
-            </div>
-
-            
-
-            <!-- Total Calculation -->
-            <div id="totalSection" class="mb-6 p-4 bg-green-50 rounded-xl hidden">
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Total Hari:</span>
-                        <span id="totalDays" class="font-semibold">0 hari</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Waktu:</span>
-                        <span id="totalTime" class="font-semibold">-</span>
-                    </div>
-                    <hr class="my-2 border-gray-300">
-    
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-gray-800">Total Harga:</span>
-                        <span id="totalPrice" class="font-bold text-xl text-blue-600">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex gap-3">
-                <button onclick="closeBookingModal()"
-                    class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 rounded-xl font-semibold transition-colors">
-                    Batal
-                </button>
-                <button onclick="submitBooking()"
-                    class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 rounded-xl font-semibold transition-all">
-                    Konfirmasi Booking
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="{{ asset('js/booking/booking.js') }}" defer></script>

@@ -18,6 +18,11 @@ class Vehicle extends Model
         'vehicle_image',
         'license_plate',
         'price_per_day',
-        'status'
+        'status',
+        'is_best_deal',
+        'harga_drop_bandara',
+        'harga_city_tour',
+        'harga_full_day',
+        'harga_luar_kota'
     ];
 }

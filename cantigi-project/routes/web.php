@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VehicleController;
 use App\Models\Article;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,12 @@ Route::get('/error', function () {
     return view('errors.general');
 })->name('error.general');
 
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 
 
 require __DIR__ . '/auth.php';
