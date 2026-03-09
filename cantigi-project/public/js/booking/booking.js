@@ -1,110 +1,42 @@
-
 let currentVehicleId = null;
 let currentVehiclePrice = 0;
 let selectedStartDate = null;
 let selectedEndDate = null;
-let selectedStartTime = null;
-let selectedEndTime = null;
 let currentDate = new Date();
 let selectionMode = "start";
-let bookedDates = [];
 
-// --- Functions for Email Verification Modal ---
-function openVerificationModal() {
-    const modal = document.getElementById("verificationModal");
-    const modalContent = document.getElementById("verificationModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modalContent.classList.remove("scale-95");
-    }, 10);
-}
-
-function closeVerificationModal() {
-    const modal = document.getElementById("verificationModal");
-    const modalContent = document.getElementById("verificationModalContent");
-    modal.classList.add("opacity-0");
-    modalContent.classList.add("scale-95");
-    setTimeout(() => modal.classList.add("hidden"), 300);
-}
-
-function openCustomerVerificationModal() {
-    const modal = document.getElementById("customerVerificationModal");
-    const modalContent = document.getElementById("customerVerificationModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modalContent.classList.remove("scale-95");
-    }, 10);
-}
-
-function closeCustomerVerificationModal() {
-    const modal = document.getElementById("customerVerificationModal");
-    const modalContent = document.getElementById("customerVerificationModalContent");
-    modal.classList.add("opacity-0");
-    modalContent.classList.add("scale-95");
-    setTimeout(() => modal.classList.add("hidden"), 300);
-}
-// --- END NEW ---
-function openAuthModal() {
-    const modal = document.getElementById("authModal");
-    const modalContent = document.getElementById("authModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modalContent.classList.remove("scale-95");
-    }, 10);
-}
-
-function closeAuthModal() {
-    const modal = document.getElementById("authModal");
-    const modalContent = document.getElementById("authModalContent");
-    modal.classList.add("opacity-0");
-    modalContent.classList.add("scale-95");
-    setTimeout(() => modal.classList.add("hidden"), 300);
-}
+// Global vars for Best Deal & Bus
+let currentIsBestDeal = false;
+let currentCarType = "reguler";
+let currentBestDealPrices = {};
+let currentBusRoute = null; // Store selected bus route object
 
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".booking-btn").forEach((button) => {
         button.addEventListener("click", function (event) {
-            // --- UPDATED LOGIC WITH 3-STEP VERIFICATION ---
-            if (window.App.isUserLoggedIn) {
-                if (window.App.isUserVerified) {
-                    if (window.App.isCustomerVerified) {
-                        // All checks passed, proceed to booking
-                        const vehicleId = button.dataset.vehicleId;
-                        const vehicleName = button.dataset.vehicleName;
-                        const vehicleImage = button.dataset.vehicleImage;
-                        const vehiclePrice = parseInt(button.dataset.vehiclePrice, 10);
-                        bookingUrl = button.dataset.bookingUrl;
+            const vehicleId = button.dataset.vehicleId;
+            const vehicleName = button.dataset.vehicleName;
+            const vehicleImage = button.dataset.vehicleImage;
+            const vehiclePrice = parseInt(button.dataset.vehiclePrice, 10);
+            
+            const isBestDeal = button.dataset.isBestDeal;
+            const carType = button.dataset.carType;
+            const bestDealPrices = {
+                drop: button.dataset.hargaDrop,
+                city: button.dataset.hargaCity,
+                full: button.dataset.hargaFull,
+                luarKota: button.dataset.hargaLuarKota
+            };
 
-                        let existingBookings = [];
-                        try {
-                            existingBookings = JSON.parse(button.dataset.existingBookings || "[]");
-                        } catch (e) {
-                            console.error("Error parsing existing bookings:", e);
-                        }
-
-                        openBookingModal(
-                            vehicleId,
-                            vehicleName,
-                            vehicleImage,
-                            vehiclePrice,
-                            existingBookings
-                        );
-                    } else {
-                        // User's identity is not verified
-                        openCustomerVerificationModal();
-                    }
-                } else {
-                    // User's email is not verified
-                    openVerificationModal();
-                }
-            } else {
-                // User is not logged in
-                openAuthModal();
-            }
-            // --- END UPDATED LOGIC ---
+            openBookingModal(
+                vehicleId,
+                vehicleName,
+                vehicleImage,
+                vehiclePrice,
+                isBestDeal,
+                carType,
+                bestDealPrices
+            );
         });
     });
 });
@@ -124,137 +56,75 @@ const monthNames = [
     "Desember",
 ];
 
-// Time options from 07:00 to 16:00
-const timeOptions = [
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-];
-
-function populateTimeOptions() {
-    const startTimeSelect = document.getElementById("startTime");
-    const endTimeSelect = document.getElementById("endTime");
-
-    // Clear existing options except the first one
-    startTimeSelect.innerHTML = '<option value="">Pilih waktu mulai</option>';
-    endTimeSelect.innerHTML = '<option value="">Pilih waktu selesai</option>';
-
-    // Add time options
-    timeOptions.forEach((time) => {
-        const startOption = document.createElement("option");
-        startOption.value = time;
-        startOption.textContent = time;
-        startTimeSelect.appendChild(startOption);
-
-        const endOption = document.createElement("option");
-        endOption.value = time;
-        endOption.textContent = time;
-        endTimeSelect.appendChild(endOption);
-    });
-}
-
-function validateTimeSelection() {
-    const startTime = document.getElementById("startTime").value;
-    const endTime = document.getElementById("endTime").value;
-
-    if (!startTime || !endTime) {
-        return true; // Skip validation if times not selected
-    }
-
-    // Convert time to minutes for comparison
-    const startMinutes = timeToMinutes(startTime);
-    const endMinutes = timeToMinutes(endTime);
-
-    // Check if it's same day booking
-    const isSameDay =
-        selectedStartDate &&
-        selectedEndDate &&
-        selectedStartDate.getTime() === selectedEndDate.getTime();
-
-    if (isSameDay) {
-        // For same day booking, end time must be at least 2 hours after start time
-        const minEndMinutes = startMinutes + 120; // 2 hours = 120 minutes
-
-        if (endMinutes <= startMinutes) {
-            showError("Waktu selesai harus lebih dari waktu mulai");
-            return false;
-        }
-
-        if (endMinutes < minEndMinutes) {
-            showError("Minimal booking 2 jam");
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function timeToMinutes(time) {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-}
-
-function minutesToTime(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours.toString().padStart(2, "0")}:${mins
-        .toString()
-        .padStart(2, "0")}`;
-}
-
-function openBookingModal(
-    vehicleId,
-    vehicleName,
-    vehicleImage,
-    pricePerDay,
-    existingBookings
-) {
+function openBookingModal(vehicleId, vehicleName, vehicleImage, pricePerDay, isBestDeal, carType, bestDealPrices) {
     currentVehicleId = vehicleId;
     currentVehiclePrice = pricePerDay;
-    bookedDates = existingBookings || [];
+    currentIsBestDeal = isBestDeal === 'true';
+    currentCarType = carType || "reguler";
+    currentBestDealPrices = bestDealPrices || {};
+    currentBusRoute = null;
 
-    // Set vehicle info
+    // Set info kendaraan
     document.getElementById("modalVehicleName").textContent = vehicleName;
     document.getElementById("modalVehicleImage").src = vehicleImage;
-    document.getElementById(
-        "modalVehiclePrice"
-    ).textContent = `Rp${pricePerDay.toLocaleString("id-ID")}/hari`;
+    document.getElementById("modalVehiclePrice").textContent =
+        `Rp${pricePerDay.toLocaleString("id-ID")}/hari`;
 
-    // Reset selections
+    // Reset pilihan tanggal
     selectedStartDate = null;
     selectedEndDate = null;
-    selectedStartTime = null;
-    selectedEndTime = null;
     selectionMode = "start";
 
-    // Clear form inputs
+    // Bersihkan input form
     document.getElementById("startDate").value = "";
     document.getElementById("endDate").value = "";
-    document.getElementById("startTime").value = "";
-    document.getElementById("endTime").value = "";
 
-    // Hide sections
+    // Reset Options
+    document.getElementById("serviceType").value = "lepas_kunci";
+    document.getElementById("driverArea").value = "150000";
+    document.getElementById("droppingRoute").value = "100000";
+    document.getElementById("driverAreaSection").classList.add("hidden");
+    document.getElementById("droppingRouteSection").classList.add("hidden");
+
+    // Reset Bus Options
+    document.getElementById("kategoriRute").value = "";
+    document.getElementById("pilihanRute").innerHTML = '<option value="" disabled selected>Pilih Rute spesifik...</option>';
+    document.getElementById("pilihanRuteContainer").classList.add("hidden");
+    document.getElementById("busMinHariInfo").textContent = "Sewa bus akan mengikuti ketentuan minimum hari berdasarkan rute yang dipilih.";
+
+    const isBus = ['hiace_elf', 'medium', 'of', 'oh'].includes(currentCarType);
+
+    // UI Toggle for Regular / Best Deal / Bus
+    if (isBus) {
+        document.getElementById("regularServiceContainer").classList.add("hidden");
+        document.getElementById("bestDealContainer").classList.add("hidden");
+        document.getElementById("busServiceContainer").classList.remove("hidden");
+
+        // Kalau bus, kita ga tunjukin harga reguler default di modal header
+        document.getElementById("modalVehiclePrice").textContent = `Pilih rute untuk melihat tarif`;
+    } else if (currentIsBestDeal) {
+        document.getElementById("regularServiceContainer").classList.add("hidden");
+        document.getElementById("bestDealContainer").classList.remove("hidden");
+        document.getElementById("busServiceContainer").classList.add("hidden");
+        
+        // Populate options based on dataset
+        document.getElementById("opt_drop_bandara").textContent = `Drop Bandara (Rp ${parseInt(currentBestDealPrices.drop).toLocaleString('id-ID')} / 1x Jalan)`;
+        document.getElementById("opt_city_tour").textContent = `City Tour 8 Jam (Rp ${parseInt(currentBestDealPrices.city).toLocaleString('id-ID')} / hari)`;
+        document.getElementById("opt_full_day").textContent = `Full Day 12 Jam (Rp ${parseInt(currentBestDealPrices.full).toLocaleString('id-ID')} / hari)`;
+        document.getElementById("opt_luar_kota").textContent = `Luar Kota (Rp ${parseInt(currentBestDealPrices.luarKota).toLocaleString('id-ID')} / hari)`;
+        
+        document.getElementById("bestDealPackage").value = "city_tour"; // Default for best deal
+    } else {
+        document.getElementById("regularServiceContainer").classList.remove("hidden");
+        document.getElementById("bestDealContainer").classList.add("hidden");
+        document.getElementById("busServiceContainer").classList.add("hidden");
+    }
+
+    // Sembunyikan pesan error & total
     document.getElementById("totalSection").classList.add("hidden");
     document.getElementById("errorMessage").classList.add("hidden");
 
-    // Populate time options
-    populateTimeOptions();
-
-    // Show modal with animation
+    // Tampilkan modal dengan animasi
     const modal = document.getElementById("bookingModal");
     const modalContent = document.getElementById("modalContent");
 
@@ -267,7 +137,6 @@ function openBookingModal(
         modalContent.classList.add("scale-100");
     }, 10);
 
-    // Generate calendar
     generateCalendar();
 }
 
@@ -289,9 +158,8 @@ function generateCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    document.getElementById(
-        "currentMonth"
-    ).textContent = `${monthNames[month]} ${year}`;
+    document.getElementById("currentMonth").textContent =
+        `${monthNames[month]} ${year}`;
 
     const calendarGrid = document.getElementById("calendarGrid");
     calendarGrid.innerHTML = "";
@@ -320,59 +188,45 @@ function generateCalendar() {
         const dayCell = document.createElement("div");
         const cellDate = new Date(year, month, day);
 
-        // Create a date for the PREVIOUS day to check its booking status
-        const previousDay = new Date(year, month, day - 1);
-
         const isPast = cellDate < today;
-        const isBooked = isDateBooked(cellDate);
-        // Check if the day before the current one is booked
-        const isPreviousDayBooked = isDateBooked(previousDay);
         const isSelected = isDateSelected(cellDate);
         const isInRange = isDateInRange(cellDate);
 
-        dayCell.className = `p-2 text-center cursor-pointer rounded-lg transition-all`;
+        // Logika styling lengkungan dari obrolan sebelumnya
+        const isStart =
+            selectedStartDate &&
+            cellDate.getTime() === selectedStartDate.getTime();
+        const isEnd =
+            selectedEndDate && cellDate.getTime() === selectedEndDate.getTime();
 
-        // If the current day OR the previous day is booked, disable it
-        if (isBooked || isPreviousDayBooked) {
-            dayCell.className += " bg-red-500 text-white cursor-not-allowed";
-            dayCell.title = isBooked
-                ? "Tanggal sudah dibooking"
-                : "Tidak tersedia";
-        } else if (isPast) {
-            dayCell.className += " text-gray-300 cursor-not-allowed";
+        dayCell.className = "py-2 text-center cursor-pointer transition-all";
+
+        if (isPast) {
+            dayCell.className += " text-gray-300 cursor-not-allowed rounded-lg";
         } else if (isSelected) {
             dayCell.className += " bg-blue-500 text-white";
+
+            if (isStart && selectedEndDate && !isEnd) {
+                dayCell.className += " rounded-l-lg";
+            } else if (isEnd && selectedStartDate && !isStart) {
+                dayCell.className += " rounded-r-lg";
+            } else {
+                dayCell.className += " rounded-lg";
+            }
         } else if (isInRange) {
             dayCell.className += " bg-blue-200 text-blue-800";
         } else {
-            dayCell.className += " hover:bg-blue-100";
+            dayCell.className += " hover:bg-blue-100 rounded-lg";
         }
 
         dayCell.textContent = day;
 
-        // Add the click event listener only if the date is not in the past,
-        // not booked, AND the previous day is not booked.
-        if (!isPast && !isBooked && !isPreviousDayBooked) {
+        if (!isPast) {
             dayCell.addEventListener("click", () => selectDate(cellDate));
         }
 
         calendarGrid.appendChild(dayCell);
     }
-}
-
-function isDateBooked(date) {
-    const checkDate = new Date(date);
-    checkDate.setHours(0, 0, 0, 0);
-
-    return bookedDates.some((booking) => {
-        const startDate = new Date(booking.start_date);
-        const endDate = new Date(booking.end_date);
-
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(0, 0, 0, 0);
-
-        return checkDate >= startDate && checkDate <= endDate;
-    });
 }
 
 function isDateSelected(date) {
@@ -397,47 +251,22 @@ function selectDate(date) {
         document.getElementById("startDate").value = formatDate(date);
         document.getElementById("endDate").value = "";
         document.getElementById("totalSection").classList.add("hidden");
-
-        // Clear time selections when date changes
-        document.getElementById("startTime").value = "";
-        document.getElementById("endTime").value = "";
     } else {
-        if (date <= selectedStartDate) {
+        // Handle kalau user klik tanggal akhir yang lebih kecil dari tanggal awal
+        if (date < selectedStartDate) {
             selectedEndDate = selectedStartDate;
             selectedStartDate = date;
         } else {
             selectedEndDate = date;
         }
-
-        if (checkDateOverlap(selectedStartDate, selectedEndDate)) {
-            showError(
-                "Tanggal yang dipilih tidak tersedia karena bertabrakan dengan booking yang sudah ada. Silakan pilih tanggal lain."
-            );
-            selectedStartDate = null;
-            selectedEndDate = null;
-            selectionMode = "start";
-            document.getElementById("startDate").value = "";
-            document.getElementById("endDate").value = "";
-        } else {
-            selectionMode = "start";
-            document.getElementById("startDate").value =
-                formatDate(selectedStartDate);
-            document.getElementById("endDate").value =
-                formatDate(selectedEndDate);
-            calculateTotal();
-        }
+        selectionMode = "start";
+        document.getElementById("startDate").value =
+            formatDate(selectedStartDate);
+        document.getElementById("endDate").value = formatDate(selectedEndDate);
+        calculateTotal();
     }
 
     generateCalendar();
-}
-
-function checkDateOverlap(startDate, endDate) {
-    return bookedDates.some((booking) => {
-        const bookedStart = new Date(booking.start_date);
-        const bookedEnd = new Date(booking.end_date);
-
-        return startDate <= bookedEnd && endDate >= bookedStart;
-    });
 }
 
 function formatDate(date) {
@@ -451,39 +280,72 @@ function calculateTotal() {
     if (selectedStartDate && selectedEndDate) {
         const timeDiff =
             selectedEndDate.getTime() - selectedStartDate.getTime();
-        const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-        const totalPrice = dayDiff * currentVehiclePrice;
+        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-        document.getElementById("totalDays").textContent = `${dayDiff} hari`;
-        document.getElementById(
-            "totalPrice"
-        ).textContent = `Rp${totalPrice.toLocaleString("id-ID")}`;
+        // Kalau pilih tanggal yang sama, hitung sebagai 1 hari booking
+        if (dayDiff === 0) {
+            dayDiff = 1;
+        }
 
-        // Update time display
-        updateTimeDisplay();
+        const isBus = ['hiace_elf', 'medium', 'of', 'oh'].includes(currentCarType);
+
+        if (isBus && currentBusRoute) {
+            if (dayDiff < currentBusRoute.min_hari) {
+                showError(`Rute Bus ini mewajibkan sewa minimal ${currentBusRoute.min_hari} hari. Silakan ubah tanggal. (Terpilih: ${dayDiff} hari)`);
+                return; // Stop rendering the total calculation
+            }
+        }
+        hideError(); // Clean up previous error if day diff gets valid
+
+        let totalPrice = 0;
+
+        if (isBus) {
+            if (!currentBusRoute) {
+                // Jangan show calculation kalau rute belum dipilih
+                document.getElementById("totalSection").classList.add("hidden");
+                return;
+            }
+            
+            // Find price based on car/bus type
+            const busPriceItem = currentBusRoute.prices.find(p => p.tipe_bus === currentCarType);
+            const busPrice = busPriceItem ? busPriceItem.harga : 0;
+            
+            totalPrice = busPrice * dayDiff;
+            document.getElementById("totalDays").textContent = `${dayDiff} hari (Min. ${currentBusRoute.min_hari} hari)`;
+        } else if (currentIsBestDeal) {
+            const packageType = document.getElementById("bestDealPackage").value;
+            let packagePrice = 0;
+            
+            if (packageType === "drop_bandara") {
+                packagePrice = parseInt(currentBestDealPrices.drop, 10);
+                totalPrice = packagePrice; // flat
+                document.getElementById("totalDays").textContent = `- (1x Jalan)`;
+            } else {
+                if (packageType === "city_tour") packagePrice = parseInt(currentBestDealPrices.city, 10);
+                if (packageType === "full_day") packagePrice = parseInt(currentBestDealPrices.full, 10);
+                if (packageType === "luar_kota") packagePrice = parseInt(currentBestDealPrices.luarKota, 10);
+                
+                totalPrice = packagePrice * dayDiff;
+                document.getElementById("totalDays").textContent = `${dayDiff} hari`;
+            }
+        } else {
+            let additionalServicePrice = 0;
+            const serviceType = document.getElementById("serviceType").value;
+            if (serviceType === "sewa_driver") {
+                const driverPricePerDay = parseInt(document.getElementById("driverArea").value, 10);
+                additionalServicePrice = driverPricePerDay * dayDiff;
+            } else if (serviceType === "dropping") {
+                const droppingPriceFlat = parseInt(document.getElementById("droppingRoute").value, 10);
+                additionalServicePrice = droppingPriceFlat;
+            }
+    
+            totalPrice = (dayDiff * currentVehiclePrice) + additionalServicePrice;
+            document.getElementById("totalDays").textContent = `${dayDiff} hari`;
+        }
+        document.getElementById("totalPrice").textContent =
+            `Rp${totalPrice.toLocaleString("id-ID")}`;
 
         document.getElementById("totalSection").classList.remove("hidden");
-    }
-}
-
-function updateTimeDisplay() {
-    const startTime = document.getElementById("startTime").value;
-    const endTime = document.getElementById("endTime").value;
-    const timeDisplay = document.getElementById("totalTime");
-
-    if (startTime && endTime) {
-        const isSameDay =
-            selectedStartDate &&
-            selectedEndDate &&
-            selectedStartDate.getTime() === selectedEndDate.getTime();
-
-        if (isSameDay) {
-            timeDisplay.textContent = `${startTime} - ${endTime}`;
-        } else {
-            timeDisplay.textContent = `${startTime} (mulai) - ${endTime} (selesai)`;
-        }
-    } else {
-        timeDisplay.textContent = "-";
     }
 }
 
@@ -503,121 +365,127 @@ function submitBooking() {
         return;
     }
 
-    const startTime = document.getElementById("startTime").value;
-    const endTime = document.getElementById("endTime").value;
+    const phoneNumber = "6283180200916";
+    const vehicleName = document.getElementById("modalVehicleName").textContent;
 
-    if (!startTime || !endTime) {
-        showError("Silakan pilih waktu mulai dan selesai");
-        return;
+    const startDateFormatted = selectedStartDate.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
+    const endDateFormatted = selectedEndDate.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
+    // Kalkulasi ulang buat dimunculin di chat WA biar lebih informatif
+    const timeDiff = selectedEndDate.getTime() - selectedStartDate.getTime();
+    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    if (dayDiff === 0) dayDiff = 1;
+
+    const isBus = ['hiace_elf', 'medium', 'of', 'oh'].includes(currentCarType);
+
+    if (isBus && currentBusRoute) {
+        if (dayDiff < currentBusRoute.min_hari) {
+            showError(`Rute Bus ini mewajibkan sewa minimal ${currentBusRoute.min_hari} hari. Silakan ubah tanggal.`);
+            return; 
+        }
     }
 
-    if (!validateTimeSelection()) {
-        return;
+    let message = `Halo, saya ingin memesan kendaraan berikut:\n\n`;
+
+    if (isBus) {
+        if (!currentBusRoute) {
+            showError("Silakan pilih rute bus spesifik.");
+            return;
+        }
+
+        const busPriceItem = currentBusRoute.prices.find(p => p.tipe_bus === currentCarType);
+        const busPrice = busPriceItem ? busPriceItem.harga : 0;
+        const totalPrice = busPrice * dayDiff;
+
+        message += `Bus Pariwisata: *${vehicleName}*\n`;
+        message += `Tanggal Mulai: *${startDateFormatted}*\n`;
+        message += `Tanggal Selesai: *${endDateFormatted}*\n`;
+        message += `Total Durasi: *${dayDiff} Hari (Min. ${currentBusRoute.min_hari} hari)*\n\n`;
+        message += `Kategori Rute: *${currentBusRoute.kategori.replace('_', ' ').toUpperCase()}*\n`;
+        message += `Rute Spesifik: *${currentBusRoute.rute}*\n`;
+        message += `Estimasi Harga Total: *Rp${totalPrice.toLocaleString("id-ID")}*\n\n`;
+        message += `Mohon konfirmasi ketersediaannya. Terima kasih!`;
+        
+    } else if (currentIsBestDeal) {
+        const packageType = document.getElementById("bestDealPackage").value;
+        const packageSelect = document.getElementById("bestDealPackage");
+        const packageText = packageSelect.options[packageSelect.selectedIndex].text.split(" (Rp")[0];
+
+        let totalPrice = 0;
+        let finalDays = `${dayDiff} Hari`;
+        if (packageType === "drop_bandara") {
+            totalPrice = parseInt(currentBestDealPrices.drop, 10);
+            finalDays = '1x Jalan';
+        } else {
+            if (packageType === "city_tour") totalPrice = parseInt(currentBestDealPrices.city, 10) * dayDiff;
+            if (packageType === "full_day") totalPrice = parseInt(currentBestDealPrices.full, 10) * dayDiff;
+            if (packageType === "luar_kota") totalPrice = parseInt(currentBestDealPrices.luarKota, 10) * dayDiff;
+        }
+
+        message += `Kendaraan: *${vehicleName}* - 🔥 *BEST DEAL*\n`;
+        message += `Tanggal Mulai: *${startDateFormatted}*\n`;
+        message += `Tanggal Selesai: *${endDateFormatted}*\n`;
+        message += `Total Durasi: *${finalDays}*\n\n`;
+        message += `Paket Pilihan: *${packageText}*\n`;
+        message += `Estimasi Harga Total: *Rp${totalPrice.toLocaleString("id-ID")}*\n\n`;
+        message += `Mohon konfirmasi ketersediaannya. Terima kasih!`;
+
+    } else {
+        let additionalServicePrice = 0;
+        const serviceType = document.getElementById("serviceType").value;
+        let serviceText = "Lepas Kunci";
+        let detailText = "-";
+        
+        if (serviceType === "sewa_driver") {
+            const driverPricePerDay = parseInt(document.getElementById("driverArea").value, 10);
+            additionalServicePrice = driverPricePerDay * dayDiff;
+            
+            const driverAreaSelect = document.getElementById("driverArea");
+            const areaText = driverAreaSelect.options[driverAreaSelect.selectedIndex].text.split(" (+")[0];
+            serviceText = "Sewa + Driver";
+            detailText = areaText;
+        } else if (serviceType === "dropping") {
+            const droppingPriceFlat = parseInt(document.getElementById("droppingRoute").value, 10);
+            additionalServicePrice = droppingPriceFlat;
+            
+            const droppingRouteSelect = document.getElementById("droppingRoute");
+            const routeText = droppingRouteSelect.options[droppingRouteSelect.selectedIndex].text.split(" (+")[0];
+            serviceText = "Dropping";
+            detailText = routeText;
+        }
+    
+        const totalVehiclePrice = dayDiff * currentVehiclePrice;
+        const totalPrice = totalVehiclePrice + additionalServicePrice;
+    
+        message += `Kendaraan: *${vehicleName}*\n`;
+        message += `Tanggal Mulai: *${startDateFormatted}*\n`;
+        message += `Tanggal Selesai: *${endDateFormatted}*\n`;
+        message += `Total Durasi: *${dayDiff} Hari*\n\n`;
+        message += `Tipe Layanan: *${serviceText}*\n`;
+        message += `Detail Rute/Area: *${detailText}*\n`;
+        message += `Biaya Layanan Tambahan: *Rp${additionalServicePrice.toLocaleString("id-ID")}*\n\n`;
+        message += `Estimasi Harga Total: *Rp${totalPrice.toLocaleString("id-ID")}*\n\n`;
+        message += `Mohon konfirmasi ketersediaannya. Terima kasih!`;
     }
 
-    // --- VALIDATION ADDED HERE ---
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-    // 1. Prevent booking on the same day as today
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time for accurate date comparison
-
-    if (selectedStartDate.getTime() === today.getTime()) {
-        showError(
-            "Pemesanan tidak bisa dimulai pada hari ini. Silakan pilih tanggal lain."
-        );
-        return;
-    }
-
-    // 2. Prevent same-day booking (minimum 1 day rental)
-    if (selectedEndDate.getTime() === selectedStartDate.getTime()) {
-        showError(
-            "Minimal durasi pemesanan adalah 1 hari. Tanggal selesai tidak boleh sama dengan tanggal mulai."
-        );
-        return;
-    }
-
-    // --- END OF VALIDATION ---
-
-    // Show loading state
-    const submitButton = document.querySelector(
-        'button[onclick="submitBooking()"]'
-    );
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = "Memproses...";
-
-    const formData = new FormData();
-    formData.append("vehicle_id", currentVehicleId);
-    formData.append(
-        "start_booking_date",
-        selectedStartDate.toISOString().split("T")[0]
-    );
-    formData.append(
-        "end_booking_date",
-        selectedEndDate.toISOString().split("T")[0]
-    );
-    formData.append("start_booking_time", startTime);
-    formData.append("end_booking_time", endTime);
-    formData.append('_token', window.App.csrfToken);
-
-    // Option 1: Using the exact route URL
-    fetch(bookingUrl, {
-        method: "POST",
-        body: formData,
-        headers: {
-            "X-Requested-With": "XMLHttpRequest", // Important for Laravel to detect AJAX
-            Accept: "application/json", // Ensure JSON response
-        },
-    })
-        .then((response) => {
-            // Check if response is ok
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.success && data.redirect_url) {
-                window.location.href = data.redirect_url;
-            } else {
-                showError(data.message || "An unknown error occurred.");
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-            alert("Terjadi kesalahan saat memproses booking: " + error.message);
-        })
-        .finally(() => {
-            // Reset button state
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
-        });
+    window.open(whatsappURL, "_blank");
 }
 
-// Event listeners for time selection
-document.addEventListener("DOMContentLoaded", function () {
-    document
-        .getElementById("startTime")
-        .addEventListener("change", function () {
-            selectedStartTime = this.value;
-            updateTimeDisplay();
-            if (!validateTimeSelection()) {
-                this.value = "";
-                selectedStartTime = null;
-            }
-        });
-
-    document.getElementById("endTime").addEventListener("change", function () {
-        selectedEndTime = this.value;
-        updateTimeDisplay();
-        if (!validateTimeSelection()) {
-            this.value = "";
-            selectedEndTime = null;
-        }
-    });
-});
-
-// Navigation buttons
+// Navigasi bulan kalender
 document.getElementById("prevMonth").addEventListener("click", () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     generateCalendar();
@@ -628,14 +496,14 @@ document.getElementById("nextMonth").addEventListener("click", () => {
     generateCalendar();
 });
 
-// Close modal when clicking outside
+// Tutup modal kalau klik area luar
 document.getElementById("bookingModal").addEventListener("click", (e) => {
     if (e.target === document.getElementById("bookingModal")) {
         closeBookingModal();
     }
 });
 
-// Keyboard support
+// Support tombol ESC di keyboard buat nutup modal
 document.addEventListener("keydown", (e) => {
     if (
         e.key === "Escape" &&
@@ -643,4 +511,175 @@ document.addEventListener("keydown", (e) => {
     ) {
         closeBookingModal();
     }
+});
+
+// Event Listener Tipe Layanan
+document.getElementById("serviceType").addEventListener("change", function (e) {
+    const driverAreaSection = document.getElementById("driverAreaSection");
+    const droppingRouteSection = document.getElementById("droppingRouteSection");
+    
+    if (e.target.value === "sewa_driver") {
+        driverAreaSection.classList.remove("hidden");
+        droppingRouteSection.classList.add("hidden");
+    } else if (e.target.value === "dropping") {
+        driverAreaSection.classList.add("hidden");
+        droppingRouteSection.classList.remove("hidden");
+    } else {
+        driverAreaSection.classList.add("hidden");
+        droppingRouteSection.classList.add("hidden");
+    }
+    calculateTotal();
+});
+
+document.getElementById("driverArea").addEventListener("change", function () {
+    calculateTotal();
+});
+
+document.getElementById("droppingRoute").addEventListener("change", function () {
+    calculateTotal();
+});
+
+document.getElementById("bestDealPackage").addEventListener("change", function () {
+    calculateTotal();
+});
+
+// Event Listeners for Bus Routes Cascading Logic
+document.getElementById("kategoriRute").addEventListener("change", function(e) {
+    const categoryName = e.target.value;
+    const routeSelect = document.getElementById("pilihanRute");
+    const routeWrapper = document.getElementById("pilihanRuteContainer");
+    
+    // Check if JSON bus routes is globally defined
+    if(typeof window.busRoutesData === "undefined") {
+        console.error("busRoutesData is not defined. Make sure @json($busRoutes) is working in Blade.");
+        return;
+    }
+
+    // Pastikan type comparison aman (jadikan lowercase semua)
+    const activeCarType = currentCarType ? currentCarType.toLowerCase() : "";
+
+    // Filter bus routes match with category
+    const filteredRoutes = window.busRoutesData.filter(r => r.kategori === categoryName);
+    
+    // Reset dropdown
+    routeSelect.innerHTML = '<option value="" disabled selected>Pilih Rute spesifik...</option>';
+    
+    let hasValidOptions = false;
+
+    if (filteredRoutes.length > 0) {
+        filteredRoutes.forEach(r => {
+            // Find specific price for current displayed car_type bus
+            // Pakai toLowerCase() biar aman kalau data di DB beda casing
+            const itemPriceInfo = (r.prices || []).find(p => p.tipe_bus.toLowerCase() === activeCarType);
+            
+            const hargaDisplayed = itemPriceInfo ? itemPriceInfo.harga : 0;
+            
+            // Generate option text only if the specific bus type price is exist
+            if (hargaDisplayed > 0) {
+                const opt = document.createElement("option");
+                opt.value = r.id;
+                opt.textContent = `${r.rute} (Rp ${parseInt(hargaDisplayed).toLocaleString('id-ID')} / hari)`;
+                routeSelect.appendChild(opt);
+                hasValidOptions = true;
+            }
+        });
+        
+        // Remove hidden class if options exist
+        if (hasValidOptions) {
+            routeWrapper.classList.remove("hidden");
+        } else {
+            routeWrapper.classList.add("hidden");
+            // Kasih tau user kalo rute di kategori ini harganya belum di-set buat bus tipe ini
+            routeSelect.innerHTML = '<option value="" disabled selected>Tidak ada rute tersedia untuk tipe bus ini.</option>';
+            routeWrapper.classList.remove("hidden"); // Tetap tampilkan pesan kosong
+        }
+    } else {
+        routeWrapper.classList.add("hidden");
+    }
+
+    currentBusRoute = null; // Reset selection Object
+    document.getElementById("busMinHariInfo").textContent = "Sewa bus akan mengikuti ketentuan minimum hari berdasarkan rute yang dipilih.";
+    calculateTotal();
+});
+
+document.getElementById("pilihanRute").addEventListener("change", function(e) {
+    const selectedRouteId = parseInt(e.target.value);
+    currentBusRoute = window.busRoutesData.find(r => r.id === selectedRouteId);
+    
+    if (currentBusRoute) {
+        document.getElementById("busMinHariInfo").innerHTML = `<b>Pemberitahuan:</b> Rute <i>${currentBusRoute.rute}</i> membutuhkan batas minimal sewa <b>${currentBusRoute.min_hari} hari</b>.`;
+    }
+    
+    calculateTotal();
+});
+
+// Logic Real-time Search & Filter Component UI //
+let currentActiveFilter = 'all';
+
+function filterVehiclesUI() {
+    const searchVal = document.getElementById("vehicleSearchInput") ? document.getElementById("vehicleSearchInput").value.toLowerCase() : "";
+    const cards = document.querySelectorAll('.vehicle-card');
+    
+    cards.forEach(card => {
+        // Karena DOM ini dibuild php foreach, kita tangkap info card dari btn di dalamnya
+        const btn = card.querySelector('.booking-btn');
+        if (!btn) return;
+        
+        const carName = btn.dataset.vehicleName.toLowerCase();
+        const carType = btn.dataset.carType;
+        const isBestDeal = btn.dataset.isBestDeal === 'true';
+
+        // Tentukan apakah memenuhi syarat filter kategori
+        let matchFilter = false;
+        if (currentActiveFilter === 'all') {
+            matchFilter = true;
+        } else if (currentActiveFilter === 'bus') {
+            matchFilter = ['hiace_elf', 'medium', 'of', 'oh'].includes(carType);
+        } else if (currentActiveFilter === 'best_deal') {
+            matchFilter = isBestDeal;
+        } else if (currentActiveFilter === 'reguler') {
+            const isBusCheck = ['hiace_elf', 'medium', 'of', 'oh'].includes(carType);
+            matchFilter = !isBusCheck && !isBestDeal;
+        }
+
+        // Tentukan apakah memenuhi syarat string search input
+        const matchSearch = carName.includes(searchVal);
+
+        if (matchFilter && matchSearch) {
+            // Un-hide parent container card (.slide -> section ..)
+            card.parentElement.closest('.slide').classList.remove("hidden"); 
+            card.classList.remove("hidden");
+        } else {
+            card.classList.add("hidden");
+        }
+    });
+}
+
+// Attach Search Listeners
+if (document.getElementById("vehicleSearchInput")) {
+    document.getElementById("vehicleSearchInput").addEventListener("input", filterVehiclesUI);
+}
+
+// Attach Filter Buttons Click Handlers
+const filterBtns = document.querySelectorAll('.filter-btn');
+filterBtns.forEach(fbtn => {
+    fbtn.addEventListener('click', function(e) {
+        // Update active class UI 
+        filterBtns.forEach(b => {
+            b.classList.remove('bg-green-500', 'text-white', 'active');
+            b.classList.add('bg-gray-100', 'text-gray-600');
+        });
+        
+        this.classList.remove('bg-gray-100', 'text-gray-600');
+        this.classList.add('bg-green-500', 'text-white', 'active');
+        
+        // Save current filter param
+        currentActiveFilter = this.dataset.filter;
+        
+        // Execute Filtering
+        filterVehiclesUI();
+        
+        // Opsional: krn kita pake slider, kalo filter applied semua card mending display grid langsung di slide 0 
+        // Logicnya akan menutupi behavior default slider. Buat UX ini kita abaikan sementara page-nya.
+    });
 });

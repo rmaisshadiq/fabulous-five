@@ -23,9 +23,6 @@
         {{-- contact section --}}
         @include('about-us.contact-section')
 
-        {{-- contact section --}}
-        @include('about-us.feedback')
-
 
 
     </section>

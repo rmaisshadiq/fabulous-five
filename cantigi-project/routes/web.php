@@ -1,17 +1,10 @@
 <?php
 
-use App\Http\Controllers\FeedbackController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\VehicleController;
 use App\Models\Article;
-use App\Models\Customer;
-use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Models\Vehicle;
-use App\Http\Controllers\PaymentController;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     $articles = Article::take(6)->get(); // Misalnya tampilkan 5 artikel saja
@@ -19,16 +12,11 @@ Route::get('/', function () {
     return view('LandingPage.homePage', compact('articles'));
 })->name('home');
 
-Route::get('/car', function () {
-    $vehicles = Vehicle::where('status', 'active')->get(); // ambil kendaraan yang aktif
-    $orders = Order::all();
-    return view('kendaraan.car.mainPageMobil', compact('vehicles'));
-})->name('kendaraan');
+Route::get('/car', [VehicleController::class, 'index'])->name('kendaraan');
+Route::get('/vehicles/filter', [VehicleController::class, 'filter'])->name('vehicles.filter');
 
 Route::get('/about-us', function () {
-    $orders = Order::all();
-    $customers = Customer::all();
-    return view('about-us.main-page', compact('orders', 'customers'));
+    return view('about-us.main-page');
 })->name('about-us');
 
 Route::get('/artikel/{id}', function ($id) {
@@ -61,76 +49,16 @@ Route::get('/syarat-ketentuan', function () {
     return view('footer.syarat-ketentuan');
 })->name('syarat-ketentuan');
 
-Route::get('/feedback', function () {
-    $orders = Order::all();
-    $customers = Customer::all();
-    return view('feedback.main-page', compact('orders', 'customers'));
-})->middleware(['auth', 'verified'])->name('feedback');
-
-Route::get('/order-history', function () {
-    $orders = Order::with(['driver', 'vehicle'])->get();
-    return view('order-history.main-page', compact('orders'));
-})->name('order-history');
-
-
-Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
-// Route untuk menyimpan feedback
-Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
-
 Route::get('/error', function () {
     return view('errors.general');
 })->name('error.general');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::get('/verify', [VerificationController::class, 'show'])->name('profile.verify');
-        Route::post('/verify', [VerificationController::class, 'store'])->name('profile.verify.store');
     });
-
-    Route::get('/order-history', function () {
-        $customerId = Auth::user()?->customer?->id;
-
-        $orders = Order::where('customer_id', $customerId)->with(['driver', 'vehicle'])->get();
-        return view('order-history.main-page', compact('orders'));
-    })->name('order-history');
-
-    Route::get('/pemesanan/{id}', [OrderController::class, 'show'])
-        ->name('detail-pemesanan');
-
-    Route::get('/pemesanan/{order}/download', [OrderController::class, 'downloadInvoicePdf'])->name('orders.invoice.download');
-
-    Route::get('/form-pemesanan/main-page/{id}', function ($id) {
-        $vehicles = Vehicle::findOrFail($id);
-        return view('form-pemesanan.main-page', compact('vehicles'));
-    })->name('form.pemesanan');
-
-    Route::get('/form-pemesanan', [OrderController::class, 'create'])->name('orders.create');
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}/pending', [OrderController::class, 'showPending'])->name('orders.pending');
-
-    Route::prefix('payment')->group(function () {
-        Route::get('/{id}', [PaymentController::class, 'create'])->name('payment.create');
-        Route::post('/', [PaymentController::class, 'store'])->name('payment.store');
-        Route::get('/success/{orderId}', [PaymentController::class, 'success'])->name('payment.success');
-        Route::get('/qris', [PaymentController::class, 'qrisPayment'])
-            ->name('payment.qris');
-        Route::post('/qris/complete/{id}', [PaymentController::class, 'completeQrisPayment'])
-            ->name('payment.qris.complete');
-        Route::post('/callback', [PaymentController::class, 'callback'])
-            ->name('payment.callback');
-        Route::post('/ajax-callback', [PaymentController::class, 'callback'])
-            ->withoutMiddleware([VerifyCsrfToken::class]) // atau exclude CSRF di VerifyCsrfToken
-            ->name('payment.ajax-callback');
-        Route::get('/history', [PaymentController::class, 'history'])
-            ->name('payment.history');
-        Route::get('/{orderId}', [PaymentController::class, 'detail'])
-            ->name('payment.detail');
-    });
-});
-
 
 
 require __DIR__ . '/auth.php';

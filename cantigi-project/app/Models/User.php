@@ -6,10 +6,12 @@ namespace App\Models;
 
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -68,29 +70,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return asset('images/user_profiles/default-avatar.png');
     }
 
-    public function customer()
+    public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasOne(Customer::class);
-    }
+        $user = User::find(Auth::user()->id);
 
-    public function employee()
-    {
-        return $this->hasOne(Employee::class);
-    }
+        if ($user->hasRole('panel_user') && $user->getRoleNames()->count() === 1) {
+            return false; // Tolak akses ke panel
+        }
 
-    public function order()
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    protected static function booted()
-    {
-        parent::boot();
-
-        static::created(function ($user) {
-            Customer::create([
-                'user_id' => $user->id
-            ]);
-        });
+        // Untuk semua user lain (misalnya super-admin, admin, dll), izinkan akses.
+        return true;
     }
 }

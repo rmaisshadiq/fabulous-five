@@ -18,29 +18,11 @@ class Vehicle extends Model
         'vehicle_image',
         'license_plate',
         'price_per_day',
-        'purchase_date',
-        'last_maintenance_date',
-        'status'
+        'status',
+        'is_best_deal',
+        'harga_drop_bandara',
+        'harga_city_tour',
+        'harga_full_day',
+        'harga_luar_kota'
     ];
-
-    public function maintenance() 
-    {
-        return $this->hasMany(Maintenance::class, 'vehicle_id');
-    }
-
-    public function order() 
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    public function return_log() 
-    {
-        return $this->hasMany(ReturnLog::class);
-    }
-
-    public function financial_report()
-    {
-        return $this->hasMany(FinancialReport::class, 'vehicle_id');
-    }
-
 }
